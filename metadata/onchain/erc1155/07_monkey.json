@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #07 — Monkey",
+  "description": "Year of the Monkey (2028, Earth). Ingenuity, Curiosity, Adaptability. A cybernetic mechanical monkey with a segmented cable grapple tail and exposed servo motors at joints. Queued for the seventh Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[MONKEY_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/monkey",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Monkey" },
+    { "trait_type": "Year", "value": "2028" },
+    { "trait_type": "Element", "value": "Earth" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 7 },
+    { "trait_type": "Frequency Keywords", "value": "Ingenuity, Curiosity, Adaptability" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Stone and Crystal" },
+    { "trait_type": "Key Feature", "value": "Segmented grapple tail, exposed servo joints" },
+    { "trait_type": "LMRP Status", "value": "Queued" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

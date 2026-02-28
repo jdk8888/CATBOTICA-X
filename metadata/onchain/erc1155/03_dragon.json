@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #03 — Dragon",
+  "description": "Year of the Dragon (2024, Wood). Power, Innovation, Fortune. A cybernetic mechanical dragon with hexagonal scale-plates and solar-panel wing arrays. Issued during the third Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[DRAGON_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/dragon",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Dragon" },
+    { "trait_type": "Year", "value": "2024" },
+    { "trait_type": "Element", "value": "Wood" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 3 },
+    { "trait_type": "Frequency Keywords", "value": "Power, Innovation, Fortune" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Branch and Vine" },
+    { "trait_type": "Key Feature", "value": "Hexagonal scale-plates, solar-panel wing arrays" },
+    { "trait_type": "LMRP Status", "value": "Activated" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

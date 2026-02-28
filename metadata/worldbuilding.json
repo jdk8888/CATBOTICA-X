@@ -1,0 +1,172 @@
+{
+  "locations": [
+    {
+      "name": "Catbotica Industries / Campus",
+      "details": {
+        "first_mention:": "Page 010, Page 013",
+        "description:": "",
+        "significance:": "",
+        "key_features:": ""
+      }
+    },
+    {
+      "name": "Space / Outer Space",
+      "details": {
+        "first_mention:": "Page 002",
+        "description:": "",
+        "significance:": "",
+        "key_features:": ""
+      }
+    },
+    {
+      "name": "Spaceship Interior",
+      "details": {
+        "first_mention:": "Page 002",
+        "description:": "",
+        "significance:": ""
+      }
+    },
+    {
+      "name": "Alien Planet",
+      "details": {
+        "first_appearance:": "Page 044",
+        "description:": "",
+        "significance:": "",
+        "key_features:": ""
+      }
+    },
+    {
+      "name": "City / Urban Environment",
+      "details": {
+        "first_mention:": "Page 050",
+        "description:": "",
+        "significance:": "",
+        "key_features:": ""
+      }
+    },
+    {
+      "name": "Jungle / Forest",
+      "details": {
+        "first_appearance:": "Page 127, Page 150",
+        "description:": "",
+        "significance:": "",
+        "key_features:": ""
+      }
+    },
+    {
+      "name": "Beach",
+      "details": {
+        "first_appearance:": "Page 020",
+        "description:": "",
+        "significance:": ""
+      }
+    },
+    {
+      "name": "Cave / Underground",
+      "details": {
+        "first_appearance:": "Page 242",
+        "description:": "",
+        "significance:": ""
+      }
+    },
+    {
+      "name": "Domestic / Residential Settings",
+      "details": {
+        "first_appearance:": "Multiple pages",
+        "description:": "",
+        "significance:": ""
+      }
+    },
+    {
+      "name": "School / Educational Setting",
+      "details": {
+        "first_appearance:": "Page 245",
+        "description:": "",
+        "significance:": ""
+      }
+    },
+    {
+      "name": "Wooded Area / Natural Setting",
+      "details": {
+        "first_appearance:": "Page 246",
+        "description:": "",
+        "significance:": ""
+      }
+    },
+    {
+      "name": "Spaceships",
+      "details": {
+        "description:": "",
+        "capabilities:": "",
+        "limitations:": ""
+      }
+    },
+    {
+      "name": "Communication Devices",
+      "details": {
+        "description:": "",
+        "usage:": ""
+      }
+    },
+    {
+      "name": "Navigation Equipment",
+      "details": {
+        "description:": "",
+        "usage:": ""
+      }
+    },
+    {
+      "name": "Control Panels / Consoles",
+      "details": {
+        "description:": "",
+        "usage:": ""
+      }
+    },
+    {
+      "name": "Organizations & Institutions",
+      "details": {
+        "description:": "",
+        "structure:": "",
+        "culture:": ""
+      }
+    },
+    {
+      "name": "Cultural Elements",
+      "details": {
+        "theme:": "\"Everyone has a story\"",
+        "manifestations:": "",
+        "description:": ""
+      }
+    },
+    {
+      "name": "Physical Laws",
+      "details": {}
+    },
+    {
+      "name": "Technological Limitations",
+      "details": {}
+    },
+    {
+      "name": "Environmental Hazards",
+      "details": {}
+    },
+    {
+      "name": "Social Rules",
+      "details": {}
+    },
+    {
+      "name": "Visual Style",
+      "details": {}
+    },
+    {
+      "name": "Color Palettes",
+      "details": {}
+    },
+    {
+      "name": "Mood & Atmosphere",
+      "details": {}
+    }
+  ],
+  "technology": [],
+  "organizations": []
+}

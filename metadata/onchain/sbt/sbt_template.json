@@ -1,0 +1,46 @@
+{
+  "_template_note": "This is the SBT metadata template. For each zodiac badge, the SBT variant uses the SAME image and description as the ERC-1155 counterpart, but adds soulbound-specific fields. Generate individual SBT JSONs by copying the ERC-1155 metadata and adding the fields below.",
+  "_sbt_fields_to_add": {
+    "transferable": false,
+    "revocable": false,
+    "soulbound": true,
+    "credential_type": "Luck-Module Recalibration Proof",
+    "issuer": "Catbotica Industries — Fulfillment Center",
+    "issuer_wallet": "[CATBOTICA_ISSUER_WALLET]"
+  },
+  "_attributes_to_add": [
+    { "trait_type": "Token Standard", "value": "SBT (Soulbound)" },
+    { "trait_type": "Transferable", "value": "No" },
+    { "trait_type": "Credential Type", "value": "Luck-Module Recalibration Proof" },
+    { "trait_type": "Issuer", "value": "Catbotica Industries" }
+  ],
+  "_attributes_to_remove": [
+    "Token Standard: ERC-1155"
+  ],
+  "example_sbt_01_tiger": {
+    "name": "LMRP Recalibration Proof — Tiger (2022)",
+    "description": "Soulbound proof that this unit successfully completed the Luck-Module Recalibration Protocol during the Year of the Tiger cycle (2022, Water). Non-transferable. Bound permanently to the issuing wallet.",
+    "image": "ipfs://[TIGER_IMAGE_CID]",
+    "external_url": "https://catbotica.industries/zodiac/soulbound/tiger",
+    "transferable": false,
+    "revocable": false,
+    "soulbound": true,
+    "credential_type": "Luck-Module Recalibration Proof",
+    "issuer": "Catbotica Industries — Fulfillment Center",
+    "issuer_wallet": "[CATBOTICA_ISSUER_WALLET]",
+    "attributes": [
+      { "trait_type": "Zodiac", "value": "Tiger" },
+      { "trait_type": "Year", "value": "2022" },
+      { "trait_type": "Element", "value": "Water" },
+      { "trait_type": "Cycle Number", "display_type": "number", "value": 1 },
+      { "trait_type": "Frequency Keywords", "value": "Courage, Ambition, Unpredictability" },
+      { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+      { "trait_type": "Token Standard", "value": "SBT (Soulbound)" },
+      { "trait_type": "Transferable", "value": "No" },
+      { "trait_type": "Credential Type", "value": "Luck-Module Recalibration Proof" },
+      { "trait_type": "Issuer", "value": "Catbotica Industries" },
+      { "trait_type": "LMRP Status", "value": "Activated" },
+      { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+    ]
+  }
+}

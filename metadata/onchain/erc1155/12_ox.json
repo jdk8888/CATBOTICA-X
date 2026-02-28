@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #12 — Ox",
+  "description": "Year of the Ox (2033, Water). Endurance, Discipline, Reliability. A cybernetic mechanical ox with twin hydraulic ram horns and a glowing data-link nose torus. Queued for the twelfth and final Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[OX_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/ox",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Ox" },
+    { "trait_type": "Year", "value": "2033" },
+    { "trait_type": "Element", "value": "Water" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 12 },
+    { "trait_type": "Frequency Keywords", "value": "Endurance, Discipline, Reliability" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Deep Ocean and Tide" },
+    { "trait_type": "Key Feature", "value": "Hydraulic ram horns, data-link nose torus" },
+    { "trait_type": "LMRP Status", "value": "Queued" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

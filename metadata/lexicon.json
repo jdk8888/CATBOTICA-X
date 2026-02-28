@@ -1,0 +1,381 @@
+{
+  "terms": [
+    {
+      "term": "Catbotica / CATBOOTICA",
+      "details": {
+        "definition:": "The name of the graphic novel and the central industrial organization",
+        "context:": "Used as title, company name, and location identifier",
+        "origin:": "Fictional organization/company name",
+        "usage:": "",
+        "related_terms:": ""
+      }
+    },
+    {
+      "term": "\"Everyone has a story\"",
+      "details": {
+        "definition:": "Central theme and phrase in the narrative",
+        "context:": "Text appearing in industrial setting (Page 013)",
+        "origin:": "Narrative theme/philosophy",
+        "usage:": "",
+        "related_concepts:": ""
+      }
+    },
+    {
+      "term": "\"Moments of life\"",
+      "details": {
+        "definition:": "Phrase related to the storytelling theme",
+        "context:": "Appears in lower right corner of panel (Page 013)",
+        "origin:": "Narrative theme",
+        "usage:": "Part of larger narrative context emphasizing life's moments as story elements",
+        "related_concepts:": ""
+      }
+    },
+    {
+      "term": "\"Where everything you've imagined can be made real\"",
+      "details": {
+        "definition:": "Tagline/slogan for Catbotica Industries",
+        "context:": "Appears as caption on campus introduction page (Page 010)",
+        "origin:": "Company tagline",
+        "usage:": "Describes the mission/philosophy of Catbotica Industries",
+        "related_concepts:": ""
+      }
+    },
+    {
+      "term": "The Wanderers",
+      "details": {
+        "definition:": "Title of a book/story within the narrative",
+        "context:": "Comic strip or graphic novel page title (Page 044)",
+        "origin:": "Story by Ben Lumley (author name mentioned)",
+        "usage:": "Appears as title on page featuring alien planet exploration",
+        "related_terms:": ""
+      }
+    },
+    {
+      "term": "\"Wild Adventures\"",
+      "details": {
+        "definition:": "Title appearing on jungle expedition page",
+        "context:": "Title at top left corner (Page 150)",
+        "origin:": "Story/section title",
+        "usage:": "Introduces jungle exploration narrative"
+      }
+    },
+    {
+      "term": "\"WHEN THEY FIND YOU IN THE FOREST\"",
+      "details": {
+        "definition:": "Caption text in forest encounter scene",
+        "context:": "Text bubble in forest scene (Page 127)",
+        "origin:": "Narrative caption",
+        "usage:": "Suggests discovery or confrontation scenario"
+      }
+    },
+    {
+      "term": "\"Let's explore the wild!\"",
+      "details": {
+        "definition:": "Dialogue from cat character",
+        "context:": "Cat's speech bubble during jungle expedition (Page 150)",
+        "origin:": "Character dialogue",
+        "usage:": "Expression of adventurous spirit"
+      }
+    },
+    {
+      "term": "\"I've been exploring these parts for years! I can show you all the hidden treasures.\"",
+      "details": {
+        "definition:": "Dialogue from Beetle guide character",
+        "context:": "Beetle's speech bubble (Page 150)",
+        "origin:": "Character dialogue",
+        "usage:": "Establishes Beetle as experienced guide offering assistance"
+      }
+    },
+    {
+      "term": "\"You must be careful around here! There are many dangerous creatures lurking in the shadows.\"",
+      "details": {
+        "definition:": "Warning dialogue from Dragonfly character",
+        "context:": "Dragonfly's speech bubble (Page 150)",
+        "origin:": "Character dialogue",
+        "usage:": "Cautionary warning about jungle dangers"
+      }
+    },
+    {
+      "term": "\"What kind of story do you want to tell?\"",
+      "details": {
+        "definition:": "Dialogue about storytelling",
+        "context:": "Character conversation on beach (Page 020)",
+        "origin:": "Character dialogue",
+        "usage:": "Philosophical question about narrative purpose",
+        "response:": "\"One that makes people remember what they are fighting for\""
+      }
+    },
+    {
+      "term": "\"One that makes people remember what they are fighting for\"",
+      "details": {
+        "definition:": "Response about storytelling purpose",
+        "context:": "Character response on beach (Page 020)",
+        "origin:": "Character dialogue",
+        "usage:": "Defines purpose of storytelling as remembrance and motivation"
+      }
+    },
+    {
+      "term": "\"Did you get your story?\" / \"No, it's not done yet.\"",
+      "details": {
+        "definition:": "Dialogue about story completion",
+        "context:": "Character conversation about drawing/story (Page 020)",
+        "origin:": "Character dialogue",
+        "usage:": "Discussion about creative process and completion"
+      }
+    },
+    {
+      "term": "\"I found something.\"",
+      "details": {
+        "definition:": "Discovery announcement",
+        "context:": "Character dialogue after landing (Page 005)",
+        "origin:": "Character dialogue",
+        "usage:": "Announces discovery or finding"
+      }
+    },
+    {
+      "term": "\"You know the one that says 'if you don't want it to happen again'?\"",
+      "details": {
+        "definition:": "Partial dialogue/question",
+        "context:": "Speech bubble in panel (Page 005)",
+        "origin:": "Character dialogue",
+        "usage:": "References something (context cut off in image)"
+      }
+    },
+    {
+      "term": "\"Welcome to Catbotica Industries.\"",
+      "details": {
+        "definition:": "Greeting/introduction",
+        "context:": "Character dialogue introducing campus (Page 010)",
+        "origin:": "Character dialogue",
+        "usage:": "Official welcome to Catbotica Industries"
+      }
+    },
+    {
+      "term": "\"We have a lot of work ahead of us.\"",
+      "details": {
+        "definition:": "Statement about upcoming work",
+        "context:": "Character dialogue at desk (Page 010)",
+        "origin:": "Character dialogue",
+        "usage:": "Acknowledges workload and preparation"
+      }
+    },
+    {
+      "term": "\"Wow, look at this!\"",
+      "details": {
+        "definition:": "Expression of surprise/excitement",
+        "context:": "Speech bubble during alien planet exploration (Page 044)",
+        "origin:": "Character dialogue",
+        "usage:": "Reaction to discovery"
+      }
+    },
+    {
+      "term": "\"What should we do?\"",
+      "details": {
+        "definition:": "Question seeking advice",
+        "context:": "Character dialogue when cat is injured (Page 075)",
+        "origin:": "Character dialogue",
+        "usage:": "Request for help or guidance",
+        "response:": "\"You can try this...\" (from bird character)"
+      }
+    },
+    {
+      "term": "\"I love you.\"",
+      "details": {
+        "definition:": "Expression of love",
+        "context:": "Dialogue from both cat and human character (Page 121)",
+        "origin:": "Character dialogue",
+        "usage:": "Emotional expression between characters"
+      }
+    },
+    {
+      "term": "\"But I don't know what to do now.\"",
+      "details": {
+        "definition:": "Expression of uncertainty",
+        "context:": "Larger human character dialogue (Page 121)",
+        "origin:": "Character dialogue",
+        "usage:": "Shows character confusion or helplessness"
+      }
+    },
+    {
+      "term": "\"Shouldn't we be looking for him?\"",
+      "details": {
+        "definition:": "Question about search",
+        "context:": "Character dialogue (Page 121)",
+        "origin:": "Character dialogue",
+        "usage:": "Suggests missing person or search scenario"
+      }
+    },
+    {
+      "term": "\"JOHN WENT OUT TO DO SOMETHING\"",
+      "details": {
+        "definition:": "Narrative caption",
+        "context:": "Text caption for John character (Page 125)",
+        "origin:": "Narrative text",
+        "usage:": "Describes character action"
+      }
+    },
+    {
+      "term": "\"JOHN FELL ASLEEP AND MISSED HIS BUS\"",
+      "details": {
+        "definition:": "Narrative caption",
+        "context:": "Text caption for John character (Page 125)",
+        "origin:": "Narrative text",
+        "usage:": "Describes humorous mishap"
+      }
+    },
+    {
+      "term": "\"NO!\"",
+      "details": {
+        "definition:": "Exclamation of refusal/shock",
+        "context:": "Humanoid character dialogue in forest (Page 127)",
+        "origin:": "Character dialogue",
+        "usage:": "Strong reaction or refusal"
+      }
+    },
+    {
+      "term": "\"Look at these fish! Maybe we can catch one for dinner!\"",
+      "details": {
+        "definition:": "Observation and suggestion",
+        "context:": "Cat's dialogue during river crossing (Page 150)",
+        "origin:": "Character dialogue",
+        "usage:": "Notices wildlife and suggests food gathering"
+      }
+    },
+    {
+      "term": "\"Wanna buy a cat?\"",
+      "details": {
+        "definition:": "Offer/question about adoption",
+        "context:": "Humanoid character dialogue (Page 175)",
+        "origin:": "Character dialogue",
+        "usage:": "Offer to sell or give away kitten"
+      }
+    },
+    {
+      "term": "\"If you don't want it, I can give it to someone else.\"",
+      "details": {
+        "definition:": "Statement about alternative",
+        "context:": "Humanoid character dialogue (Page 175)",
+        "origin:": "Character dialogue",
+        "usage:": "Suggests alternative if offer declined"
+      }
+    },
+    {
+      "term": "\"And then the ground shook\"",
+      "details": {
+        "definition:": "Narrative caption",
+        "context:": "Text in cave exploration scene (Page 242)",
+        "origin:": "Narrative text",
+        "usage:": "Describes environmental event"
+      }
+    },
+    {
+      "term": "\"How do you even clean this?\"",
+      "details": {
+        "definition:": "Question about cleaning",
+        "context:": "Character dialogue in cave (Page 242)",
+        "origin:": "Character dialogue",
+        "usage:": "Practical question about situation"
+      }
+    },
+    {
+      "term": "\"THE BELL JUST RANG!\"",
+      "details": {
+        "definition:": "Announcement",
+        "context:": "Speech bubble in school scene (Page 245)",
+        "origin:": "Character dialogue",
+        "usage:": "Indicates school bell ringing"
+      }
+    },
+    {
+      "term": "Onomatopoeia",
+      "details": {
+        "definition:": "Explosion sound",
+        "context:": "Text bubble in action scene (Page 244)",
+        "origin:": "Sound effect",
+        "usage:": "Represents explosion or impact"
+      }
+    },
+    {
+      "term": "Spaceship",
+      "details": {
+        "definition:": "Vehicle for space travel",
+        "context:": "Used throughout space exploration scenes",
+        "origin:": "Science fiction technology",
+        "usage:": "Primary mode of transportation in space"
+      }
+    },
+    {
+      "term": "Meteor",
+      "details": {
+        "definition:": "Space rock that can strike spaceships",
+        "context:": "Causes damage to spaceship (Page 002)",
+        "origin:": "Astronomical term",
+        "usage:": "Hazard in space travel"
+      }
+    },
+    {
+      "term": "Control Panel / Console",
+      "details": {
+        "definition:": "Spaceship operation interface",
+        "context:": "Used by space explorers (Pages 002, 044)",
+        "origin:": "Technical term",
+        "usage:": "Ship operation and navigation"
+      }
+    },
+    {
+      "term": "Communication Device",
+      "details": {
+        "definition:": "Handheld communication equipment",
+        "context:": "Used by space explorers (Page 002)",
+        "origin:": "Technical term",
+        "usage:": "Communication between characters"
+      }
+    },
+    {
+      "term": "Navigation Equipment",
+      "details": {
+        "definition:": "Device for location tracking and navigation",
+        "context:": "Used for understanding location (Pages 002, 044)",
+        "origin:": "Technical term",
+        "usage:": "Navigation and mapping"
+      }
+    },
+    {
+      "term": "The Simpsons",
+      "details": {
+        "definition:": "Reference to animated television show",
+        "context:": "Characters appear in narrative (Page 241)",
+        "origin:": "Popular culture reference",
+        "usage:": "Meta-narrative element, characters include Homer and Marge Simpson",
+        "related_terms:": ""
+      }
+    },
+    {
+      "term": "John",
+      "details": {
+        "definition:": "Recurring character name",
+        "context:": "Slice-of-life character (Page 125)",
+        "origin:": "Character name",
+        "usage:": "Everyday character in relatable scenarios"
+      }
+    },
+    {
+      "term": "Thomas Bloom",
+      "details": {
+        "definition:": "Character name mentioned in final pages",
+        "context:": "Banner text (Page 246)",
+        "origin:": "Character name",
+        "usage:": "Appears in final scene of narrative"
+      }
+    },
+    {
+      "term": "Ben Lumley",
+      "details": {
+        "definition:": "Author name referenced",
+        "context:": "\"The Wanderers\" by Ben Lumley (Page 044)",
+        "origin:": "Author name",
+        "usage:": "Meta-reference to story within story"
+      }
+    }
+  ]
+}

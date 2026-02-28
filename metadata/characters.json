@@ -1,0 +1,319 @@
+[
+  {
+    "name": "Primary Characters",
+    "sections": {}
+  },
+  {
+    "name": "Supporting Characters",
+    "sections": {}
+  },
+  {
+    "name": "Robot Character (Protagonist)",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Humanoid robot with prominent, expressive face",
+        "Black eyes",
+        "Sleek body structure with visible neck joint",
+        "Bipedal (stands on two legs)",
+        "Adorned with colorful patterns: purple stripe along side, pink, blue, and green details",
+        "Stylized, retro-futuristic aesthetic"
+      ],
+      "personality_traits:": [
+        "Expressive and animated",
+        "Central figure in the narrative"
+      ],
+      "character_arc:": [
+        "Appears on cover as the central character",
+        "Likely the protagonist of the Catbotica narrative"
+      ],
+      "relationships:": [
+        "Central to the Catbotica Industries setting"
+      ],
+      "key_events:": [
+        "Featured prominently on cover art (Page 001)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Anthropomorphic Cat Character",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Anthropomorphic cat",
+        "Eyes can be closed (relaxation/sleep state)",
+        "White variant appears in some scenes"
+      ],
+      "personality_traits:": [
+        "Can appear relaxed or sleeping",
+        "Part of industrial/workshop environments",
+        "Appears in various emotional states (contemplative, curious, distressed)"
+      ],
+      "character_arc:": [
+        "Appears throughout narrative in various contexts",
+        "Part of \"Everyone has a story\" theme (Page 013)",
+        "Involved in jungle expeditions (Page 150)",
+        "Appears in domestic/emotional scenes (Page 121)"
+      ],
+      "relationships:": [
+        "Interacts with dog character",
+        "Appears with human characters",
+        "Part of group expeditions"
+      ],
+      "key_events:": [
+        "Industrial setting introduction (Page 013)",
+        "Jungle exploration expedition (Page 150)",
+        "Emotional interactions (Page 121)",
+        "Cave exploration (Page 242)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Anthropomorphic Dog Character",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Anthropomorphic dog",
+        "Appears in motion, running",
+        "Mouth open as if speaking"
+      ],
+      "personality_traits:": [
+        "Active and energetic",
+        "Communicative"
+      ],
+      "character_arc:": [
+        "Appears in industrial settings",
+        "Interacts with cat character"
+      ],
+      "relationships:": [
+        "Companion to cat character",
+        "Part of character group in industrial environment"
+      ],
+      "key_events:": [
+        "Industrial setting introduction (Page 013)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Humanoid Space Explorer",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Humanoid figure",
+        "Wears spacesuit in some appearances",
+        "Contemplative expressions",
+        "Holds communication devices and navigation equipment"
+      ],
+      "personality_traits:": [
+        "Contemplative and concerned",
+        "Problem-solving oriented",
+        "Reacts to unexpected situations with shock or curiosity"
+      ],
+      "character_arc:": [
+        "Involved in spaceship meteor strike incident (Page 002)",
+        "Explores alien environments (Page 044)",
+        "Interacts with alien creatures"
+      ],
+      "relationships:": [
+        "Works with other space explorers",
+        "Encounters alien entities"
+      ],
+      "key_events:": [
+        "Spaceship meteor strike aftermath (Page 002)",
+        "Alien planet exploration (Page 044)",
+        "Space debris scenes (Page 230)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "John",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Human character",
+        "Drawn in simplistic comic strip style"
+      ],
+      "personality_traits:": [
+        "Relatable, everyday character",
+        "Prone to humorous mishaps"
+      ],
+      "character_arc:": [
+        "Appears in slice-of-life scenarios",
+        "Misses bus due to falling asleep (Page 125)"
+      ],
+      "key_events:": [
+        "Goes out to do something (Page 125)",
+        "Falls asleep and misses bus (Page 125)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Alien Octopus Creature",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Octopus-like entity",
+        "Multiple tentacles spread out",
+        "Appears to be reaching or interacting with environment"
+      ],
+      "personality_traits:": [
+        "Unknown (appears in exploration context)"
+      ],
+      "character_arc:": [
+        "Encountered during alien planet exploration"
+      ],
+      "relationships:": [
+        "Encountered by space explorers"
+      ],
+      "key_events:": [
+        "Discovered on alien planet (Page 044)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Beetle Guide",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Large insect resembling a beetle",
+        "Larger than both cat and other insects"
+      ],
+      "personality_traits:": [
+        "Experienced explorer",
+        "Helpful and guiding",
+        "Knowledgeable about jungle terrain"
+      ],
+      "character_arc:": [
+        "Guides cat and insects through jungle",
+        "Offers to show hidden treasures"
+      ],
+      "relationships:": [
+        "Guide to cat and insect expedition group"
+      ],
+      "key_events:": [
+        "Introduces self as experienced explorer (Page 150)",
+        "Offers to guide group through jungle (Page 150)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Dragonfly Character",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Large dragonfly creature"
+      ],
+      "personality_traits:": [
+        "Cautious and warning-oriented",
+        "Protective"
+      ],
+      "character_arc:": [
+        "Warns expedition group about dangers"
+      ],
+      "relationships:": [
+        "Part of jungle expedition narrative"
+      ],
+      "key_events:": [
+        "Warns about dangerous creatures in jungle (Page 150)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Thomas Bloom",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Character mentioned in banner text",
+        "Appears in wooded/outdoor setting",
+        "Engaged in conversation"
+      ],
+      "personality_traits:": [
+        "Unknown (appears in contemplative scene)"
+      ],
+      "character_arc:": [
+        "Appears in final pages of narrative",
+        "Part of serious/contemplative scene"
+      ],
+      "key_events:": [
+        "Mentioned in banner (Page 246)",
+        "Appears in wooded area conversation (Page 246)",
+        "---"
+      ]
+    }
+  },
+  {
+    "name": "Character with Cowboy Hat",
+    "sections": {
+      "first_appearance:": [],
+      "physical_appearance:": [
+        "Wears cowboy hat",
+        "Human character",
+        "Appears distressed or confused"
+      ],
+      "personality_traits:": [
+        "Reacts strongly to situations",
+        "Yelling or reacting with intensity"
+      ],
+      "character_arc:": [
+        "Appears during alien planet exploration"
+      ],
+      "key_events:": [
+        "Reacts to alien environment (Page 044)",
+        "---",
+        "## Character Types & Categories"
+      ]
+    }
+  },
+  {
+    "name": "Robots & Androids",
+    "sections": {}
+  },
+  {
+    "name": "Anthropomorphic Animals",
+    "sections": {}
+  },
+  {
+    "name": "Human Characters",
+    "sections": {}
+  },
+  {
+    "name": "Alien Creatures",
+    "sections": {}
+  },
+  {
+    "name": "Mythical Creatures",
+    "sections": {}
+  },
+  {
+    "name": "Industrial Setting Group",
+    "sections": {}
+  },
+  {
+    "name": "Space Exploration Team",
+    "sections": {}
+  },
+  {
+    "name": "Jungle Expedition Group",
+    "sections": {}
+  },
+  {
+    "name": "Domestic/Emotional Groups",
+    "sections": {}
+  },
+  {
+    "name": "Themes",
+    "sections": {}
+  },
+  {
+    "name": "Narrative Functions",
+    "sections": {}
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "name": "Catbotica: The Celestial Cat-Circuit — Zodiac Badge Collection",
+  "description": "The full Zodiac Vault — twelve zodiac-frequency calibration templates pre-loaded into every Catbotica unit's firmware at the founding of Catbotica Industries. Each annual Luck-Module Recalibration Protocol (LMRP) cycle activates the corresponding zodiac badge, unlocking it for eligible units. Collect all twelve to complete the Celestial Cat-Circuit.",
+  "image": "ipfs://[COLLECTION_IMAGE_CID]",
+  "external_link": "https://catbotica.industries/zodiac",
+  "seller_fee_basis_points": 750,
+  "fee_recipient": "[TREASURY_WALLET_ADDRESS]",
+  "lore_anchor": "LS-CATBOTICA-ANCHOR-012",
+  "collection_launch": "2022-01-01",
+  "total_badges": 12,
+  "token_standard": "ERC-1155"
+}

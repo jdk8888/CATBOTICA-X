@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #10 — Pig",
+  "description": "Year of the Pig (2031, Metal). Generosity, Abundance, Determination. A cybernetic mechanical pig with dual intake vent snout and a coiled power conduit tail. Queued for the tenth Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[PIG_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/pig",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Pig" },
+    { "trait_type": "Year", "value": "2031" },
+    { "trait_type": "Element", "value": "Metal" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 10 },
+    { "trait_type": "Frequency Keywords", "value": "Generosity, Abundance, Determination" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Hammered Bronze and Gilt" },
+    { "trait_type": "Key Feature", "value": "Intake vent snout, coiled power conduit tail" },
+    { "trait_type": "LMRP Status", "value": "Queued" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

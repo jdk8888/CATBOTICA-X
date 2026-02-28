@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #04 — Snake",
+  "description": "Year of the Snake (2025, Wood). Wisdom, Stealth, Transformation. A cybernetic mechanical snake with interlocking segmented rings and a hooded cobra head with LED sensor eyes. Issued during the fourth Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[SNAKE_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/snake",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Snake" },
+    { "trait_type": "Year", "value": "2025" },
+    { "trait_type": "Element", "value": "Wood" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 4 },
+    { "trait_type": "Frequency Keywords", "value": "Wisdom, Stealth, Transformation" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Leaf and Tendril" },
+    { "trait_type": "Key Feature", "value": "Segmented ring body, forked antenna tongue" },
+    { "trait_type": "LMRP Status", "value": "Activated" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

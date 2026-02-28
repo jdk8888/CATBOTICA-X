@@ -1,0 +1,23 @@
+{
+  "name": "Catbotica Zodiac Badge #05 — Horse ★ Active",
+  "description": "Year of the Horse (2026, Fire). Speed, Courage, Forward Momentum. A cybernetic mechanical horse with fiber-optic cable mane and hydraulic leg pistons in a rearing dynamic pose. The currently active LMRP cycle badge. Master reference for The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[HORSE_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/horse",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Horse" },
+    { "trait_type": "Year", "value": "2026" },
+    { "trait_type": "Element", "value": "Fire" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 5 },
+    { "trait_type": "Frequency Keywords", "value": "Speed, Courage, Forward Momentum" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Flame and Spark" },
+    { "trait_type": "Key Feature", "value": "Fiber-optic cable mane, hydraulic leg pistons" },
+    { "trait_type": "LMRP Status", "value": "Active (Current)" },
+    { "trait_type": "Master Badge", "value": "Yes" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

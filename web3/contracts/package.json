@@ -1,0 +1,33 @@
+{
+  "name": "@catbotica/smart-contracts",
+  "version": "1.0.0",
+  "description": "Catbotica Celestial Cat-Circuit — ERC-1155 Zodiac Badges + Soulbound Recalibration Proofs",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "deploy:erc1155:local": "hardhat run scripts/deploy-erc1155.ts --network hardhat",
+    "deploy:erc1155:testnet": "hardhat run scripts/deploy-erc1155.ts --network baseSepolia",
+    "deploy:erc1155:mainnet": "hardhat run scripts/deploy-erc1155.ts --network base",
+    "deploy:sbt:local": "hardhat run scripts/deploy-sbt.ts --network hardhat",
+    "deploy:sbt:testnet": "hardhat run scripts/deploy-sbt.ts --network baseSepolia",
+    "deploy:sbt:mainnet": "hardhat run scripts/deploy-sbt.ts --network base",
+    "deploy:all:local": "hardhat run scripts/deploy-all.ts --network hardhat",
+    "deploy:all:testnet": "hardhat run scripts/deploy-all.ts --network baseSepolia",
+    "deploy:all:mainnet": "hardhat run scripts/deploy-all.ts --network base",
+    "verify": "hardhat run scripts/verify.ts",
+    "clean": "hardhat clean",
+    "node": "hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.1.0",
+    "dotenv": "^16.4.7",
+    "hardhat": "^2.22.0",
+    "hardhat-gas-reporter": "^1.0.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

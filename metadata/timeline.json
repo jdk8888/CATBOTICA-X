@@ -1,0 +1,235 @@
+{
+  "events": [
+    {
+      "page": 1,
+      "title": "Page 001: Cover / Introduction",
+      "details": {
+        "event:": "Cover art featuring robot protagonist",
+        "characters_involved:": "Robot Character (protagonist)",
+        "location:": "Cover/Title page",
+        "significance:": "Introduction to Catbotica graphic novel, establishes main character",
+        "details:": "Stylized, vibrant illustration with retro-futuristic aesthetic. Robot character prominently featured with colorful patterns."
+      }
+    },
+    {
+      "page": 2,
+      "title": "Page 002: Spaceship Meteor Strike",
+      "details": {
+        "event:": "Spaceship struck by meteor in space",
+        "characters_involved:": "Humanoid space explorer",
+        "location:": "Outer space, spaceship interior",
+        "significance:": "Inciting incident for space exploration narrative",
+        "details:": ""
+      }
+    },
+    {
+      "page": 5,
+      "title": "Page 005: Character Landing / Discovery",
+      "details": {
+        "event:": "Character flies/lands, crowd observes, character finds something",
+        "characters_involved:": "Flying character, crowd of people",
+        "location:": "Open-air setting, clear blue sky",
+        "significance:": "Discovery or arrival moment",
+        "details:": ""
+      }
+    },
+    {
+      "page": 10,
+      "title": "Page 010: Catbotica Industries Introduction",
+      "details": {
+        "event:": "Welcome to Catbotica Industries campus",
+        "characters_involved:": "Character giving tour",
+        "location:": "Catbotica Industries Campus",
+        "significance:": "Introduction to central location",
+        "details:": ""
+      }
+    },
+    {
+      "page": 13,
+      "title": "Page 013: \"Everyone Has a Story\"",
+      "details": {
+        "event:": "Industrial setting introduction with character interactions",
+        "characters_involved:": "Anthropomorphic cat and dog characters",
+        "location:": "Industrial/workshop environment, Catbotica Industries",
+        "significance:": "Establishes theme of individual narratives",
+        "details:": ""
+      }
+    },
+    {
+      "page": 20,
+      "title": "Page 020: Beach Storytelling Scene",
+      "details": {
+        "event:": "Characters on beach discuss storytelling and create art",
+        "characters_involved:": "Two characters (short hair, casual clothing)",
+        "location:": "Beach during sunset",
+        "significance:": "Explores theme of storytelling and remembrance",
+        "details:": ""
+      }
+    },
+    {
+      "page": 44,
+      "title": "Page 044: Alien Planet Exploration / \"The Wanderers\"",
+      "details": {
+        "event:": "Space explorers discover alien planet with octopus creature",
+        "characters_involved:": "Man in spacesuit, characters in distress, character with cowboy hat, alien octopus creature",
+        "location:": "Alien planet",
+        "significance:": "First contact scenario, exploration narrative",
+        "details:": ""
+      }
+    },
+    {
+      "page": 50,
+      "title": "Page 050: City Day to Night Transition",
+      "details": {
+        "event:": "Urban environment shown transitioning from day to night",
+        "characters_involved:": "Solitary figure on highway",
+        "location:": "City streets, highway",
+        "significance:": "Passage of time, urban setting",
+        "details:": ""
+      }
+    },
+    {
+      "page": 75,
+      "title": "Page 075: Injured Cat Scene",
+      "details": {
+        "event:": "Cat character injured, characters seek help",
+        "characters_involved:": "Human character, anthropomorphic cat, anthropomorphic dog, bird characters",
+        "location:": "Outdoor environment with machinery/equipment",
+        "significance:": "Character care and assistance",
+        "details:": ""
+      }
+    },
+    {
+      "page": 100,
+      "title": "Page 100: Domestic Emotional Scenes",
+      "details": {
+        "event:": "Series of emotional interactions in domestic setting",
+        "characters_involved:": "Multiple human and animal characters",
+        "location:": "Indoor/domestic setting",
+        "significance:": "Character relationships and emotions",
+        "details:": ""
+      }
+    },
+    {
+      "page": 121,
+      "title": "Page 121: \"I Love You\" Scene",
+      "details": {
+        "event:": "Emotional interaction between characters",
+        "characters_involved:": "Cat with large ears, human child/teenager, larger human, parent/guardian, various animals",
+        "location:": "Room with chair, door, table, window",
+        "significance:": "Expression of love and concern",
+        "details:": ""
+      }
+    },
+    {
+      "page": 125,
+      "title": "Page 125: John Misses Bus",
+      "details": {
+        "event:": "John goes out, falls asleep, misses bus",
+        "characters_involved:": "John",
+        "location:": "Outside building (residential or public)",
+        "significance:": "Slice-of-life humorous scenario",
+        "details:": ""
+      }
+    },
+    {
+      "page": 127,
+      "title": "Page 127: Forest Encounter",
+      "details": {
+        "event:": "Humanoid character encounters mythical bird creature in forest",
+        "characters_involved:": "Humanoid figure (male), mythical bird creature with wings",
+        "location:": "Forest with tall trees, clearing/pathway",
+        "significance:": "Discovery or confrontation in natural setting",
+        "details:": ""
+      }
+    },
+    {
+      "page": 150,
+      "title": "Page 150: Jungle Expedition",
+      "details": {
+        "event:": "Cat leads expedition with insects through jungle",
+        "characters_involved:": "Cat, group of insects, large beetle, dragonfly",
+        "location:": "Jungle environment",
+        "significance:": "Adventure and exploration narrative",
+        "details:": ""
+      }
+    },
+    {
+      "page": 175,
+      "title": "Page 175: Kitten Adoption Scene",
+      "details": {
+        "event:": "Discussion about adopting a kitten",
+        "characters_involved:": "Animated kitten, humanoid character",
+        "location:": "Outdoor setting, cloudy day",
+        "significance:": "Care and responsibility theme",
+        "details:": ""
+      }
+    },
+    {
+      "page": 200,
+      "title": "Page 200: Space Suit Action Scene",
+      "details": {
+        "event:": "Characters in space suits, one flying with electric spark effect",
+        "characters_involved:": "Two characters in space suits",
+        "location:": "Otherworldly environment, gray rocky ground",
+        "significance:": "Action/adventure in space setting",
+        "details:": ""
+      }
+    },
+    {
+      "page": 230,
+      "title": "Page 230: Space Debris Aftermath",
+      "details": {
+        "event:": "Debris scattered in space, aftermath of struggle",
+        "characters_involved:": "None visible",
+        "location:": "Dark, starry space",
+        "significance:": "Aftermath of space conflict or accident",
+        "details:": ""
+      }
+    },
+    {
+      "page": 241,
+      "title": "Page 241: Simpsons Reference Scene",
+      "details": {
+        "event:": "Characters from \"The Simpsons\" appear in narrative",
+        "characters_involved:": "Homer Simpson, Marge Simpson, two children",
+        "location:": "Indoor/home environment",
+        "significance:": "Meta-narrative or reference",
+        "details:": ""
+      }
+    },
+    {
+      "page": 242,
+      "title": "Page 242: Cave Exploration",
+      "details": {
+        "event:": "Characters explore cave with glowing rocks",
+        "characters_involved:": "Person, cat, group of cats",
+        "location:": "Cave/underground environment",
+        "significance:": "Exploration and discovery",
+        "details:": ""
+      }
+    },
+    {
+      "page": 245,
+      "title": "Page 245: School Bell Scene",
+      "details": {
+        "event:": "School setting with bell ringing",
+        "characters_involved:": "Child character, students, character running away",
+        "location:": "School building",
+        "significance:": "Educational/school life moment",
+        "details:": ""
+      }
+    },
+    {
+      "page": 246,
+      "title": "Page 246: Final Scene - Thomas Bloom",
+      "details": {
+        "event:": "Contemplative scene in wooded area",
+        "characters_involved:": "Three characters in conversation (Thomas Bloom mentioned)",
+        "location:": "Wooded area with trees and foliage",
+        "significance:": "Final scene of narrative",
+        "details:": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "_meta": {
+    "title": "Catbotica Zodiac Badge — PuLID FLUX Workflow",
+    "description": "Generates consistent zodiac badges using FLUX 1 Dev FP8 + PuLID for identity-preserving cross-badge consistency. Generate the Horse (Master Badge) first with PuLID disabled, then enable PuLID and feed the Horse as reference for all 11 remaining badges.",
+    "author": "Lore Sanctum / BeyondVerse Studio",
+    "version": "2.0",
+    "lore_anchor": "LS-CATBOTICA-ANCHOR-012",
+    "usage_notes": [
+      "STEP 1: Set node 6 (CLIPTextEncodeFlux) prompts to the Horse prompt from zodiac_badge_prompts.md",
+      "STEP 2: Run the workflow WITHOUT PuLID nodes (remove nodes 10,11,12,15,20) to generate the Master Badge",
+      "STEP 3: Save the Master Badge output as 'master_badge_horse.png' in ComfyUI/input/",
+      "STEP 4: Add PuLID nodes back, load master_badge_horse.png in node 15 (LoadImage)",
+      "STEP 5: Swap the positive prompt to each zodiac in turn, generate all 11 remaining badges",
+      "STEP 6: For transparent background variants, add an alpha-matting/bg-removal node after node 8 (VAEDecode)",
+      "NOTE: FLUX uses CLIPTextEncodeFlux (dual clip_l + t5xxl) and cfg=1.0 with internal guidance=3.5"
+    ]
+  },
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "flux1-dev-fp8.safetensors"
+    },
+    "_meta": {
+      "title": "Load FLUX 1 Dev FP8 Checkpoint"
+    }
+  },
+  "4": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Empty Latent (1024x1024 Square)"
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncodeFlux",
+    "inputs": {
+      "clip": ["1", 1],
+      "clip_l": "Cybernetic mechanical horse badge, retro-futuristic enamel pin, Electric Cyan circuitry, Imperial Red and Gold filigree, Carbon Fiber Black base, digital collectible",
+      "t5xxl": "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. A cybernetic mechanical HORSE constructed from hard-surface metallic plates, copper wiring, circuit traces, and LED optical sensors. Rearing dynamic pose, pistons and hydraulic joints visible at legs and neck, mane rendered as a cascade of fiber-optic cables glowing Electric Cyan #00F2FF, armored chest plate with exposed circuitry. The badge frame features Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs representing Fire element — flame and spark motifs in the filigree. A Gold glowing Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. Centered, symmetrical, isolated on solid black background, ultra-fine technical detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible.",
+      "guidance": 3.5
+    },
+    "_meta": {
+      "title": "Positive Prompt (FLUX Dual Encoder) — SWAP PER ZODIAC"
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncodeFlux",
+    "inputs": {
+      "clip": ["1", 1],
+      "clip_l": "",
+      "t5xxl": "fur, hair, feathers, organic skin, organic eyes, realistic animal, photograph, soft textures, watercolor, oil painting, blurry, low quality, text, typography, words, letters, numbers, human face, human body, environmental background, landscape, scenery, multiple objects, cluttered, asymmetrical, cartoon, chibi, anime, sketch, pencil drawing, crayon",
+      "guidance": 3.5
+    },
+    "_meta": {
+      "title": "Negative Prompt (FLUX Dual Encoder) — DO NOT CHANGE"
+    }
+  },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["20", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["4", 0],
+      "seed": 42,
+      "steps": 28,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+    },
+    "_meta": {
+      "title": "KSampler (28 steps, CFG 1.0 — FLUX uses internal guidance)"
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["1", 2]
+    },
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["8", 0],
+      "filename_prefix": "catbotica_zodiac/horse"
+    },
+    "_meta": {
+      "title": "Save Image — UPDATE filename_prefix per zodiac"
+    }
+  },
+  "10": {
+    "class_type": "PulidFluxModelLoader",
+    "inputs": {
+      "pulid_file": "pulid_flux_v0.9.1.safetensors"
+    },
+    "_meta": {
+      "title": "Load PuLID FLUX Model"
+    }
+  },
+  "11": {
+    "class_type": "PulidFluxInsightFaceLoader",
+    "inputs": {
+      "provider": "CUDA"
+    },
+    "_meta": {
+      "title": "Load InsightFace (CUDA)"
+    }
+  },
+  "12": {
+    "class_type": "PulidFluxEvaClipLoader",
+    "inputs": {},
+    "_meta": {
+      "title": "Load EVA CLIP"
+    }
+  },
+  "15": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "master_badge_horse.png"
+    },
+    "_meta": {
+      "title": "Reference Image — Master Badge (Horse)"
+    }
+  },
+  "20": {
+    "class_type": "ApplyPulidFlux",
+    "inputs": {
+      "model": ["1", 0],
+      "pulid_flux": ["10", 0],
+      "eva_clip": ["12", 0],
+      "face_analysis": ["11", 0],
+      "image": ["15", 0],
+      "weight": 0.7,
+      "start_at": 0.0,
+      "end_at": 0.85
+    },
+    "_meta": {
+      "title": "Apply PuLID FLUX — Consistency Engine (weight 0.7, end_at 0.85)"
+    }
+  }
+}

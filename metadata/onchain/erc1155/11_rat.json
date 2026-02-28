@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #11 — Rat",
+  "description": "Year of the Rat (2032, Water). Resourcefulness, Adaptability, Wit. A cybernetic mechanical rat with micro-servo linked tail and fiber-optic whisker probes. Queued for the eleventh Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[RAT_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/rat",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Rat" },
+    { "trait_type": "Year", "value": "2032" },
+    { "trait_type": "Element", "value": "Water" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 11 },
+    { "trait_type": "Frequency Keywords", "value": "Resourcefulness, Adaptability, Wit" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Ripple and Current" },
+    { "trait_type": "Key Feature", "value": "Micro-servo linked tail, fiber-optic whisker probes" },
+    { "trait_type": "LMRP Status", "value": "Queued" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

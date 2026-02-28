@@ -1,0 +1,1171 @@
+{
+  "characters": [
+    {
+      "name": "Primary Characters",
+      "sections": {}
+    },
+    {
+      "name": "Supporting Characters",
+      "sections": {}
+    },
+    {
+      "name": "Robot Character (Protagonist)",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Humanoid robot with prominent, expressive face",
+          "Black eyes",
+          "Sleek body structure with visible neck joint",
+          "Bipedal (stands on two legs)",
+          "Adorned with colorful patterns: purple stripe along side, pink, blue, and green details",
+          "Stylized, retro-futuristic aesthetic"
+        ],
+        "personality_traits:": [
+          "Expressive and animated",
+          "Central figure in the narrative"
+        ],
+        "character_arc:": [
+          "Appears on cover as the central character",
+          "Likely the protagonist of the Catbotica narrative"
+        ],
+        "relationships:": [
+          "Central to the Catbotica Industries setting"
+        ],
+        "key_events:": [
+          "Featured prominently on cover art (Page 001)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Anthropomorphic Cat Character",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Anthropomorphic cat",
+          "Eyes can be closed (relaxation/sleep state)",
+          "White variant appears in some scenes"
+        ],
+        "personality_traits:": [
+          "Can appear relaxed or sleeping",
+          "Part of industrial/workshop environments",
+          "Appears in various emotional states (contemplative, curious, distressed)"
+        ],
+        "character_arc:": [
+          "Appears throughout narrative in various contexts",
+          "Part of \"Everyone has a story\" theme (Page 013)",
+          "Involved in jungle expeditions (Page 150)",
+          "Appears in domestic/emotional scenes (Page 121)"
+        ],
+        "relationships:": [
+          "Interacts with dog character",
+          "Appears with human characters",
+          "Part of group expeditions"
+        ],
+        "key_events:": [
+          "Industrial setting introduction (Page 013)",
+          "Jungle exploration expedition (Page 150)",
+          "Emotional interactions (Page 121)",
+          "Cave exploration (Page 242)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Anthropomorphic Dog Character",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Anthropomorphic dog",
+          "Appears in motion, running",
+          "Mouth open as if speaking"
+        ],
+        "personality_traits:": [
+          "Active and energetic",
+          "Communicative"
+        ],
+        "character_arc:": [
+          "Appears in industrial settings",
+          "Interacts with cat character"
+        ],
+        "relationships:": [
+          "Companion to cat character",
+          "Part of character group in industrial environment"
+        ],
+        "key_events:": [
+          "Industrial setting introduction (Page 013)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Humanoid Space Explorer",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Humanoid figure",
+          "Wears spacesuit in some appearances",
+          "Contemplative expressions",
+          "Holds communication devices and navigation equipment"
+        ],
+        "personality_traits:": [
+          "Contemplative and concerned",
+          "Problem-solving oriented",
+          "Reacts to unexpected situations with shock or curiosity"
+        ],
+        "character_arc:": [
+          "Involved in spaceship meteor strike incident (Page 002)",
+          "Explores alien environments (Page 044)",
+          "Interacts with alien creatures"
+        ],
+        "relationships:": [
+          "Works with other space explorers",
+          "Encounters alien entities"
+        ],
+        "key_events:": [
+          "Spaceship meteor strike aftermath (Page 002)",
+          "Alien planet exploration (Page 044)",
+          "Space debris scenes (Page 230)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "John",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Human character",
+          "Drawn in simplistic comic strip style"
+        ],
+        "personality_traits:": [
+          "Relatable, everyday character",
+          "Prone to humorous mishaps"
+        ],
+        "character_arc:": [
+          "Appears in slice-of-life scenarios",
+          "Misses bus due to falling asleep (Page 125)"
+        ],
+        "key_events:": [
+          "Goes out to do something (Page 125)",
+          "Falls asleep and misses bus (Page 125)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Alien Octopus Creature",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Octopus-like entity",
+          "Multiple tentacles spread out",
+          "Appears to be reaching or interacting with environment"
+        ],
+        "personality_traits:": [
+          "Unknown (appears in exploration context)"
+        ],
+        "character_arc:": [
+          "Encountered during alien planet exploration"
+        ],
+        "relationships:": [
+          "Encountered by space explorers"
+        ],
+        "key_events:": [
+          "Discovered on alien planet (Page 044)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Beetle Guide",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Large insect resembling a beetle",
+          "Larger than both cat and other insects"
+        ],
+        "personality_traits:": [
+          "Experienced explorer",
+          "Helpful and guiding",
+          "Knowledgeable about jungle terrain"
+        ],
+        "character_arc:": [
+          "Guides cat and insects through jungle",
+          "Offers to show hidden treasures"
+        ],
+        "relationships:": [
+          "Guide to cat and insect expedition group"
+        ],
+        "key_events:": [
+          "Introduces self as experienced explorer (Page 150)",
+          "Offers to guide group through jungle (Page 150)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Dragonfly Character",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Large dragonfly creature"
+        ],
+        "personality_traits:": [
+          "Cautious and warning-oriented",
+          "Protective"
+        ],
+        "character_arc:": [
+          "Warns expedition group about dangers"
+        ],
+        "relationships:": [
+          "Part of jungle expedition narrative"
+        ],
+        "key_events:": [
+          "Warns about dangerous creatures in jungle (Page 150)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Thomas Bloom",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Character mentioned in banner text",
+          "Appears in wooded/outdoor setting",
+          "Engaged in conversation"
+        ],
+        "personality_traits:": [
+          "Unknown (appears in contemplative scene)"
+        ],
+        "character_arc:": [
+          "Appears in final pages of narrative",
+          "Part of serious/contemplative scene"
+        ],
+        "key_events:": [
+          "Mentioned in banner (Page 246)",
+          "Appears in wooded area conversation (Page 246)",
+          "---"
+        ]
+      }
+    },
+    {
+      "name": "Character with Cowboy Hat",
+      "sections": {
+        "first_appearance:": [],
+        "physical_appearance:": [
+          "Wears cowboy hat",
+          "Human character",
+          "Appears distressed or confused"
+        ],
+        "personality_traits:": [
+          "Reacts strongly to situations",
+          "Yelling or reacting with intensity"
+        ],
+        "character_arc:": [
+          "Appears during alien planet exploration"
+        ],
+        "key_events:": [
+          "Reacts to alien environment (Page 044)",
+          "---",
+          "## Character Types & Categories"
+        ]
+      }
+    },
+    {
+      "name": "Robots & Androids",
+      "sections": {}
+    },
+    {
+      "name": "Anthropomorphic Animals",
+      "sections": {}
+    },
+    {
+      "name": "Human Characters",
+      "sections": {}
+    },
+    {
+      "name": "Alien Creatures",
+      "sections": {}
+    },
+    {
+      "name": "Mythical Creatures",
+      "sections": {}
+    },
+    {
+      "name": "Industrial Setting Group",
+      "sections": {}
+    },
+    {
+      "name": "Space Exploration Team",
+      "sections": {}
+    },
+    {
+      "name": "Jungle Expedition Group",
+      "sections": {}
+    },
+    {
+      "name": "Domestic/Emotional Groups",
+      "sections": {}
+    },
+    {
+      "name": "Themes",
+      "sections": {}
+    },
+    {
+      "name": "Narrative Functions",
+      "sections": {}
+    }
+  ],
+  "worldbuilding": {
+    "locations": [
+      {
+        "name": "Catbotica Industries / Campus",
+        "details": {
+          "first_mention:": "Page 010, Page 013",
+          "description:": "",
+          "significance:": "",
+          "key_features:": ""
+        }
+      },
+      {
+        "name": "Space / Outer Space",
+        "details": {
+          "first_mention:": "Page 002",
+          "description:": "",
+          "significance:": "",
+          "key_features:": ""
+        }
+      },
+      {
+        "name": "Spaceship Interior",
+        "details": {
+          "first_mention:": "Page 002",
+          "description:": "",
+          "significance:": ""
+        }
+      },
+      {
+        "name": "Alien Planet",
+        "details": {
+          "first_appearance:": "Page 044",
+          "description:": "",
+          "significance:": "",
+          "key_features:": ""
+        }
+      },
+      {
+        "name": "City / Urban Environment",
+        "details": {
+          "first_mention:": "Page 050",
+          "description:": "",
+          "significance:": "",
+          "key_features:": ""
+        }
+      },
+      {
+        "name": "Jungle / Forest",
+        "details": {
+          "first_appearance:": "Page 127, Page 150",
+          "description:": "",
+          "significance:": "",
+          "key_features:": ""
+        }
+      },
+      {
+        "name": "Beach",
+        "details": {
+          "first_appearance:": "Page 020",
+          "description:": "",
+          "significance:": ""
+        }
+      },
+      {
+        "name": "Cave / Underground",
+        "details": {
+          "first_appearance:": "Page 242",
+          "description:": "",
+          "significance:": ""
+        }
+      },
+      {
+        "name": "Domestic / Residential Settings",
+        "details": {
+          "first_appearance:": "Multiple pages",
+          "description:": "",
+          "significance:": ""
+        }
+      },
+      {
+        "name": "School / Educational Setting",
+        "details": {
+          "first_appearance:": "Page 245",
+          "description:": "",
+          "significance:": ""
+        }
+      },
+      {
+        "name": "Wooded Area / Natural Setting",
+        "details": {
+          "first_appearance:": "Page 246",
+          "description:": "",
+          "significance:": ""
+        }
+      },
+      {
+        "name": "Spaceships",
+        "details": {
+          "description:": "",
+          "capabilities:": "",
+          "limitations:": ""
+        }
+      },
+      {
+        "name": "Communication Devices",
+        "details": {
+          "description:": "",
+          "usage:": ""
+        }
+      },
+      {
+        "name": "Navigation Equipment",
+        "details": {
+          "description:": "",
+          "usage:": ""
+        }
+      },
+      {
+        "name": "Control Panels / Consoles",
+        "details": {
+          "description:": "",
+          "usage:": ""
+        }
+      },
+      {
+        "name": "Organizations & Institutions",
+        "details": {
+          "description:": "",
+          "structure:": "",
+          "culture:": ""
+        }
+      },
+      {
+        "name": "Cultural Elements",
+        "details": {
+          "theme:": "\"Everyone has a story\"",
+          "manifestations:": "",
+          "description:": ""
+        }
+      },
+      {
+        "name": "Physical Laws",
+        "details": {}
+      },
+      {
+        "name": "Technological Limitations",
+        "details": {}
+      },
+      {
+        "name": "Environmental Hazards",
+        "details": {}
+      },
+      {
+        "name": "Social Rules",
+        "details": {}
+      },
+      {
+        "name": "Visual Style",
+        "details": {}
+      },
+      {
+        "name": "Color Palettes",
+        "details": {}
+      },
+      {
+        "name": "Mood & Atmosphere",
+        "details": {}
+      }
+    ],
+    "technology": [],
+    "organizations": []
+  },
+  "timeline": {
+    "events": [
+      {
+        "page": 1,
+        "title": "Page 001: Cover / Introduction",
+        "details": {
+          "event:": "Cover art featuring robot protagonist",
+          "characters_involved:": "Robot Character (protagonist)",
+          "location:": "Cover/Title page",
+          "significance:": "Introduction to Catbotica graphic novel, establishes main character",
+          "details:": "Stylized, vibrant illustration with retro-futuristic aesthetic. Robot character prominently featured with colorful patterns."
+        }
+      },
+      {
+        "page": 2,
+        "title": "Page 002: Spaceship Meteor Strike",
+        "details": {
+          "event:": "Spaceship struck by meteor in space",
+          "characters_involved:": "Humanoid space explorer",
+          "location:": "Outer space, spaceship interior",
+          "significance:": "Inciting incident for space exploration narrative",
+          "details:": ""
+        }
+      },
+      {
+        "page": 5,
+        "title": "Page 005: Character Landing / Discovery",
+        "details": {
+          "event:": "Character flies/lands, crowd observes, character finds something",
+          "characters_involved:": "Flying character, crowd of people",
+          "location:": "Open-air setting, clear blue sky",
+          "significance:": "Discovery or arrival moment",
+          "details:": ""
+        }
+      },
+      {
+        "page": 10,
+        "title": "Page 010: Catbotica Industries Introduction",
+        "details": {
+          "event:": "Welcome to Catbotica Industries campus",
+          "characters_involved:": "Character giving tour",
+          "location:": "Catbotica Industries Campus",
+          "significance:": "Introduction to central location",
+          "details:": ""
+        }
+      },
+      {
+        "page": 13,
+        "title": "Page 013: \"Everyone Has a Story\"",
+        "details": {
+          "event:": "Industrial setting introduction with character interactions",
+          "characters_involved:": "Anthropomorphic cat and dog characters",
+          "location:": "Industrial/workshop environment, Catbotica Industries",
+          "significance:": "Establishes theme of individual narratives",
+          "details:": ""
+        }
+      },
+      {
+        "page": 20,
+        "title": "Page 020: Beach Storytelling Scene",
+        "details": {
+          "event:": "Characters on beach discuss storytelling and create art",
+          "characters_involved:": "Two characters (short hair, casual clothing)",
+          "location:": "Beach during sunset",
+          "significance:": "Explores theme of storytelling and remembrance",
+          "details:": ""
+        }
+      },
+      {
+        "page": 44,
+        "title": "Page 044: Alien Planet Exploration / \"The Wanderers\"",
+        "details": {
+          "event:": "Space explorers discover alien planet with octopus creature",
+          "characters_involved:": "Man in spacesuit, characters in distress, character with cowboy hat, alien octopus creature",
+          "location:": "Alien planet",
+          "significance:": "First contact scenario, exploration narrative",
+          "details:": ""
+        }
+      },
+      {
+        "page": 50,
+        "title": "Page 050: City Day to Night Transition",
+        "details": {
+          "event:": "Urban environment shown transitioning from day to night",
+          "characters_involved:": "Solitary figure on highway",
+          "location:": "City streets, highway",
+          "significance:": "Passage of time, urban setting",
+          "details:": ""
+        }
+      },
+      {
+        "page": 75,
+        "title": "Page 075: Injured Cat Scene",
+        "details": {
+          "event:": "Cat character injured, characters seek help",
+          "characters_involved:": "Human character, anthropomorphic cat, anthropomorphic dog, bird characters",
+          "location:": "Outdoor environment with machinery/equipment",
+          "significance:": "Character care and assistance",
+          "details:": ""
+        }
+      },
+      {
+        "page": 100,
+        "title": "Page 100: Domestic Emotional Scenes",
+        "details": {
+          "event:": "Series of emotional interactions in domestic setting",
+          "characters_involved:": "Multiple human and animal characters",
+          "location:": "Indoor/domestic setting",
+          "significance:": "Character relationships and emotions",
+          "details:": ""
+        }
+      },
+      {
+        "page": 121,
+        "title": "Page 121: \"I Love You\" Scene",
+        "details": {
+          "event:": "Emotional interaction between characters",
+          "characters_involved:": "Cat with large ears, human child/teenager, larger human, parent/guardian, various animals",
+          "location:": "Room with chair, door, table, window",
+          "significance:": "Expression of love and concern",
+          "details:": ""
+        }
+      },
+      {
+        "page": 125,
+        "title": "Page 125: John Misses Bus",
+        "details": {
+          "event:": "John goes out, falls asleep, misses bus",
+          "characters_involved:": "John",
+          "location:": "Outside building (residential or public)",
+          "significance:": "Slice-of-life humorous scenario",
+          "details:": ""
+        }
+      },
+      {
+        "page": 127,
+        "title": "Page 127: Forest Encounter",
+        "details": {
+          "event:": "Humanoid character encounters mythical bird creature in forest",
+          "characters_involved:": "Humanoid figure (male), mythical bird creature with wings",
+          "location:": "Forest with tall trees, clearing/pathway",
+          "significance:": "Discovery or confrontation in natural setting",
+          "details:": ""
+        }
+      },
+      {
+        "page": 150,
+        "title": "Page 150: Jungle Expedition",
+        "details": {
+          "event:": "Cat leads expedition with insects through jungle",
+          "characters_involved:": "Cat, group of insects, large beetle, dragonfly",
+          "location:": "Jungle environment",
+          "significance:": "Adventure and exploration narrative",
+          "details:": ""
+        }
+      },
+      {
+        "page": 175,
+        "title": "Page 175: Kitten Adoption Scene",
+        "details": {
+          "event:": "Discussion about adopting a kitten",
+          "characters_involved:": "Animated kitten, humanoid character",
+          "location:": "Outdoor setting, cloudy day",
+          "significance:": "Care and responsibility theme",
+          "details:": ""
+        }
+      },
+      {
+        "page": 200,
+        "title": "Page 200: Space Suit Action Scene",
+        "details": {
+          "event:": "Characters in space suits, one flying with electric spark effect",
+          "characters_involved:": "Two characters in space suits",
+          "location:": "Otherworldly environment, gray rocky ground",
+          "significance:": "Action/adventure in space setting",
+          "details:": ""
+        }
+      },
+      {
+        "page": 230,
+        "title": "Page 230: Space Debris Aftermath",
+        "details": {
+          "event:": "Debris scattered in space, aftermath of struggle",
+          "characters_involved:": "None visible",
+          "location:": "Dark, starry space",
+          "significance:": "Aftermath of space conflict or accident",
+          "details:": ""
+        }
+      },
+      {
+        "page": 241,
+        "title": "Page 241: Simpsons Reference Scene",
+        "details": {
+          "event:": "Characters from \"The Simpsons\" appear in narrative",
+          "characters_involved:": "Homer Simpson, Marge Simpson, two children",
+          "location:": "Indoor/home environment",
+          "significance:": "Meta-narrative or reference",
+          "details:": ""
+        }
+      },
+      {
+        "page": 242,
+        "title": "Page 242: Cave Exploration",
+        "details": {
+          "event:": "Characters explore cave with glowing rocks",
+          "characters_involved:": "Person, cat, group of cats",
+          "location:": "Cave/underground environment",
+          "significance:": "Exploration and discovery",
+          "details:": ""
+        }
+      },
+      {
+        "page": 245,
+        "title": "Page 245: School Bell Scene",
+        "details": {
+          "event:": "School setting with bell ringing",
+          "characters_involved:": "Child character, students, character running away",
+          "location:": "School building",
+          "significance:": "Educational/school life moment",
+          "details:": ""
+        }
+      },
+      {
+        "page": 246,
+        "title": "Page 246: Final Scene - Thomas Bloom",
+        "details": {
+          "event:": "Contemplative scene in wooded area",
+          "characters_involved:": "Three characters in conversation (Thomas Bloom mentioned)",
+          "location:": "Wooded area with trees and foliage",
+          "significance:": "Final scene of narrative",
+          "details:": ""
+        }
+      }
+    ]
+  },
+  "lexicon": {
+    "terms": [
+      {
+        "term": "Catbotica / CATBOOTICA",
+        "details": {
+          "definition:": "The name of the graphic novel and the central industrial organization",
+          "context:": "Used as title, company name, and location identifier",
+          "origin:": "Fictional organization/company name",
+          "usage:": "",
+          "related_terms:": ""
+        }
+      },
+      {
+        "term": "\"Everyone has a story\"",
+        "details": {
+          "definition:": "Central theme and phrase in the narrative",
+          "context:": "Text appearing in industrial setting (Page 013)",
+          "origin:": "Narrative theme/philosophy",
+          "usage:": "",
+          "related_concepts:": ""
+        }
+      },
+      {
+        "term": "\"Moments of life\"",
+        "details": {
+          "definition:": "Phrase related to the storytelling theme",
+          "context:": "Appears in lower right corner of panel (Page 013)",
+          "origin:": "Narrative theme",
+          "usage:": "Part of larger narrative context emphasizing life's moments as story elements",
+          "related_concepts:": ""
+        }
+      },
+      {
+        "term": "\"Where everything you've imagined can be made real\"",
+        "details": {
+          "definition:": "Tagline/slogan for Catbotica Industries",
+          "context:": "Appears as caption on campus introduction page (Page 010)",
+          "origin:": "Company tagline",
+          "usage:": "Describes the mission/philosophy of Catbotica Industries",
+          "related_concepts:": ""
+        }
+      },
+      {
+        "term": "The Wanderers",
+        "details": {
+          "definition:": "Title of a book/story within the narrative",
+          "context:": "Comic strip or graphic novel page title (Page 044)",
+          "origin:": "Story by Ben Lumley (author name mentioned)",
+          "usage:": "Appears as title on page featuring alien planet exploration",
+          "related_terms:": ""
+        }
+      },
+      {
+        "term": "\"Wild Adventures\"",
+        "details": {
+          "definition:": "Title appearing on jungle expedition page",
+          "context:": "Title at top left corner (Page 150)",
+          "origin:": "Story/section title",
+          "usage:": "Introduces jungle exploration narrative"
+        }
+      },
+      {
+        "term": "\"WHEN THEY FIND YOU IN THE FOREST\"",
+        "details": {
+          "definition:": "Caption text in forest encounter scene",
+          "context:": "Text bubble in forest scene (Page 127)",
+          "origin:": "Narrative caption",
+          "usage:": "Suggests discovery or confrontation scenario"
+        }
+      },
+      {
+        "term": "\"Let's explore the wild!\"",
+        "details": {
+          "definition:": "Dialogue from cat character",
+          "context:": "Cat's speech bubble during jungle expedition (Page 150)",
+          "origin:": "Character dialogue",
+          "usage:": "Expression of adventurous spirit"
+        }
+      },
+      {
+        "term": "\"I've been exploring these parts for years! I can show you all the hidden treasures.\"",
+        "details": {
+          "definition:": "Dialogue from Beetle guide character",
+          "context:": "Beetle's speech bubble (Page 150)",
+          "origin:": "Character dialogue",
+          "usage:": "Establishes Beetle as experienced guide offering assistance"
+        }
+      },
+      {
+        "term": "\"You must be careful around here! There are many dangerous creatures lurking in the shadows.\"",
+        "details": {
+          "definition:": "Warning dialogue from Dragonfly character",
+          "context:": "Dragonfly's speech bubble (Page 150)",
+          "origin:": "Character dialogue",
+          "usage:": "Cautionary warning about jungle dangers"
+        }
+      },
+      {
+        "term": "\"What kind of story do you want to tell?\"",
+        "details": {
+          "definition:": "Dialogue about storytelling",
+          "context:": "Character conversation on beach (Page 020)",
+          "origin:": "Character dialogue",
+          "usage:": "Philosophical question about narrative purpose",
+          "response:": "\"One that makes people remember what they are fighting for\""
+        }
+      },
+      {
+        "term": "\"One that makes people remember what they are fighting for\"",
+        "details": {
+          "definition:": "Response about storytelling purpose",
+          "context:": "Character response on beach (Page 020)",
+          "origin:": "Character dialogue",
+          "usage:": "Defines purpose of storytelling as remembrance and motivation"
+        }
+      },
+      {
+        "term": "\"Did you get your story?\" / \"No, it's not done yet.\"",
+        "details": {
+          "definition:": "Dialogue about story completion",
+          "context:": "Character conversation about drawing/story (Page 020)",
+          "origin:": "Character dialogue",
+          "usage:": "Discussion about creative process and completion"
+        }
+      },
+      {
+        "term": "\"I found something.\"",
+        "details": {
+          "definition:": "Discovery announcement",
+          "context:": "Character dialogue after landing (Page 005)",
+          "origin:": "Character dialogue",
+          "usage:": "Announces discovery or finding"
+        }
+      },
+      {
+        "term": "\"You know the one that says 'if you don't want it to happen again'?\"",
+        "details": {
+          "definition:": "Partial dialogue/question",
+          "context:": "Speech bubble in panel (Page 005)",
+          "origin:": "Character dialogue",
+          "usage:": "References something (context cut off in image)"
+        }
+      },
+      {
+        "term": "\"Welcome to Catbotica Industries.\"",
+        "details": {
+          "definition:": "Greeting/introduction",
+          "context:": "Character dialogue introducing campus (Page 010)",
+          "origin:": "Character dialogue",
+          "usage:": "Official welcome to Catbotica Industries"
+        }
+      },
+      {
+        "term": "\"We have a lot of work ahead of us.\"",
+        "details": {
+          "definition:": "Statement about upcoming work",
+          "context:": "Character dialogue at desk (Page 010)",
+          "origin:": "Character dialogue",
+          "usage:": "Acknowledges workload and preparation"
+        }
+      },
+      {
+        "term": "\"Wow, look at this!\"",
+        "details": {
+          "definition:": "Expression of surprise/excitement",
+          "context:": "Speech bubble during alien planet exploration (Page 044)",
+          "origin:": "Character dialogue",
+          "usage:": "Reaction to discovery"
+        }
+      },
+      {
+        "term": "\"What should we do?\"",
+        "details": {
+          "definition:": "Question seeking advice",
+          "context:": "Character dialogue when cat is injured (Page 075)",
+          "origin:": "Character dialogue",
+          "usage:": "Request for help or guidance",
+          "response:": "\"You can try this...\" (from bird character)"
+        }
+      },
+      {
+        "term": "\"I love you.\"",
+        "details": {
+          "definition:": "Expression of love",
+          "context:": "Dialogue from both cat and human character (Page 121)",
+          "origin:": "Character dialogue",
+          "usage:": "Emotional expression between characters"
+        }
+      },
+      {
+        "term": "\"But I don't know what to do now.\"",
+        "details": {
+          "definition:": "Expression of uncertainty",
+          "context:": "Larger human character dialogue (Page 121)",
+          "origin:": "Character dialogue",
+          "usage:": "Shows character confusion or helplessness"
+        }
+      },
+      {
+        "term": "\"Shouldn't we be looking for him?\"",
+        "details": {
+          "definition:": "Question about search",
+          "context:": "Character dialogue (Page 121)",
+          "origin:": "Character dialogue",
+          "usage:": "Suggests missing person or search scenario"
+        }
+      },
+      {
+        "term": "\"JOHN WENT OUT TO DO SOMETHING\"",
+        "details": {
+          "definition:": "Narrative caption",
+          "context:": "Text caption for John character (Page 125)",
+          "origin:": "Narrative text",
+          "usage:": "Describes character action"
+        }
+      },
+      {
+        "term": "\"JOHN FELL ASLEEP AND MISSED HIS BUS\"",
+        "details": {
+          "definition:": "Narrative caption",
+          "context:": "Text caption for John character (Page 125)",
+          "origin:": "Narrative text",
+          "usage:": "Describes humorous mishap"
+        }
+      },
+      {
+        "term": "\"NO!\"",
+        "details": {
+          "definition:": "Exclamation of refusal/shock",
+          "context:": "Humanoid character dialogue in forest (Page 127)",
+          "origin:": "Character dialogue",
+          "usage:": "Strong reaction or refusal"
+        }
+      },
+      {
+        "term": "\"Look at these fish! Maybe we can catch one for dinner!\"",
+        "details": {
+          "definition:": "Observation and suggestion",
+          "context:": "Cat's dialogue during river crossing (Page 150)",
+          "origin:": "Character dialogue",
+          "usage:": "Notices wildlife and suggests food gathering"
+        }
+      },
+      {
+        "term": "\"Wanna buy a cat?\"",
+        "details": {
+          "definition:": "Offer/question about adoption",
+          "context:": "Humanoid character dialogue (Page 175)",
+          "origin:": "Character dialogue",
+          "usage:": "Offer to sell or give away kitten"
+        }
+      },
+      {
+        "term": "\"If you don't want it, I can give it to someone else.\"",
+        "details": {
+          "definition:": "Statement about alternative",
+          "context:": "Humanoid character dialogue (Page 175)",
+          "origin:": "Character dialogue",
+          "usage:": "Suggests alternative if offer declined"
+        }
+      },
+      {
+        "term": "\"And then the ground shook\"",
+        "details": {
+          "definition:": "Narrative caption",
+          "context:": "Text in cave exploration scene (Page 242)",
+          "origin:": "Narrative text",
+          "usage:": "Describes environmental event"
+        }
+      },
+      {
+        "term": "\"How do you even clean this?\"",
+        "details": {
+          "definition:": "Question about cleaning",
+          "context:": "Character dialogue in cave (Page 242)",
+          "origin:": "Character dialogue",
+          "usage:": "Practical question about situation"
+        }
+      },
+      {
+        "term": "\"THE BELL JUST RANG!\"",
+        "details": {
+          "definition:": "Announcement",
+          "context:": "Speech bubble in school scene (Page 245)",
+          "origin:": "Character dialogue",
+          "usage:": "Indicates school bell ringing"
+        }
+      },
+      {
+        "term": "Onomatopoeia",
+        "details": {
+          "definition:": "Explosion sound",
+          "context:": "Text bubble in action scene (Page 244)",
+          "origin:": "Sound effect",
+          "usage:": "Represents explosion or impact"
+        }
+      },
+      {
+        "term": "Spaceship",
+        "details": {
+          "definition:": "Vehicle for space travel",
+          "context:": "Used throughout space exploration scenes",
+          "origin:": "Science fiction technology",
+          "usage:": "Primary mode of transportation in space"
+        }
+      },
+      {
+        "term": "Meteor",
+        "details": {
+          "definition:": "Space rock that can strike spaceships",
+          "context:": "Causes damage to spaceship (Page 002)",
+          "origin:": "Astronomical term",
+          "usage:": "Hazard in space travel"
+        }
+      },
+      {
+        "term": "Control Panel / Console",
+        "details": {
+          "definition:": "Spaceship operation interface",
+          "context:": "Used by space explorers (Pages 002, 044)",
+          "origin:": "Technical term",
+          "usage:": "Ship operation and navigation"
+        }
+      },
+      {
+        "term": "Communication Device",
+        "details": {
+          "definition:": "Handheld communication equipment",
+          "context:": "Used by space explorers (Page 002)",
+          "origin:": "Technical term",
+          "usage:": "Communication between characters"
+        }
+      },
+      {
+        "term": "Navigation Equipment",
+        "details": {
+          "definition:": "Device for location tracking and navigation",
+          "context:": "Used for understanding location (Pages 002, 044)",
+          "origin:": "Technical term",
+          "usage:": "Navigation and mapping"
+        }
+      },
+      {
+        "term": "The Simpsons",
+        "details": {
+          "definition:": "Reference to animated television show",
+          "context:": "Characters appear in narrative (Page 241)",
+          "origin:": "Popular culture reference",
+          "usage:": "Meta-narrative element, characters include Homer and Marge Simpson",
+          "related_terms:": ""
+        }
+      },
+      {
+        "term": "John",
+        "details": {
+          "definition:": "Recurring character name",
+          "context:": "Slice-of-life character (Page 125)",
+          "origin:": "Character name",
+          "usage:": "Everyday character in relatable scenarios"
+        }
+      },
+      {
+        "term": "Thomas Bloom",
+        "details": {
+          "definition:": "Character name mentioned in final pages",
+          "context:": "Banner text (Page 246)",
+          "origin:": "Character name",
+          "usage:": "Appears in final scene of narrative"
+        }
+      },
+      {
+        "term": "Ben Lumley",
+        "details": {
+          "definition:": "Author name referenced",
+          "context:": "\"The Wanderers\" by Ben Lumley (Page 044)",
+          "origin:": "Author name",
+          "usage:": "Meta-reference to story within story"
+        }
+      }
+    ]
+  },
+  "visual_style": {},
+  "character_relationships": {
+    "summary": "# Character Relationships\n\n## Overview\nThis document maps character relationships, groups, and social connections throughout the Catbotica narrative.\n\n---\n\n## Relationship Matrix\n\n### Primary Relationships\n\n#### Robot Character ↔ Catbotica Industries\n- **Type:** Central/Institutional\n- **Nature:** Protagonist associated with central organization\n- **Context:** Cover character, likely central to Catbotica narrative\n- **Pages:** 001\n\n#### Cat Character ↔ Dog Character\n- **Type:** Companion/Friends...",
+    "file": "character-relationships.md",
+    "has_content": true
+  },
+  "narrative_themes": {
+    "summary": "# Narrative Themes and Motifs\n\n## Overview\nThis document identifies and analyzes the recurring themes, motifs, and narrative patterns throughout the Catbotica graphic novel.\n\n---\n\n## Primary Themes\n\n### 1. \"Everyone Has a Story\"\n**Core Theme:** Individual narratives intersecting in shared environments\n\n**Manifestations:**\n- **Page 013:** Explicit text \"Everyone has a story\" and \"Moments of life\"\n- **Industrial Setting:** Multiple characters with individual stories in shared space\n- **Narrative S...",
+    "file": "narrative-themes.md",
+    "has_content": true
+  },
+  "plot_structure": {
+    "summary": "# Plot Structure Analysis\n\n## Overview\nThis document analyzes the narrative structure, story arcs, pacing, and plot progression across the 246-page Catbotica graphic novel.\n\n---\n\n## Narrative Structure\n\n### Overall Structure\n**Type:** Episodic with Interconnected Threads\n\n**Characteristics:**\n- Multiple narrative threads running parallel\n- Episodic stories/vignettes\n- Recurring characters and themes\n- Not strictly linear progression\n- Interconnected through themes and characters\n\n**Total Pages:*...",
+    "file": "plot-structure.md",
+    "has_content": true
+  },
+  "dialogue_style": {
+    "summary": "# Dialogue Style Guide\n\n## Overview\nThis document analyzes dialogue patterns, character voices, writing style, and dialogue conventions used throughout the Catbotica graphic novel.\n\n---\n\n## Dialogue Patterns\n\n### Direct Speech Patterns\n\n#### Simple Declarative Statements\n**Pattern:** Clear, direct communication\n**Examples:**\n- \"I found something.\" (Page 005)\n- \"Welcome to Catbotica Industries.\" (Page 010)\n- \"We have a lot of work ahead of us.\" (Page 010)\n- \"I love you.\" (Page 121)\n\n**Characteris...",
+    "file": "dialogue-style.md",
+    "has_content": true
+  },
+  "character_arcs": {
+    "summary": "# Character Arc Analysis\n\n## Overview\nThis document provides detailed analysis of character development trajectories, growth patterns, transformation points, and arc completion status for major characters in the Catbotica graphic novel.\n\n---\n\n## Character Arc Methodology\n\n### Arc Components\n- **Starting Point:** Character introduction and initial state\n- **Development:** Growth, change, challenges faced\n- **Key Moments:** Significant events affecting character\n- **Transformation:** Changes in ch...",
+    "file": "character-arcs.md",
+    "has_content": true
+  },
+  "technology_systems": {
+    "summary": "# Technology Systems Deep Dive\n\n## Overview\nComprehensive documentation of all technology, systems, devices, and technical elements in the Catbotica universe, including specifications, capabilities, limitations, and integration points.\n\n---\n\n## Space Technology\n\n### Spaceships\n\n#### General Specifications\n**Design Philosophy:** Sleek, aerodynamic, functional\n**Construction:** Advanced materials, retro-futuristic design\n**Size:** Variable (from small exploration vessels to larger ships)\n**Crew Ca...",
+    "file": "technology-systems.md",
+    "has_content": true
+  },
+  "cultural_analysis": {
+    "summary": "# Cultural Analysis\n\n## Overview\nDeep dive into cultural elements, social structures, practices, traditions, and cultural evolution in the Catbotica universe.\n\n---\n\n## Core Cultural Philosophy\n\n### \"Everyone Has a Story\"\n**Central Cultural Theme:** Individual narratives valued within community\n\n**Manifestations:**\n- **Industrial Setting:** Multiple characters with individual stories in shared space\n- **Narrative Structure:** Episodic stories emphasizing individual perspectives\n- **Visual Represe...",
+    "file": "cultural-analysis.md",
+    "has_content": true
+  },
+  "geography": {
+    "summary": "# Geography and Spatial Relationships\n\n## Overview\nDocumentation of geographic relationships, spatial organization, travel routes, and location connections in the Catbotica universe.\n\n---\n\n## Geographic Organization\n\n### Primary Locations\n\n#### Catbotica Industries Campus\n**Type:** Central Hub\n**Location:** Primary industrial/research location\n**Relationship:** Central to narrative, likely central geographically\n**Connections:** Connected to various narrative threads\n\n**Spatial Characteristics:*...",
+    "file": "geography.md",
+    "has_content": true
+  },
+  "continuity": {},
+  "production_notes": {
+    "summary": "# Production Notes\n\n## Overview\nDocumentation of production decisions, design choices, creative context, and reference materials for the Catbotica Series Bible.\n\n---\n\n## Production Context\n\n### Source Material\n- **Type:** Graphic Novel\n- **Pages:** 246 pages analyzed\n- **Format:** Rough draft (v03)\n- **Style:** Black and white with some color pages\n- **Status:** Complete analysis of available pages\n\n### Analysis Method\n- **Process:** Image-to-text extraction using vision model (llava)\n- **Analys...",
+    "file": "production-notes.md",
+    "has_content": true
+  },
+  "visual_references": {
+    "summary": "# Visual Reference Library\n\n## Overview\nCatalog of visual elements, design patterns, recurring motifs, and visual references from the Catbotica graphic novel for consistent visual generation and design.\n\n---\n\n## Character Design References\n\n### Robot Character Design\n**Source:** Page 001 (Cover)\n\n**Key Visual Elements:**\n- Humanoid robot form\n- Prominent, expressive face\n- Black eyes\n- Sleek body structure\n- Visible neck joint\n- Bipedal stance\n- Purple stripe along side\n- Pink, blue, green accen...",
+    "file": "visual-references.md",
+    "has_content": true
+  },
+  "visual_style_guide": {
+    "summary": "# Visual Style Guide\n\n## Overview\nThis document captures the visual aesthetic, art direction, and design patterns from the Catbotica graphic novel to ensure visual consistency across all media.\n\n---\n\n## Overall Aesthetic\n\n### Primary Style\n**Retro-Futuristic Cyberpunk**\n- Blend of science fiction and cyberpunk themes\n- Stylized, vibrant illustrations\n- Bold, graphic quality\n- Clean lines and strong contrasts\n- Energy and vibrancy\n\n### Visual Characteristics\n- **Line Work:** Bold lines, clean del...",
+    "file": "visual-style-guide.md",
+    "has_content": true
+  },
+  "continuity_log": {
+    "summary": "# Continuity Log\n\n## Overview\nTracking system for maintaining consistency across the Catbotica Series Bible, identifying potential errors, and documenting updates.\n\n---\n\n## Consistency Validation Rules\n\n### Character Consistency\n- [ ] All characters in timeline have profiles in `characters.md`\n- [ ] Character appearances match across all references\n- [ ] Character relationships are consistent\n- [ ] Character arcs align with timeline events\n- [ ] Character names are consistent throughout\n\n### Loc...",
+    "file": "continuity-log.md",
+    "has_content": true
+  }
+}

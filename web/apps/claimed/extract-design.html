@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract Design from catbotica.com</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .instructions {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem 0;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        #results {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        .result-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h1>Extract Design from catbotica.com</h1>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Open catbotica.com in a new tab</li>
+            <li>Open Developer Tools (F12)</li>
+            <li>Go to the Console tab</li>
+            <li>Copy and paste the code below into the console</li>
+            <li>Press Enter</li>
+            <li>Copy the results and share them</li>
+        </ol>
+        
+        <h3>Code to paste in Console:</h3>
+        <div class="code-block" id="extractCode">
+// Extract fonts, colors, and design from catbotica.com
+const styles = window.getComputedStyle(document.body);
+const fonts = [];
+const colors = new Set();
+const images = [];
+
+// Get all fonts
+document.querySelectorAll('*').forEach(el => {
+    const fontFamily = window.getComputedStyle(el).fontFamily;
+    if (fontFamily && fontFamily !== 'initial') {
+        fonts.push(fontFamily.split(',')[0].replace(/['"]/g, ''));
+    }
+});
+
+// Get all colors
+document.querySelectorAll('*').forEach(el => {
+    const bg = window.getComputedStyle(el).backgroundColor;
+    const color = window.getComputedStyle(el).color;
+    const border = window.getComputedStyle(el).borderColor;
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') colors.add(bg);
+    if (color && color !== 'rgba(0, 0, 0, 0)') colors.add(color);
+    if (border && border !== 'rgba(0, 0, 0, 0)' && border !== 'transparent') colors.add(border);
+});
+
+// Get all images
+document.querySelectorAll('img').forEach(img => {
+    if (img.src) images.push(img.src);
+});
+
+// Get logo
+const logo = document.querySelector('img[alt*="logo" i], img[src*="logo" i], .logo img, header img');
+const logoUrl = logo ? logo.src : 'Not found';
+
+// Get CSS variables
+const rootStyles = getComputedStyle(document.documentElement);
+const cssVars = {};
+for (let i = 0; i < rootStyles.length; i++) {
+    const prop = rootStyles[i];
+    if (prop.startsWith('--')) {
+        cssVars[prop] = rootStyles.getPropertyValue(prop);
+    }
+}
+
+const result = {
+    fonts: [...new Set(fonts)].slice(0, 5),
+    colors: Array.from(colors).slice(0, 20),
+    logo: logoUrl,
+    images: images.slice(0, 10),
+    cssVariables: cssVars,
+    bodyBackground: styles.backgroundColor,
+    bodyColor: styles.color,
+    bodyFont: styles.fontFamily
+};
+
+console.log('=== CATBOTICA DESIGN EXTRACTION ===');
+console.log(JSON.stringify(result, null, 2));
+console.log('=== COPY THE ABOVE JSON ===');
+
+// Also display in alert for easy copying
+const resultText = JSON.stringify(result, null, 2);
+const textarea = document.createElement('textarea');
+textarea.value = resultText;
+textarea.style.position = 'fixed';
+textarea.style.opacity = '0';
+document.body.appendChild(textarea);
+textarea.select();
+document.execCommand('copy');
+document.body.removeChild(textarea);
+alert('Design data copied to clipboard! Also check console for full details.');
+        </div>
+        
+        <button onclick="copyCode()">Copy Code to Clipboard</button>
+    </div>
+
+    <div id="results" style="display: none;">
+        <h2>Extracted Design Data</h2>
+        <div id="resultsContent"></div>
+    </div>
+
+    <script>
+        function copyCode() {
+            const code = document.getElementById('extractCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard! Now paste it in the catbotica.com console.');
+            });
+        }
+    </script>
+</body>
+</html>

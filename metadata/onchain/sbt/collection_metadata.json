@@ -1,0 +1,12 @@
+{
+  "name": "Catbotica: Luck-Module Recalibration Proof — Soulbound Zodiac Certificates",
+  "description": "Non-transferable proof-of-recalibration certificates for the Catbotica Luck-Module Recalibration Protocol (LMRP). Each Soulbound Token permanently records that a unit completed its zodiac recalibration for a given year. These tokens cannot be traded — they are identity and reputation artifacts bound to the wallet that earned them.",
+  "image": "ipfs://[SBT_COLLECTION_IMAGE_CID]",
+  "external_link": "https://catbotica.industries/zodiac/soulbound",
+  "lore_anchor": "LS-CATBOTICA-ANCHOR-012",
+  "collection_launch": "2022-01-01",
+  "total_badges": 12,
+  "token_standard": "SBT (Soulbound Token)",
+  "transferable": false,
+  "revocable": false
+}

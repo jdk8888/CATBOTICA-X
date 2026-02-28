@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #02 — Rabbit",
+  "description": "Year of the Rabbit (2023, Water). Diplomacy, Intuition, Elegance. A cybernetic mechanical rabbit with titanium radar-dish ears and fiber-optic whiskers. Issued during the second Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[RABBIT_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/rabbit",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Rabbit" },
+    { "trait_type": "Year", "value": "2023" },
+    { "trait_type": "Element", "value": "Water" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 2 },
+    { "trait_type": "Frequency Keywords", "value": "Diplomacy, Intuition, Elegance" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Flowing Ribbon" },
+    { "trait_type": "Key Feature", "value": "Titanium radar-dish ears, fiber-optic whiskers" },
+    { "trait_type": "LMRP Status", "value": "Activated" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}

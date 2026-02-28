@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATBOTICA Inc. - Fulfillment Center | claimed.catbotica.com</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- TODO: Replace with actual fonts from catbotica.com -->
+    <!-- To find fonts: Open catbotica.com → F12 → Console → Run: getComputedStyle(document.body).fontFamily -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Add additional fonts here based on catbotica.com inspection -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* TODO: Update these colors to match catbotica.com exactly */
+            /* To extract colors: Open catbotica.com → F12 → Elements → Inspect elements → Copy color values */
+            --primary: #00ff88; /* Replace with catbotica.com primary color */
+            --primary-dark: #00cc6a;
+            --primary-light: #33ffaa;
+            --secondary: #ff00ff; /* Replace with catbotica.com secondary color */
+            --background: #0a0a0a; /* Replace with catbotica.com background */
+            --background-light: #1a1a1a;
+            --background-lighter: #2a2a2a;
+            --text: #ffffff; /* Replace with catbotica.com text color */
+            --text-muted: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 42rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+        }
+
+        .card {
+            background: var(--background-light);
+            border: 1px solid var(--background-lighter);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label .required {
+            color: var(--primary);
+        }
+
+        .form-group select,
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--background);
+            border: 1px solid var(--background-lighter);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group select:focus,
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-top: 0.125rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .checkbox-group a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .checkbox-group a:hover {
+            color: var(--primary-light);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--background);
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn:hover:not(:disabled) {
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            box-shadow: 0 10px 15px -3px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .footer a:hover {
+            color: var(--primary-light);
+        }
+
+        .wallet-section {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .wallet-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--background);
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(0, 255, 136, 0.2);
+        }
+
+        .wallet-btn:hover {
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            box-shadow: 0 10px 15px -3px rgba(0, 255, 136, 0.4);
+        }
+
+        .wallet-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--background-light);
+            border: 1px solid var(--background-lighter);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .wallet-address {
+            font-family: monospace;
+            color: var(--text);
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--background-light);
+            border: 1px solid var(--background-lighter);
+            border-radius: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .corporate-header {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .welcome-text {
+            max-width: 600px;
+            margin: 1rem auto;
+            font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .music-controls {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--background-light);
+            border: 1px solid var(--background-lighter);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            z-index: 1000;
+        }
+
+        .music-controls button {
+            background: transparent;
+            border: 1px solid var(--background-lighter);
+            color: var(--text);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .music-controls button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .music-controls audio {
+            display: none;
+        }
+
+        .section p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.2);
+            color: var(--primary);
+        }
+
+        .success-icon {
+            display: inline-block;
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cat-Themed Elevator Music -->
+    <audio id="elevatorMusic" autoplay loop>
+        <!-- Replace with your cat-themed elevator music file -->
+        <!-- You can use a URL to an online file or a local file -->
+        <!-- Example: <source src="cat-elevator-music.mp3" type="audio/mpeg"> -->
+        <!-- Or use a placeholder service: -->
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Music Controls -->
+    <div class="music-controls">
+        <span>🎵</span>
+        <button id="musicToggle" onclick="toggleMusic()">Pause</button>
+        <span style="font-size: 0.65rem; opacity: 0.7;">Elevator Music</span>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <!-- TODO: Add CATBOTICA logo here -->
+            <!-- <img src="logo.png" alt="CATBOTICA" style="max-width: 200px; margin-bottom: 1rem;"> -->
+            <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase;">
+                CATBOTICA Inc.
+            </div>
+            <h1>Fulfillment Center</h1>
+            <p style="max-width: 600px; margin: 1rem auto; font-style: italic; color: var(--text-muted);">
+                Welcome to the Fulfillment Center. Please submit your fulfillment requests using the form below. 
+                Our highly efficient automated processing system will review your submission in a timely fashion 
+                (processing times may vary from 2-4 business eternities). All requests are subject to review, 
+                approval, and our standard terms of service. Thank you for choosing CATBOTICA Inc.
+            </p>
+        </div>
+
+        <!-- Wallet Connection -->
+        <div class="wallet-section">
+            <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+            <div id="walletInfo" style="display: none;" class="wallet-info">
+                <span class="wallet-address">0x1234...5678</span>
+                <button onclick="disconnectWallet()" style="background: transparent; border: 1px solid var(--background-lighter); color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.75rem;">Disconnect</button>
+            </div>
+        </div>
+
+        <!-- NFT Verification Section -->
+        <div class="section" id="nftVerification" style="display: none;">
+            <h3>Asset Verification Required</h3>
+            <p>Per company policy, please verify ownership of the asset to proceed with fulfillment processing.</p>
+            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="verifyNFT()">Verify Asset Ownership</button>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="section" id="signatureSection" style="display: none;">
+            <h3>Digital Signature Required</h3>
+            <p>Please provide your digital signature to authorize this fulfillment request. This signature serves as your acknowledgment and agreement to our terms of service.</p>
+            <div style="padding: 0.75rem; background: var(--background); border: 1px solid var(--background-lighter); border-radius: 0.25rem; margin-bottom: 1rem;">
+                <p style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace; word-break: break-word;">
+                    I hereby submit this fulfillment request to CATBOTICA Inc. and acknowledge that I have read, understood, and agree to be bound by the Terms of Service and Privacy Policy.
+                </p>
+            </div>
+            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="signMessage()">Authorize & Sign</button>
+        </div>
+
+        <!-- Claim Card -->
+        <div class="card">
+            <form id="claimForm" onsubmit="handleSubmit(event)">
+                <!-- Region Dropdown -->
+                <div class="form-group">
+                    <label>
+                        Select Your Region <span class="required">*</span>
+                    </label>
+                    <select id="region" required>
+                        <option value="">-- Select Region --</option>
+                        <option value="asia">Asia</option>
+                        <option value="n-america">North America</option>
+                        <option value="s-america">South America</option>
+                        <option value="europe">Europe</option>
+                        <option value="africa">Africa</option>
+                    </select>
+                </div>
+
+                <!-- Terms of Service -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a> <span class="required">*</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn" id="submitBtn">
+                    Submit Claim for Processing
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>
+                For fulfillment inquiries, please contact our Fulfillment Center at <a href="mailto:fulfillment@catbotica.com">fulfillment@catbotica.com</a>
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.7;">
+                CATBOTICA Inc. - Fulfilling orders since the dawn of digital assets. 
+                Standard processing time: 2-4 business eternities. Terms and conditions apply.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let walletConnected = false;
+        let nftVerified = false;
+        let messageSigned = false;
+
+        function connectWallet() {
+            walletConnected = true;
+            document.querySelector('.wallet-btn').style.display = 'none';
+            document.getElementById('walletInfo').style.display = 'inline-flex';
+            document.getElementById('nftVerification').style.display = 'block';
+            document.getElementById('signatureSection').style.display = 'block';
+        }
+
+        function disconnectWallet() {
+            walletConnected = false;
+            nftVerified = false;
+            messageSigned = false;
+            document.querySelector('.wallet-btn').style.display = 'inline-block';
+            document.getElementById('walletInfo').style.display = 'none';
+            document.getElementById('nftVerification').style.display = 'none';
+            document.getElementById('signatureSection').style.display = 'none';
+            updateSubmitButton();
+        }
+
+        function verifyNFT() {
+            nftVerified = true;
+            const section = document.getElementById('nftVerification');
+            section.className = 'section success';
+            section.innerHTML = `
+                <h3>
+                    <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Asset Verification Complete
+                </h3>
+                <p>Asset ownership has been verified. Your fulfillment request is eligible for processing.</p>
+            `;
+            updateSubmitButton();
+        }
+
+        function signMessage() {
+            messageSigned = true;
+            const section = document.getElementById('signatureSection');
+            section.className = 'section success';
+            section.innerHTML = `
+                <h3>
+                    <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Authorization Complete
+                </h3>
+                <p>Your digital signature has been verified and recorded. Fulfillment request authorization approved.</p>
+            `;
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            const btn = document.getElementById('submitBtn');
+            const canSubmit = walletConnected && nftVerified && messageSigned;
+            btn.disabled = !canSubmit;
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const region = document.getElementById('region').value;
+            const terms = document.getElementById('terms').checked;
+
+            if (!walletConnected) {
+                alert('Please connect your wallet first.');
+                return;
+            }
+
+            if (!nftVerified) {
+                alert('Please verify your NFT ownership.');
+                return;
+            }
+
+            if (!messageSigned) {
+                alert('Please sign the message.');
+                return;
+            }
+
+            if (!terms) {
+                alert('Please accept the Terms of Service.');
+                return;
+            }
+
+            if (!region) {
+                alert('Please select your region.');
+                return;
+            }
+
+            alert('Fulfillment request submitted successfully! Your request has been received and assigned order number #' + Math.floor(Math.random() * 1000000) + '. Our automated processing system will review your submission. Please allow 2-4 business eternities for processing. (This is a preview - no actual request was processed)');
+        }
+
+        // Music control
+        function toggleMusic() {
+            const audio = document.getElementById('elevatorMusic');
+            const button = document.getElementById('musicToggle');
+            
+            if (audio.paused) {
+                audio.play();
+                button.textContent = 'Pause';
+            } else {
+                audio.pause();
+                button.textContent = 'Play';
+            }
+        }
+
+        // Handle autoplay restrictions (some browsers block autoplay)
+        const audio = document.getElementById('elevatorMusic');
+        audio.play().catch(() => {
+            // Autoplay was blocked, show play button
+            document.getElementById('musicToggle').textContent = 'Play';
+        });
+
+        // Initialize
+        updateSubmitButton();
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "Catbotica Zodiac Badge #06 — Goat",
+  "description": "Year of the Goat (2027, Fire). Harmony, Creativity, Compassion. A cybernetic mechanical goat with copper coil spiral horns and magnetic stabilizer hooves. Queued for the sixth Luck-Module Recalibration Protocol cycle. Part of The Celestial Cat-Circuit collection.",
+  "image": "ipfs://[GOAT_IMAGE_CID]",
+  "animation_url": "",
+  "external_url": "https://catbotica.industries/zodiac/goat",
+  "attributes": [
+    { "trait_type": "Zodiac", "value": "Goat" },
+    { "trait_type": "Year", "value": "2027" },
+    { "trait_type": "Element", "value": "Fire" },
+    { "trait_type": "Cycle Number", "display_type": "number", "value": 6 },
+    { "trait_type": "Frequency Keywords", "value": "Harmony, Creativity, Compassion" },
+    { "trait_type": "Collection", "value": "The Celestial Cat-Circuit" },
+    { "trait_type": "Frame Material", "value": "Carbon Fiber Black" },
+    { "trait_type": "Circuitry Color", "value": "Electric Cyan #00F2FF" },
+    { "trait_type": "Filigree Motif", "value": "Ember and Warmth" },
+    { "trait_type": "Key Feature", "value": "Copper coil spiral horns, magnetic stabilizer hooves" },
+    { "trait_type": "LMRP Status", "value": "Queued" },
+    { "trait_type": "Token Standard", "value": "ERC-1155" },
+    { "trait_type": "Lore Anchor", "value": "LS-CATBOTICA-ANCHOR-012" }
+  ]
+}
