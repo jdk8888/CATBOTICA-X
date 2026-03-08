@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#141414">
+  <title>CATBOTICA Medallions — Full (medallions + globe)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      min-height: 100vh; min-height: 100dvh;
+      background: #141414; color: #F4F4F4;
+    }
+    #parade-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: block; touch-action: none; -webkit-tap-highlight-color: transparent;
+    }
+    #hero-carousel-controls {
+      position: fixed; top: 12px; left: 12px; z-index: 30;
+      max-width: 320px; max-height: 90vh; overflow-y: auto;
+      background: rgba(10,10,20,0.92); border: 2px solid #0ea5e9;
+      border-radius: 10px; padding: 14px; font-size: 12px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    #hero-carousel-controls h3 { color: #0ea5e9; margin-bottom: 10px; font-size: 14px; }
+    #hero-carousel-controls section { margin-bottom: 14px; }
+    #hero-carousel-controls label { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    #hero-carousel-controls input[type="range"] { flex: 1; min-width: 80px; accent-color: #0ea5e9; }
+    #hero-carousel-controls input[type="color"] { width: 28px; height: 22px; cursor: pointer; }
+    #hero-carousel-controls .hcc-hex { width: 72px; padding: 4px; background: #1a1a2e; border: 1px solid #0ea5e9; border-radius: 4px; color: #f4f4f4; }
+    #hero-carousel-controls .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .hint {
+      position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+      font-family: ui-monospace, monospace; font-size: 12px;
+      color: rgba(255,255,255,0.5); pointer-events: none; z-index: 10;
+    }
+    #file-protocol-warning {
+      display: none;
+      position: fixed; inset: 0; background: #141414;
+      flex-direction: column; justify-content: center; align-items: center;
+      padding: 24px; text-align: center; z-index: 9999;
+      font-family: ui-monospace, monospace; color: #fff;
+    }
+    #file-protocol-warning.show { display: flex; }
+    #file-protocol-warning h2 { font-size: 18px; margin-bottom: 12px; color: #0ea5e9; }
+    #file-protocol-warning p { font-size: 14px; color: rgba(255,255,255,0.8); max-width: 360px; }
+    #file-protocol-warning a { color: #f59e0b; }
+    #closeup-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 20;
+      flex-direction: column; justify-content: flex-end; align-items: center;
+      background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 0%, transparent 38%, rgba(10,10,18,0.5) 65%, rgba(10,10,15,0.88) 100%);
+      pointer-events: none;
+    }
+    #closeup-overlay.show { display: flex; }
+    #closeup-overlay .closeup-actions {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      padding: 28px 24px 36px; text-align: center; pointer-events: auto;
+    }
+    #closeup-overlay .closeup-card-name {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: clamp(20px, 4.5vw, 32px); font-weight: 800; color: #0ea5e9;
+      text-shadow: 0 0 24px rgba(14,165,233,0.5), 0 0 48px rgba(245,158,11,0.2);
+      letter-spacing: 0.02em;
+    }
+    #closeup-overlay .closeup-back {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 16px; font-weight: 700; padding: 14px 36px;
+      letter-spacing: 0.08em; text-transform: uppercase; color: #F4F4F4;
+      background: rgba(14,165,233,0.25); border: 2px solid #0ea5e9;
+      border-radius: 10px; box-shadow: 0 0 20px rgba(14,165,233,0.3);
+      cursor: pointer; transition: background 0.2s, box-shadow 0.2s;
+    }
+    #closeup-overlay .closeup-back:hover {
+      background: rgba(14,165,233,0.4);
+      box-shadow: 0 0 24px rgba(14,165,233,0.4), 0 0 32px rgba(245,158,11,0.2);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="file-protocol-warning" aria-live="polite">
+    <h2>Open via HTTP</h2>
+    <p>Serve from <code>projects/CATBOTICA/web/apps</code>: <code>npx serve -p 8767</code></p>
+    <p style="margin: 8px 0;"><a href="http://localhost:8767/catbotica_medallions/full.html">http://localhost:8767/catbotica_medallions/full.html</a></p>
+  </div>
+  <div id="hero-carousel-controls" aria-label="Scene controls">
+    <h3>Camera</h3>
+    <section>
+      <div class="row">
+        <label>Zoom 1–10 <input type="range" id="hcc-camera-zoom" min="1" max="10" step="1" value="5"></label>
+      </div>
+    </section>
+    <h3>Bloom</h3>
+    <section>
+      <label><input type="checkbox" id="hcc-bloom" checked> Bloom</label>
+      <div class="row">
+        <label>Level 1–10 <input type="range" id="hcc-bloom-level" min="1" max="10" step="1" value="5"></label>
+      </div>
+    </section>
+    <h3>Particles</h3>
+    <section>
+      <label><input type="checkbox" id="hcc-particles" checked> Visible</label>
+      <div class="row">
+        <label>More 1–20 <input type="range" id="hcc-particles-mult" min="1" max="20" step="1" value="4"></label>
+      </div>
+      <div class="row">
+        <label>Lum 1–20 <input type="range" id="hcc-particles-lum" min="1" max="20" step="1" value="12"></label>
+      </div>
+      <div class="row">
+        <label>Bloom 1–10 <input type="range" id="hcc-particles-bloom" min="1" max="10" step="1" value="6"></label>
+      </div>
+      <div class="row">
+        <label>Size 1–20 <input type="range" id="hcc-particles-size" min="1" max="20" step="1" value="5"></label>
+      </div>
+      <div class="row">
+        <label>Spin 1–10 <input type="range" id="hcc-particles-spin" min="1" max="10" step="1" value="4"></label>
+      </div>
+      <div class="row">
+        <label>Dir <select id="hcc-particles-spin-dir"><option value="-1">CCW</option><option value="1">CW</option></select></label>
+      </div>
+      <div class="row">
+        <label>Color <input type="color" id="hcc-particles-color" value="#0ea5e9"></label>
+        <input type="text" id="hcc-particles-hex" class="hcc-hex" placeholder="#RRGGBB" value="#0ea5e9">
+      </div>
+    </section>
+    <h3>Medallions</h3>
+    <section>
+      <label><input type="checkbox" id="hcc-medallions" checked> Visible</label>
+      <div class="row">
+        <label>Size 1–10 <input type="range" id="hcc-medallions-scale" min="1" max="10" step="1" value="7"></label>
+      </div>
+      <div class="row">
+        <label>Spin 1–10 <input type="range" id="hcc-medallions-spin" min="1" max="10" step="1" value="3"></label>
+      </div>
+      <div class="row">
+        <label>Bloom 1–10 <input type="range" id="hcc-medallions-bloom" min="1" max="10" step="1" value="7"></label>
+      </div>
+      <div class="row">
+        <label>Color <input type="color" id="hcc-medallions-color" value="#ffffff"></label>
+        <input type="text" id="hcc-medallions-hex" class="hcc-hex" placeholder="#RRGGBB" value="#ffffff">
+      </div>
+    </section>
+    <h3>Inner sphere</h3>
+    <section>
+      <label><input type="checkbox" id="hcc-inner-sphere" checked> Visible</label>
+      <div class="row">
+        <label>Bloom 1–10 <input type="range" id="hcc-inner-sphere-bloom" min="1" max="10" step="1" value="6"></label>
+      </div>
+      <div class="row">
+        <label>Color <input type="color" id="hcc-inner-sphere-color" value="#0ea5e9"></label>
+        <input type="text" id="hcc-inner-sphere-hex" class="hcc-hex" placeholder="#RRGGBB" value="#0ea5e9">
+      </div>
+    </section>
+    <h3>Globe screens</h3>
+    <section>
+      <label><input type="checkbox" id="hcc-globe" checked> Visible</label>
+      <div class="row">
+        <label>Diameter 1–10 <input type="range" id="hcc-globe-diameter" min="1" max="10" step="1" value="3"></label>
+      </div>
+      <div class="row">
+        <label>Screen size 1–10 <input type="range" id="hcc-globe-screen-size" min="1" max="10" step="1" value="10"></label>
+      </div>
+      <div class="row">
+        <label>Separation 1–10 <input type="range" id="hcc-globe-separation" min="1" max="10" step="1" value="5"></label>
+      </div>
+      <div class="row">
+        <label>Lum 1–10 <input type="range" id="hcc-globe-lum" min="1" max="10" step="1" value="6"></label>
+      </div>
+      <div class="row">
+        <label>Bloom 1–10 <input type="range" id="hcc-globe-bloom" min="1" max="10" step="1" value="3"></label>
+      </div>
+      <div class="row">
+        <label>Spin 1–10 <input type="range" id="hcc-globe-spin" min="1" max="10" step="1" value="8"></label>
+      </div>
+      <div class="row">
+        <label>Color <input type="color" id="hcc-globe-color" value="#ffffff"></label>
+        <input type="text" id="hcc-globe-hex" class="hcc-hex" placeholder="#RRGGBB" value="#ffffff">
+      </div>
+    </section>
+  </div>
+  <div id="parade-canvas"></div>
+  <div id="closeup-overlay" class="closeup-overlay" aria-hidden="true">
+    <div class="closeup-actions">
+      <span id="closeup-card-name" class="closeup-card-name"></span>
+      <button type="button" id="closeup-back" class="closeup-back">Back to carousel</button>
+    </div>
+  </div>
+  <p class="hint" aria-hidden="true">CATBOTICA Medallions — Drag to orbit. Scroll to zoom.</p>
+
+  <script>
+    (function () {
+      if (window.location.protocol === 'file:' || window.location.origin === 'null') {
+        document.getElementById('file-protocol-warning').classList.add('show');
+      }
+    })();
+  </script>
+  <script>
+    window.PARADE_MEDALLIONS_COINS_CONFIG = {
+      imageList: [
+        { name: 'Rat',    url: 'assets/rat.png' },
+        { name: 'Ox',     url: 'assets/ox.png' },
+        { name: 'Tiger',  url: 'assets/tiger.png' },
+        { name: 'Rabbit', url: 'assets/rabbit.png' },
+        { name: 'Dragon', url: 'assets/dragon.png' },
+        { name: 'Snake',  url: 'assets/snake.png' },
+        { name: 'Horse',  url: 'assets/horse.png' },
+        { name: 'Goat',   url: 'assets/goat.png' },
+        { name: 'Monkey', url: 'assets/monkey.png' },
+        { name: 'Rooster', url: 'assets/rooster.png' },
+        { name: 'Dog',    url: 'assets/dog.png' },
+        { name: 'Pig',    url: 'assets/pig.png' }
+      ],
+      rearUrl: 'assets/rear.png'
+    };
+    window.PARADE_IMAX_CONFIG = {
+      innerSphereVideoUrl: 'videos/video1_480p.mp4',
+      innerSphereVisible: true,
+      globeScreensVisible: true,
+      globeScreenVideos: [
+        'videos/video1_480p.mp4',
+        'videos/video2_480p.mp4',
+        'videos/video3_480p.mp4',
+        'videos/video4_480p.mp4'
+      ]
+    };
+    window.PARADE_ENABLE_CAROUSEL = false;
+  </script>
+  <script>
+    (function () {
+      var ctrl = {
+        cameraZoom: 5,
+        bloomEnabled: true,
+        bloomLevel: 5,
+        particlesVisible: true,
+        medallionsVisible: true,
+        innerSphereVisible: true,
+        globeScreensVisible: true,
+        particlesMult: 4,
+        particlesLum: 12,
+        particlesSize: 5,
+        particlesSpinSpeed: 4,
+        particlesSpinDir: -1,
+        particlesColor: '#0ea5e9',
+        particlesColorHex: '#0ea5e9',
+        particlesBloom: 6,
+        medallionsScale: 7,
+        medallionsSpinSpeed: 3,
+        medallionsColor: '#ffffff',
+        medallionsColorHex: '#ffffff',
+        medallionsBloom: 7,
+        innerSphereColor: '#0ea5e9',
+        innerSphereColorHex: '#0ea5e9',
+        innerSphereBloom: 6,
+        globeScreensDiameter: 3,
+        globeScreensScreenSize: 10,
+        globeScreensSeparation: 5,
+        globeScreensLum: 6,
+        globeScreensSpin: 8,
+        globeScreensColor: '#ffffff',
+        globeScreensColorHex: '#ffffff',
+        globeScreensBloom: 3
+      };
+      window.heroCarouselControls = ctrl;
+
+      function bindCheck(id, key) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.checked = ctrl[key] !== false;
+        el.addEventListener('change', function () { ctrl[key] = el.checked; });
+      }
+      function bindRange(id, key, parse) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.value = String(ctrl[key]);
+        el.addEventListener('input', function () { ctrl[key] = (parse || parseFloat)(el.value); });
+      }
+      function bindColor(id, hexId, key) {
+        var hexKey = key + 'Hex';
+        var colorEl = document.getElementById(id);
+        var hexEl = document.getElementById(hexId);
+        if (!colorEl || !hexEl) return;
+        function setFromPicker() {
+          var hex = colorEl.value;
+          ctrl[key] = hex;
+          ctrl[hexKey] = hex;
+          hexEl.value = hex;
+        }
+        function setFromHex() {
+          var raw = hexEl.value.trim().replace(/^#/, '');
+          if (/^[0-9a-fA-F]{3}$/.test(raw)) {
+            raw = raw[0] + raw[0] + raw[1] + raw[1] + raw[2] + raw[2];
+          }
+          if (/^[0-9a-fA-F]{6}$/.test(raw)) {
+            var hex = '#' + raw;
+            ctrl[key] = hex;
+            ctrl[hexKey] = hex;
+            colorEl.value = hex;
+          }
+        }
+        colorEl.addEventListener('input', setFromPicker);
+        hexEl.addEventListener('change', setFromHex);
+        hexEl.addEventListener('blur', setFromHex);
+        setFromPicker();
+      }
+      function bindSelect(id, key, parse) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.value = String(ctrl[key]);
+        el.addEventListener('change', function () { ctrl[key] = (parse || parseInt)(el.value, 10); });
+      }
+
+      bindRange('hcc-camera-zoom', 'cameraZoom');
+      bindCheck('hcc-bloom', 'bloomEnabled');
+      bindRange('hcc-bloom-level', 'bloomLevel');
+      bindCheck('hcc-particles', 'particlesVisible');
+      bindCheck('hcc-medallions', 'medallionsVisible');
+      bindCheck('hcc-inner-sphere', 'innerSphereVisible');
+      bindCheck('hcc-globe', 'globeScreensVisible');
+      bindRange('hcc-particles-mult', 'particlesMult');
+      bindRange('hcc-particles-lum', 'particlesLum');
+      bindRange('hcc-particles-bloom', 'particlesBloom');
+      bindRange('hcc-particles-size', 'particlesSize');
+      bindRange('hcc-particles-spin', 'particlesSpinSpeed');
+      bindSelect('hcc-particles-spin-dir', 'particlesSpinDir', parseInt);
+      bindColor('hcc-particles-color', 'hcc-particles-hex', 'particlesColor');
+      bindRange('hcc-medallions-scale', 'medallionsScale');
+      bindRange('hcc-medallions-spin', 'medallionsSpinSpeed');
+      bindRange('hcc-medallions-bloom', 'medallionsBloom');
+      bindColor('hcc-medallions-color', 'hcc-medallions-hex', 'medallionsColor');
+      bindRange('hcc-inner-sphere-bloom', 'innerSphereBloom');
+      bindColor('hcc-inner-sphere-color', 'hcc-inner-sphere-hex', 'innerSphereColor');
+      bindRange('hcc-globe-diameter', 'globeScreensDiameter');
+      bindRange('hcc-globe-screen-size', 'globeScreensScreenSize');
+      bindRange('hcc-globe-separation', 'globeScreensSeparation');
+      bindRange('hcc-globe-lum', 'globeScreensLum');
+      bindRange('hcc-globe-bloom', 'globeScreensBloom');
+      bindRange('hcc-globe-spin', 'globeScreensSpin');
+      bindColor('hcc-globe-color', 'hcc-globe-hex', 'globeScreensColor');
+    })();
+  </script>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="catbotica_medallions_full.js"></script>
+</body>
+</html>

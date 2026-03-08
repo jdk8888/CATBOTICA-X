@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>CATBOTICA — Medallions v2 (Strip layout)</title>
+  <style>
+    :root {
+      --cb-sky: #0ea5e9;
+      --cb-amber: #f59e0b;
+      --cb-bg: #0f172a;
+      --cb-text: #f1f5f9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; margin: 0; overflow: hidden; }
+    body {
+      min-height: 100vh; min-height: 100dvh;
+      display: flex; flex-direction: column; background: var(--cb-bg); color: var(--cb-text);
+      font-family: system-ui, sans-serif;
+    }
+    .strip-band {
+      flex-shrink: 0; height: 6vh;
+      background: linear-gradient(90deg, var(--cb-sky) 0%, var(--cb-sky) 40%, var(--cb-amber) 60%, var(--cb-amber) 100%);
+      pointer-events: none;
+    }
+    .strip-wrapper {
+      flex: 1; min-height: 0;
+      position: relative; overflow: hidden; z-index: 1;
+    }
+    #parade-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: block; touch-action: none; z-index: 1;
+    }
+    #closeup-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 20;
+      flex-direction: column; justify-content: flex-end; align-items: center;
+      background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 0%, transparent 38%, rgba(15,23,42,0.5) 65%, rgba(15,23,42,0.88) 100%);
+      pointer-events: none;
+    }
+    #closeup-overlay.show { display: flex; }
+    #closeup-overlay .closeup-actions {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      padding: 28px 24px 36px; pointer-events: auto;
+    }
+    #closeup-overlay .closeup-card-name {
+      font-family: ui-monospace, monospace; font-size: clamp(18px, 4vw, 28px); font-weight: 800;
+      color: var(--cb-sky); letter-spacing: 0.02em;
+    }
+    #closeup-overlay .closeup-back {
+      font-family: ui-monospace, monospace; font-size: 14px; font-weight: 700; padding: 12px 28px;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--cb-text);
+      background: rgba(14,165,233,0.25); border: 2px solid var(--cb-sky); border-radius: 10px;
+      cursor: pointer;
+    }
+    .zoom-hint {
+      position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%);
+      font-family: ui-monospace, monospace; font-size: 11px;
+      color: rgba(255,255,255,0.5); pointer-events: none; z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="strip-band" aria-hidden="true"></div>
+  <section class="strip-wrapper">
+    <div id="parade-canvas"></div>
+    <div id="closeup-overlay" aria-hidden="true">
+      <div class="closeup-actions">
+        <span id="closeup-card-name" class="closeup-card-name"></span>
+        <button type="button" id="closeup-back" class="closeup-back">Back to carousel</button>
+      </div>
+    </div>
+    <p class="zoom-hint" aria-hidden="true">CATBOTICA Medallions v2 — Scroll to zoom. Drag to orbit. Click card for closeup.</p>
+  </section>
+  <script>
+    window.PARADE_MEDALLIONS_COINS_CONFIG = {
+      imageList: [
+        { name: 'Rat',    url: '../assets/rat.png' },
+        { name: 'Ox',     url: '../assets/ox.png' },
+        { name: 'Tiger',  url: '../assets/tiger.png' },
+        { name: 'Rabbit', url: '../assets/rabbit.png' },
+        { name: 'Dragon', url: '../assets/dragon.png' },
+        { name: 'Snake',  url: '../assets/snake.png' },
+        { name: 'Horse',  url: '../assets/horse.png' },
+        { name: 'Goat',   url: '../assets/goat.png' },
+        { name: 'Monkey', url: '../assets/monkey.png' },
+        { name: 'Rooster', url: '../assets/rooster.png' },
+        { name: 'Dog',    url: '../assets/dog.png' },
+        { name: 'Pig',    url: '../assets/pig.png' }
+      ],
+      rearUrl: '../assets/rear.png'
+    };
+  </script>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="../v1/catbotica_medallions_v1.js"></script>
+</body>
+</html>
