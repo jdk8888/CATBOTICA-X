@@ -5,10 +5,10 @@ CATBOTICA Zodiac Badge Post-Processor — Silo 07 (Post-Prod)
 Post-processes raw zodiac badge PNGs: background removal + upscaling.
 
 Pipeline:
-  1. Read raw badges from projects/CATBOTICA/Assets/badges/raw/
+  1. Read raw badges from projects/CATBOTICA/Exports/draft/badges/raw/
   2. Background removal via rembg (AI-based, u2net model)
   3. Upscale 1024→2048 via Pillow LANCZOS (or optional Real-ESRGAN)
-  4. Output final assets to projects/CATBOTICA/Exports/final_assets/badges/
+  4. Output to projects/CATBOTICA/Exports/draft/badges/ (transparent, upscaled, final)
 
 VRAM: ~2GB (rembg uses ONNX on CPU/GPU, Pillow upscale is CPU-only)
 Lore Anchor: LS-CATBOTICA-ANCHOR-012
@@ -49,22 +49,47 @@ except ImportError:
 # ─── Paths ──────────────────────────────────────────────────────────────────
 STUDIO_ROOT = Path("E:/thebeyondverse/BEYONDVERSE_STUDIO")
 PROJECT_ROOT = STUDIO_ROOT / "projects" / "CATBOTICA"
-RAW_INPUT_DIR = PROJECT_ROOT / "Assets" / "badges" / "raw"
-FINAL_OUTPUT_DIR = PROJECT_ROOT / "Exports" / "final_assets" / "badges"
+BADGES_BASE = PROJECT_ROOT / "Exports" / "draft" / "badges"
+RAW_INPUT_DIR = BADGES_BASE / "raw"  # default; with --draft-label use raw/<label>/
+DRAFT_OUTPUT_DIR = BADGES_BASE
 SCRIPTS_DIR = STUDIO_ROOT / "Scripts"
 
-# Sub-directories for each processing stage
-TRANSPARENT_DIR = FINAL_OUTPUT_DIR / "transparent"
-UPSCALED_DIR = FINAL_OUTPUT_DIR / "upscaled"
-FINAL_DIR = FINAL_OUTPUT_DIR / "final"  # upscaled + transparent
+
+def get_raw_input_dir(draft_label: str | None) -> Path:
+    """Raw input dir: raw/<draft_label>/ when draft_label set, else raw/."""
+    if draft_label:
+        return BADGES_BASE / "raw" / draft_label
+    return BADGES_BASE / "raw"
+
+
+def get_output_dirs(draft_label: str | None) -> tuple[Path, Path, Path]:
+    """Transparent, upscaled, final dirs; when draft_label set, use subdirs."""
+    if draft_label:
+        return (
+            DRAFT_OUTPUT_DIR / "transparent" / draft_label,
+            DRAFT_OUTPUT_DIR / "upscaled" / draft_label,
+            DRAFT_OUTPUT_DIR / "final" / draft_label,
+        )
+    return (
+        DRAFT_OUTPUT_DIR / "transparent",
+        DRAFT_OUTPUT_DIR / "upscaled",
+        DRAFT_OUTPUT_DIR / "final",
+    )
+
+
+# Sub-directories for each processing stage (default; use get_output_dirs(draft_label) for variants)
+TRANSPARENT_DIR = DRAFT_OUTPUT_DIR / "transparent"
+UPSCALED_DIR = DRAFT_OUTPUT_DIR / "upscaled"
+FINAL_DIR = DRAFT_OUTPUT_DIR / "final"  # upscaled + transparent
 
 SILO_NAME = "07_Post_Prod"
 VRAM_ESTIMATE_GB = 2.0
 
 # Expected badge names (matches generation order)
+# Order matches generator: Horse then Monkey (style anchors), then rest
 BADGE_NAMES = [
-    "horse", "tiger", "rabbit", "dragon", "snake", "goat",
-    "monkey", "rooster", "dog", "pig", "rat", "ox",
+    "horse", "monkey", "dog", "tiger", "rabbit", "dragon", "snake",
+    "goat", "rooster", "pig", "rat", "ox",
 ]
 
 
@@ -169,11 +194,15 @@ def upscale_image(input_path: Path, output_path: Path, factor: int = 2) -> bool:
 
 def run_pipeline(args):
     """Execute the post-processing pipeline."""
+    draft_label = getattr(args, "draft_label", None)
+    raw_input_dir = get_raw_input_dir(draft_label)
+    transparent_dir, upscaled_dir, final_dir = get_output_dirs(draft_label)
+
     print("=" * 70)
     print("CATBOTICA ZODIAC BADGE POST-PROCESSOR — Silo 07 (Post-Prod)")
     print("Lore Anchor: LS-CATBOTICA-ANCHOR-012")
-    print(f"Input:  {RAW_INPUT_DIR}")
-    print(f"Output: {FINAL_OUTPUT_DIR}")
+    print(f"Input:  {raw_input_dir}")
+    print(f"Output: {DRAFT_OUTPUT_DIR}" + (f" (variant: {draft_label})" if draft_label else ""))
     print(f"Upscale Factor: {args.upscale_factor}x")
     print("=" * 70)
 
@@ -185,7 +214,7 @@ def run_pipeline(args):
 
     raw_files = []
     for name in badge_names:
-        raw_path = RAW_INPUT_DIR / f"{name}.png"
+        raw_path = raw_input_dir / f"{name}.png"
         if raw_path.exists():
             raw_files.append((name, raw_path))
         else:
@@ -193,7 +222,7 @@ def run_pipeline(args):
 
     if not raw_files:
         print("[ERROR] No raw badge files found in input directory.")
-        print(f"  Expected: {RAW_INPUT_DIR}/<name>.png")
+        print(f"  Expected: {raw_input_dir}/<name>.png")
         print("  Run generate_zodiac_badges.py first (Silo 03).")
         return False
 
@@ -223,7 +252,7 @@ def run_pipeline(args):
 
     try:
         # Create output directories
-        for d in [TRANSPARENT_DIR, UPSCALED_DIR, FINAL_DIR]:
+        for d in [transparent_dir, upscaled_dir, final_dir]:
             d.mkdir(parents=True, exist_ok=True)
 
         results = []
@@ -235,7 +264,7 @@ def run_pipeline(args):
 
             # Step A: Background Removal
             if not args.skip_bg:
-                transparent_path = TRANSPARENT_DIR / f"{name}_transparent.png"
+                transparent_path = transparent_dir / f"{name}_transparent.png"
                 if transparent_path.exists() and not args.force:
                     print(f"  [SKIP] Transparent version exists: {transparent_path.name}")
                     result["bg_removed"] = True
@@ -252,7 +281,7 @@ def run_pipeline(args):
 
             # Step B: Upscale raw (black background version)
             if not args.skip_upscale:
-                upscaled_path = UPSCALED_DIR / f"{name}_{args.upscale_factor}x.png"
+                upscaled_path = upscaled_dir / f"{name}_{args.upscale_factor}x.png"
                 if upscaled_path.exists() and not args.force:
                     print(f"  [SKIP] Upscaled version exists: {upscaled_path.name}")
                     result["upscaled"] = True
@@ -267,8 +296,8 @@ def run_pipeline(args):
 
             # Step C: Upscale transparent version (final deliverable)
             if not args.skip_bg and not args.skip_upscale and result["bg_removed"]:
-                final_path = FINAL_DIR / f"{name}_final_{args.upscale_factor}x.png"
-                transparent_src = TRANSPARENT_DIR / f"{name}_transparent.png"
+                final_path = final_dir / f"{name}_final_{args.upscale_factor}x.png"
+                transparent_src = transparent_dir / f"{name}_transparent.png"
                 if final_path.exists() and not args.force:
                     print(f"  [SKIP] Final version exists: {final_path.name}")
                     result["final"] = True
@@ -286,9 +315,9 @@ def run_pipeline(args):
         print("POST-PROCESSING COMPLETE")
         print("=" * 70)
         print(f"\n  Output structure:")
-        print(f"    {TRANSPARENT_DIR}/  — Transparent PNGs (bg removed)")
-        print(f"    {UPSCALED_DIR}/     — Upscaled PNGs (black bg)")
-        print(f"    {FINAL_DIR}/        — Final deliverables (transparent + upscaled)")
+        print(f"    {transparent_dir}/  — Transparent PNGs (bg removed)")
+        print(f"    {upscaled_dir}/     — Upscaled PNGs (black bg)")
+        print(f"    {final_dir}/        — Final deliverables (transparent + upscaled)")
 
         print(f"\n  Results:")
         for r in results:
@@ -307,7 +336,7 @@ def run_pipeline(args):
         print(f"\n  Totals: {bg_count} bg-removed, {up_count} upscaled, {final_count} final")
 
         print(f"\n[NEXT STEPS]")
-        print(f"  1. Review outputs in: {FINAL_OUTPUT_DIR}")
+        print(f"  1. Review outputs in: {DRAFT_OUTPUT_DIR}")
         print(f"  2. Upload final PNGs to IPFS")
         print(f"  3. Update metadata CIDs in: projects/CATBOTICA/metadata/onchain/erc1155/")
         print(f"  4. Redeploy claim page with updated image URIs")
@@ -350,6 +379,8 @@ def main():
                         choices=[2, 4], help="Upscale factor (default: 2 → 2048x2048)")
     parser.add_argument("--force", action="store_true", help="Overwrite existing outputs")
     parser.add_argument("--skip-lock", action="store_true", help="Skip VRAM lock (dev mode)")
+    parser.add_argument("--draft-label", type=str, default=None,
+                        help="Draft variant: read from raw/<label>/ and write to transparent/<label>/ etc. (e.g. cute_cartoon)")
     args = parser.parse_args()
 
     success = run_pipeline(args)

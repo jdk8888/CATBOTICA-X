@@ -1,6 +1,6 @@
-# CATBOTICA Medallions — Standalone App
+# Catbotica Inc — Medallions (Standalone App)
 
-This folder is the **dedicated, independent** home for all CATBOTICA medallion/carousel experiences. It is **not** tied to KARAFURU paths or structure; all assets and versions live here.
+This folder is the **dedicated, independent** home for all **Catbotica Inc** medallion/carousel experiences. It is **not** tied to KARAFURU paths or structure; all assets and versions live here. **Hub:** Catbotica Inc.
 
 ## Structure
 
@@ -39,3 +39,15 @@ The **catbotica_marquee** app embeds the root `catbotica_medallions.js` and sets
 ## Assets
 
 See `assets/README.md` for what to put in `assets/` (12 zodiac images + rear). Copy from `catbotica_marquee/assets/` or from `projects/CATBOTICA/Assets/badges/` if available.
+
+## GitHub hub (Catbotica Inc)
+
+To use **Catbotica Inc** as its own GitHub hub (separate from KARAFURU.WORLD):
+
+1. **Create a new repository** on GitHub (e.g. `catbotica-inc`, `CatboticaInc`, or `catbotica-medallions`).
+2. From the studio root, add the new remote and push this app (or the whole CATBOTICA project):
+   ```bash
+   git remote add catbotica-inc https://github.com/YOUR_ORG/catbotica-inc.git
+   git subtree push --prefix=projects/CATBOTICA/web/apps/catbotica_medallions catbotica-inc main
+   ```
+   Or, if the new repo is meant to hold only the medallions app, clone the app into a new repo and push there. To start a **new project** that is Catbotica Inc–only, create the repo and then either push this folder as the root or use the studio’s `Scripts/create_project.py` to create a `CATBOTICA_INC` project and wire it to the new remote.

@@ -17,25 +17,28 @@ import { type Address } from 'viem'
 //  CONTRACT ADDRESSES (Per-Chain)
 // ═══════════════════════════════════════════════════════════════
 
+const ZERO = '0x0000000000000000000000000000000000000000' as Address
+
 /**
  * Deployed contract addresses.
- * Update these after running deploy-all.ts on each target network.
+ * Base (8453) can be overridden via env: NEXT_PUBLIC_BASE_ERC1155_ADDRESS, NEXT_PUBLIC_BASE_SBT_ADDRESS.
  */
-export const CONTRACT_ADDRESSES: Record<
-  number,
-  { erc1155: Address; sbt: Address }
-> = {
-  // Base Sepolia (testnet)
-  84532: {
-    erc1155: '0x0000000000000000000000000000000000000000' as Address, // TODO: Update after deployment
-    sbt: '0x0000000000000000000000000000000000000000' as Address, // TODO: Update after deployment
-  },
-  // Base (mainnet)
-  8453: {
-    erc1155: '0x0000000000000000000000000000000000000000' as Address, // TODO: Update after deployment
-    sbt: '0x0000000000000000000000000000000000000000' as Address, // TODO: Update after deployment
-  },
+function getContractAddressesStatic(): Record<number, { erc1155: Address; sbt: Address }> {
+  const baseErc1155 = (process.env.NEXT_PUBLIC_BASE_ERC1155_ADDRESS || ZERO) as Address
+  const baseSbt = (process.env.NEXT_PUBLIC_BASE_SBT_ADDRESS || ZERO) as Address
+  return {
+    84532: {
+      erc1155: (process.env.NEXT_PUBLIC_BASE_SEPOLIA_ERC1155_ADDRESS || ZERO) as Address,
+      sbt: (process.env.NEXT_PUBLIC_BASE_SEPOLIA_SBT_ADDRESS || ZERO) as Address,
+    },
+    8453: {
+      erc1155: baseErc1155,
+      sbt: baseSbt,
+    },
+  }
 }
+
+export const CONTRACT_ADDRESSES = getContractAddressesStatic()
 
 // ═══════════════════════════════════════════════════════════════
 //  ZODIAC BADGE MAPPING

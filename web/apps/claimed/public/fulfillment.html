@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATBOTICA Inc. - Fulfillment Center | claimed.catbotica.com</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00ff88; --primary-dark: #00cc6a; --primary-light: #33ffaa;
+            --secondary: #ff00ff; --background: #0a0a0a; --background-light: #1a1a1a; --background-lighter: #2a2a2a;
+            --text: #ffffff; --text-muted: #a0a0a0;
+        }
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--background); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; line-height: 1.6; }
+        h1, h2, h3 { font-family: 'Space Grotesk', system-ui, sans-serif; }
+        .container { width: 100%; max-width: 42rem; }
+        .header { text-align: center; margin-bottom: 3rem; }
+        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header p { color: var(--text-muted); font-size: 1.125rem; }
+        .card { background: var(--background-light); border: 1px solid var(--background-lighter); border-radius: 1rem; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; }
+        .form-group label .required { color: var(--primary); }
+        .form-group select, .form-group input[type="text"] { width: 100%; padding: 0.75rem 1rem; background: var(--background); border: 1px solid var(--background-lighter); border-radius: 0.5rem; color: var(--text); font-size: 1rem; transition: all 0.2s; }
+        .form-group select:focus, .form-group input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2); }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 0.75rem; }
+        .checkbox-group input[type="checkbox"] { width: 1.25rem; height: 1.25rem; margin-top: 0.125rem; accent-color: var(--primary); cursor: pointer; }
+        .checkbox-group label { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+        .checkbox-group a { color: var(--primary); text-decoration: underline; }
+        .btn { width: 100%; padding: 1rem 1.5rem; background: linear-gradient(to right, var(--primary), var(--primary-dark)); color: var(--background); font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 1.125rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 15px -3px rgba(0, 255, 136, 0.2); }
+        .btn:hover:not(:disabled) { background: linear-gradient(to right, var(--primary-light), var(--primary)); box-shadow: 0 10px 15px -3px rgba(0, 255, 136, 0.4); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .footer { margin-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--text-muted); }
+        .footer a { color: var(--primary); text-decoration: underline; }
+        .wallet-section { margin-bottom: 1.5rem; text-align: center; }
+        .wallet-btn { display: inline-block; padding: 0.75rem 1.5rem; background: linear-gradient(to right, var(--primary), var(--primary-dark)); color: var(--background); font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s; }
+        .wallet-info { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--background-light); border: 1px solid var(--background-lighter); border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; }
+        .section { margin-bottom: 1.5rem; padding: 1rem; background: var(--background-light); border: 1px solid var(--background-lighter); border-radius: 0.5rem; }
+        .section h3 { font-size: 0.875rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; }
+        .section p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .success { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.2); color: var(--primary); }
+        .success-icon { display: inline-block; width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; vertical-align: middle; }
+        .music-controls { position: fixed; bottom: 1rem; right: 1rem; background: var(--background-light); border: 1px solid var(--background-lighter); border-radius: 0.5rem; padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); z-index: 1000; }
+        .music-controls button { background: transparent; border: 1px solid var(--background-lighter); color: var(--text); padding: 0.25rem 0.5rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <audio id="elevatorMusic" autoplay loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+    <div class="music-controls"><span>🎵</span><button id="musicToggle" onclick="toggleMusic()">Pause</button></div>
+    <div class="container">
+        <div class="header">
+            <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase;">CATBOTICA Inc.</div>
+            <h1>Fulfillment Center</h1>
+            <p style="max-width: 600px; margin: 1rem auto; font-style: italic; color: var(--text-muted);">Welcome to the Fulfillment Center. Please submit your fulfillment requests using the form below. Our highly efficient automated processing system will review your submission in a timely fashion (processing times may vary from 2-4 business eternities). Thank you for choosing CATBOTICA Inc.</p>
+        </div>
+        <div class="wallet-section">
+            <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+            <div id="walletInfo" style="display: none;" class="wallet-info"><span class="wallet-address">0x1234...5678</span><button onclick="disconnectWallet()" style="background: transparent; border: 1px solid var(--background-lighter); color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.75rem;">Disconnect</button></div>
+        </div>
+        <div class="section" id="nftVerification" style="display: none;"><h3>Asset Verification Required</h3><p>Verify ownership of the asset to proceed.</p><button class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="verifyNFT()">Verify Asset Ownership</button></div>
+        <div class="section" id="signatureSection" style="display: none;"><h3>Digital Signature Required</h3><p>Sign to authorize this fulfillment request.</p><button class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="signMessage()">Authorize & Sign</button></div>
+        <div class="card">
+            <form id="claimForm" onsubmit="handleSubmit(event)">
+                <div class="form-group"><label>Select Your Region <span class="required">*</span></label>
+                    <select id="region" required onchange="handleRegionChange()"><option value="">-- Select Region --</option><option value="asia">Asia</option><option value="n-america">North America</option><option value="s-america">South America</option><option value="europe">Europe</option><option value="africa">Africa</option></select>
+                </div>
+                <div class="form-group" id="canadianSection" style="display: none;"><label>Are you Canadian? <span class="required">*</span></label>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"><input type="radio" name="isCanadian" value="yes" onchange="handleCanadianChange()" style="width: auto; margin: 0;"><span>Yes</span></label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"><input type="radio" name="isCanadian" value="no" onchange="handleCanadianChange()" style="width: auto; margin: 0;"><span>No</span></label>
+                    </div>
+                </div>
+                <div class="form-group" id="provinceSection" style="display: none;"><label>Province/Territory <span class="required">*</span></label>
+                    <select id="province" onchange="validateProvince()"><option value="">-- Select --</option><option value="alberta">Alberta</option><option value="british-columbia">British Columbia</option><option value="manitoba">Manitoba</option><option value="new-brunswick">New Brunswick</option><option value="newfoundland-labrador">Newfoundland and Labrador</option><option value="northwest-territories">Northwest Territories</option><option value="nova-scotia">Nova Scotia</option><option value="nunavut">Nunavut</option><option value="ontario">Ontario</option><option value="prince-edward-island">Prince Edward Island</option><option value="quebec">Quebec</option><option value="saskatchewan">Saskatchewan</option><option value="yukon">Yukon</option></select>
+                </div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="terms" required><label for="terms">I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a> <span class="required">*</span></label></div></div>
+                <button type="submit" class="btn" id="submitBtn">Submit Fulfillment Request</button>
+            </form>
+        </div>
+        <div class="footer">
+            <p><strong>Register &amp; mint (live wallet):</strong> <a href="/">Claim Page</a> — connect wallet and complete eligibility to mint.</p>
+            <p style="margin-top: 0.75rem;">Fulfillment: <a href="mailto:fulfillment@catbotica.com">fulfillment@catbotica.com</a></p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.7;">CATBOTICA Inc. — 2-4 business eternities. Terms apply.</p>
+        </div>
+    </div>
+    <script>
+        let walletConnected = false, nftVerified = false, messageSigned = false;
+        function connectWallet() { walletConnected = true; document.querySelector('.wallet-btn').style.display = 'none'; document.getElementById('walletInfo').style.display = 'inline-flex'; document.getElementById('nftVerification').style.display = 'block'; document.getElementById('signatureSection').style.display = 'block'; }
+        function disconnectWallet() { walletConnected = nftVerified = messageSigned = false; document.querySelector('.wallet-btn').style.display = 'inline-block'; document.getElementById('walletInfo').style.display = 'none'; document.getElementById('nftVerification').style.display = 'none'; document.getElementById('signatureSection').style.display = 'none'; updateSubmitButton(); }
+        function verifyNFT() { nftVerified = true; var s = document.getElementById('nftVerification'); s.className = 'section success'; s.innerHTML = '<h3><span class="success-icon">✓</span>Asset Verification Complete</h3><p>Eligible for processing.</p>'; updateSubmitButton(); }
+        function signMessage() { messageSigned = true; var s = document.getElementById('signatureSection'); s.className = 'section success'; s.innerHTML = '<h3><span class="success-icon">✓</span>Authorization Complete</h3><p>Signature recorded.</p>'; updateSubmitButton(); }
+        function updateSubmitButton() { var r = document.getElementById('region').value, c = document.querySelector('input[name="isCanadian"]:checked')?.value, p = document.getElementById('province').value; var ok = walletConnected && nftVerified && messageSigned; if (r === 'n-america') { if (!c) ok = false; else if (c === 'yes' && !p) ok = false; } document.getElementById('submitBtn').disabled = !ok; }
+        function handleRegionChange() { var r = document.getElementById('region').value; document.getElementById('canadianSection').style.display = r === 'n-america' ? 'block' : 'none'; if (r !== 'n-america') { document.getElementById('provinceSection').style.display = 'none'; document.querySelectorAll('input[name="isCanadian"]').forEach(function(x){ x.checked = false; }); document.getElementById('province').value = ''; } updateSubmitButton(); }
+        function handleCanadianChange() { var c = document.querySelector('input[name="isCanadian"]:checked')?.value; document.getElementById('provinceSection').style.display = c === 'yes' ? 'block' : 'none'; document.getElementById('province').required = c === 'yes'; if (c !== 'yes') document.getElementById('province').value = ''; updateSubmitButton(); }
+        function validateProvince() { updateSubmitButton(); }
+        function handleSubmit(e) { e.preventDefault(); if (!walletConnected) { alert('Connect wallet first.'); return; } if (!nftVerified) { alert('Verify NFT ownership.'); return; } if (!messageSigned) { alert('Sign the message.'); return; } if (!document.getElementById('terms').checked) { alert('Accept Terms.'); return; } var r = document.getElementById('region').value; if (!r) { alert('Select region.'); return; } if (r === 'n-america') { var c = document.querySelector('input[name="isCanadian"]:checked')?.value; if (!c) { alert('Indicate if Canadian.'); return; } if (c === 'yes' && !document.getElementById('province').value) { alert('Select province.'); return; } } alert('Fulfillment request submitted! Order #' + Math.floor(Math.random() * 1000000) + '. (Preview — no request processed)'); }
+        function toggleMusic() { var a = document.getElementById('elevatorMusic'), b = document.getElementById('musicToggle'); if (a.paused) { a.play(); b.textContent = 'Pause'; } else { a.pause(); b.textContent = 'Play'; } }
+        document.getElementById('elevatorMusic').play().catch(function(){ document.getElementById('musicToggle').textContent = 'Play'; }); updateSubmitButton();
+    </script>
+</body>
+</html>

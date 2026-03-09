@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { useAccount, useSignMessage } from 'wagmi'
+import { useAccount, useChainId, useSignMessage, useSwitchChain } from 'wagmi'
 import { z } from 'zod'
 
 // ─────────────────────────────────────────────────────────────
@@ -16,6 +16,14 @@ const shippingSchema = z.object({
   email: z
     .string()
     .email('Invalid email address'),
+  socialPlatform: z
+    .enum(['discord', 'kakao'], {
+      errorMap: () => ({ message: 'Select Discord or KakaoTalk' }),
+    }),
+  socialUserId: z
+    .string()
+    .min(2, 'Social ID is required')
+    .max(40, 'Social ID too long'),
   streetAddress: z
     .string()
     .min(5, 'Street address is required')
@@ -204,6 +212,8 @@ export function LunarClaimForm() {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
+    socialPlatform: '' as '' | 'discord' | 'kakao',
+    socialUserId: '',
     streetAddress: '',
     city: '',
     stateProvince: '',
@@ -216,6 +226,11 @@ export function LunarClaimForm() {
   const [claimState, setClaimState] = useState<ClaimState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [claimId, setClaimId] = useState<string | null>(null)
+  const [basescanUrl, setBasescanUrl] = useState<string | null>(null)
+
+  const chainId = useChainId()
+  const { switchChainAsync } = useSwitchChain()
+  const isOnBase = chainId === 8453
 
   // ── Auto-populate wallet ──
   const walletAddress = address || ''
@@ -269,6 +284,17 @@ export function LunarClaimForm() {
       return
     }
 
+    if (!isOnBase) {
+      setErrorMessage('Please switch to Base network to register and receive your airdrop.')
+      try {
+        await switchChainAsync?.({ chainId: 8453 })
+      } catch {
+        setClaimState('error_generic')
+        setErrorMessage('Switch to Base was rejected or failed. Please switch manually and try again.')
+      }
+      return
+    }
+
     if (!validateForm()) return
 
     // Step 1: Sign message
@@ -296,6 +322,8 @@ export function LunarClaimForm() {
           walletAddress: address,
           fullName: formData.fullName,
           email: formData.email,
+          socialPlatform: formData.socialPlatform,
+          socialUserId: formData.socialUserId,
           streetAddress: formData.streetAddress,
           city: formData.city,
           stateProvince: formData.stateProvince,
@@ -327,6 +355,7 @@ export function LunarClaimForm() {
 
       // SUCCESS
       setClaimId(result.data?.claimId || `LMRP-${timestamp}`)
+      setBasescanUrl(result.data?.basescanUrl ?? null)
       setClaimState('success')
 
       // Fire confetti
@@ -337,13 +366,14 @@ export function LunarClaimForm() {
       setClaimState('error_generic')
       setErrorMessage(err instanceof Error ? err.message : 'An unexpected error occurred.')
     }
-  }, [isConnected, address, formData, validateForm, signMessageAsync])
+  }, [isConnected, address, isOnBase, formData, validateForm, signMessageAsync, switchChainAsync])
 
   // ── Reset handler ──
   const handleReset = useCallback(() => {
     setClaimState('idle')
     setErrorMessage('')
     setErrors({})
+    setBasescanUrl(null)
   }, [])
 
   // ─────────────────────────────────────────────────────────
@@ -368,14 +398,28 @@ export function LunarClaimForm() {
           </h2>
 
           <p className="text-text-muted text-lg mb-6">
-            Your Luck-Module has been synchronized with the Year of the Horse frequency.
-            Enhanced probability matrices are now active.
+            {basescanUrl
+              ? 'Your ERC-1155 Zodiac Badge has been minted on Base. Check your wallet and the transaction link below.'
+              : 'Your Luck-Module has been synchronized with the Year of the Horse frequency. Your airdrop will be processed shortly.'}
           </p>
 
           <div className="inline-block bg-background border border-secondary/20 rounded-lg px-6 py-3 mb-6">
             <span className="text-xs text-text-muted block mb-1">RECALIBRATION ID</span>
             <span className="font-mono text-secondary text-sm">{claimId}</span>
           </div>
+
+          {basescanUrl && (
+            <p className="mb-6">
+              <a
+                href={basescanUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary-light underline font-display"
+              >
+                View transaction on BaseScan →
+              </a>
+            </p>
+          )}
 
           <div className="filigree-divider my-6" />
 
@@ -494,6 +538,22 @@ export function LunarClaimForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+      {/* ── Switch to Base (required for airdrop) ── */}
+      {isConnected && !isOnBase && (
+        <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <p className="text-sm text-text">
+            Airdrop is on <strong>Base</strong>. Please switch network to register and receive your ERC-1155 Zodiac Badge.
+          </p>
+          <button
+            type="button"
+            onClick={() => switchChainAsync?.({ chainId: 8453 })}
+            className="shrink-0 px-4 py-2 bg-primary text-background font-display font-bold rounded-lg hover:bg-primary-light transition-colors"
+          >
+            Switch to Base
+          </button>
+        </div>
+      )}
+
       {/* ── Section: Unit Identity ── */}
       <div className="bg-background-light border border-background-lighter rounded-2xl p-6">
         <h3 className="text-sm font-display font-bold text-secondary uppercase tracking-wider mb-4 flex items-center gap-2">
@@ -547,6 +607,70 @@ export function LunarClaimForm() {
               <p className="text-primary text-xs mt-1">{errors.email}</p>
             )}
           </div>
+        </div>
+
+        {/* ── Social Identity (Discord or Kakao) ── */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-text mb-1.5">
+            Community Identity <span className="text-primary">*</span>
+          </label>
+          <p className="text-xs text-text-muted mb-3">
+            Provide your Discord or KakaoTalk ID for claim verification. One social account per claim.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Platform selector */}
+            <div>
+              <select
+                value={formData.socialPlatform}
+                onChange={(e) => updateField('socialPlatform', e.target.value as '' | 'discord' | 'kakao')}
+                disabled={isProcessing}
+                className={`w-full px-4 py-3 bg-background border rounded-lg text-text focus:outline-none focus:ring-2 transition-all disabled:opacity-50 ${
+                  errors.socialPlatform
+                    ? 'border-primary focus:ring-primary/40'
+                    : 'border-background-lighter focus:ring-secondary/40 focus:border-secondary/50'
+                }`}
+              >
+                <option value="">— Platform —</option>
+                <option value="discord">Discord</option>
+                <option value="kakao">KakaoTalk</option>
+              </select>
+              {errors.socialPlatform && (
+                <p className="text-primary text-xs mt-1">{errors.socialPlatform}</p>
+              )}
+            </div>
+
+            {/* Social ID input */}
+            <div className="md:col-span-2">
+              <input
+                type="text"
+                value={formData.socialUserId}
+                onChange={(e) => updateField('socialUserId', e.target.value)}
+                placeholder={
+                  formData.socialPlatform === 'kakao'
+                    ? 'Your KakaoTalk ID'
+                    : formData.socialPlatform === 'discord'
+                    ? 'Your Discord username'
+                    : 'Select platform first...'
+                }
+                disabled={isProcessing || !formData.socialPlatform}
+                className={`w-full px-4 py-3 bg-background border rounded-lg text-text placeholder:text-text-muted/50 focus:outline-none focus:ring-2 transition-all disabled:opacity-50 ${
+                  errors.socialUserId
+                    ? 'border-primary focus:ring-primary/40'
+                    : 'border-background-lighter focus:ring-secondary/40 focus:border-secondary/50'
+                }`}
+              />
+              {errors.socialUserId && (
+                <p className="text-primary text-xs mt-1">{errors.socialUserId}</p>
+              )}
+            </div>
+          </div>
+          {formData.socialPlatform && (
+            <p className="text-xs text-text-muted/60 mt-2 font-mono">
+              {formData.socialPlatform === 'discord'
+                ? 'Format: your_username or legacy username#1234'
+                : 'Format: your_kakao_id (alphanumeric + underscores)'}
+            </p>
+          )}
         </div>
 
         {/* Wallet (auto-populated, read-only) */}
@@ -749,7 +873,7 @@ export function LunarClaimForm() {
       {/* ── Submit Button ── */}
       <button
         type="submit"
-        disabled={!isConnected || isProcessing}
+        disabled={!isConnected || !isOnBase || isProcessing}
         className="w-full py-4 px-6 bg-gradient-to-r from-primary via-primary-dark to-primary text-text font-display font-bold text-lg rounded-xl hover:from-primary-light hover:via-primary hover:to-primary-light transition-all duration-500 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-primary/20 hover:shadow-primary/40 relative overflow-hidden group"
       >
         {/* Gold accent line */}

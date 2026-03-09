@@ -155,7 +155,7 @@ describe("CatboticaZodiacBadges", function () {
     it("should track supply correctly", async function () {
       await badges.connect(minter).mintBadge(user1.address, 5, "LMRP-A");
       await badges.connect(minter).mintBadge(user2.address, 5, "LMRP-B");
-      expect(await badges.totalSupply(5)).to.equal(2);
+      expect(await badges["totalSupply(uint256)"](5)).to.equal(2);
     });
   });
 

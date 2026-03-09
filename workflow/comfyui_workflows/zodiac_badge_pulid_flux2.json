@@ -1,15 +1,15 @@
 {
   "_meta": {
     "title": "Catbotica Zodiac Badge — PuLID FLUX Workflow",
-    "description": "Generates consistent zodiac badges using FLUX 1 Dev FP8 + PuLID for identity-preserving cross-badge consistency. Generate the Horse (Master Badge) first with PuLID disabled, then enable PuLID and feed the Horse as reference for all 11 remaining badges.",
+    "description": "Catbotica zodiac badges: hard-surface mechanical, enamel pin, hybrid palette (Cyan/Red/Gold/Black). Horse master, then PuLID from Horse. Bible: project_bible.md + LS-CATBOTICA-ANCHOR-012.",
     "author": "Lore Sanctum / BeyondVerse Studio",
     "version": "2.0",
     "lore_anchor": "LS-CATBOTICA-ANCHOR-012",
     "usage_notes": [
-      "STEP 1: Set node 6 (CLIPTextEncodeFlux) prompts to the Horse prompt from zodiac_badge_prompts.md",
-      "STEP 2: Run the workflow WITHOUT PuLID nodes (remove nodes 10,11,12,15,20) to generate the Master Badge",
-      "STEP 3: Save the Master Badge output as 'master_badge_horse.png' in ComfyUI/input/",
-      "STEP 4: Add PuLID nodes back, load master_badge_horse.png in node 15 (LoadImage)",
+      "STEP 1: Set node 6 to Horse badge (Catbotica mechanical, enamel pin) from zodiac_badge_prompts.md",
+      "STEP 2: Run WITHOUT PuLID to generate Master Badge (Horse)",
+      "STEP 3: Save as 'master_badge_horse.png' in ComfyUI/input/",
+      "STEP 4: Add PuLID back, load master_badge_horse.png in node 15 (LoadImage)",
       "STEP 5: Swap the positive prompt to each zodiac in turn, generate all 11 remaining badges",
       "STEP 6: For transparent background variants, add an alpha-matting/bg-removal node after node 8 (VAEDecode)",
       "NOTE: FLUX uses CLIPTextEncodeFlux (dual clip_l + t5xxl) and cfg=1.0 with internal guidance=3.5"
@@ -18,10 +18,10 @@
   "1": {
     "class_type": "CheckpointLoaderSimple",
     "inputs": {
-      "ckpt_name": "flux1-dev-fp8.safetensors"
+      "ckpt_name": "flux2_dev_fp8mixed.safetensors"
     },
     "_meta": {
-      "title": "Load FLUX 1 Dev FP8 Checkpoint"
+      "title": "Load FLUX 2 Dev FP8 (no FLUX 1)"
     }
   },
   "4": {
@@ -39,8 +39,8 @@
     "class_type": "CLIPTextEncodeFlux",
     "inputs": {
       "clip": ["1", 1],
-      "clip_l": "Cybernetic mechanical horse badge, retro-futuristic enamel pin, Electric Cyan circuitry, Imperial Red and Gold filigree, Carbon Fiber Black base, digital collectible",
-      "t5xxl": "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. A cybernetic mechanical HORSE constructed from hard-surface metallic plates, copper wiring, circuit traces, and LED optical sensors. Rearing dynamic pose, pistons and hydraulic joints visible at legs and neck, mane rendered as a cascade of fiber-optic cables glowing Electric Cyan #00F2FF, armored chest plate with exposed circuitry. The badge frame features Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs representing Fire element — flame and spark motifs in the filigree. A Gold glowing Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. Centered, symmetrical, isolated on solid black background, ultra-fine technical detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible.",
+      "clip_l": "Minimal abstract dog badge, rounded-edge box frame, standard dog silhouette, subtle glimmer, black background",
+      "t5xxl": "Abstract minimal zodiac badge. Standard DOG silhouette, simple and recognizable: sitting or standing pose, clean outline, medium build, neutral friendly shape. Hard-surface mechanical style only. Rounded-edge box or rounded rectangle frame; subject fully inside, nothing outside the boundary. Flat metallic panels, one thin Electric Cyan #00F2FF circuit line. Simple thin Cyan rounded border, one subtle Gold #FFD700 or Imperial Red #C41E3A accent. Very subtle soft glimmer or faint Luck-Module at forehead, no strong glow. Carbon Fiber Black #0D0D0D background. Clean, minimal, geometric, centered, symmetrical, no ornamentation, no details above or outside the frame, digital collectible.",
       "guidance": 3.5
     },
     "_meta": {
@@ -52,7 +52,7 @@
     "inputs": {
       "clip": ["1", 1],
       "clip_l": "",
-      "t5xxl": "fur, hair, feathers, organic skin, organic eyes, realistic animal, photograph, soft textures, watercolor, oil painting, blurry, low quality, text, typography, words, letters, numbers, human face, human body, environmental background, landscape, scenery, multiple objects, cluttered, asymmetrical, cartoon, chibi, anime, sketch, pencil drawing, crayon",
+      "t5xxl": "fur, hair, feathers, organic skin, organic eyes, realistic animal, photograph, soft textures, watercolor, oil painting, blurry, low quality, text, typography, words, letters, numbers, human face, human body, environmental background, landscape, scenery, multiple objects, cluttered, asymmetrical, cartoon, chibi, anime, sketch, pencil drawing, crayon, ornate, baroque, filigree, busy, decorative, intricate patterns, heraldic, crest, shield, excessive detail, lavish, fancy, details at top, ornament above frame, elements outside boundary, strong glow, harsh glimmer, bright spotlight",
       "guidance": 3.5
     },
     "_meta": {
@@ -91,7 +91,7 @@
     "class_type": "SaveImage",
     "inputs": {
       "images": ["8", 0],
-      "filename_prefix": "catbotica_zodiac/horse"
+      "filename_prefix": "catbotica_zodiac/dog"
     },
     "_meta": {
       "title": "Save Image — UPDATE filename_prefix per zodiac"
@@ -139,12 +139,12 @@
       "eva_clip": ["12", 0],
       "face_analysis": ["11", 0],
       "image": ["15", 0],
-      "weight": 0.7,
+      "weight": 1,
       "start_at": 0.0,
-      "end_at": 0.85
+      "end_at": 1
     },
     "_meta": {
-      "title": "Apply PuLID FLUX — Consistency Engine (weight 0.7, end_at 0.85)"
+      "title": "Apply PuLID FLUX — Max style lock (weight 1.0, end_at 1.0)"
     }
   }
 }

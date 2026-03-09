@@ -99,8 +99,8 @@ function LunarClaimPageInner() {
           </p>
 
           <p className="text-text-muted text-base max-w-lg mx-auto mt-4 leading-relaxed">
-            Celebrate the Year of the Fire Horse with Catbotica.
-            Claim your exclusive Lunar New Year badge below.
+            Catbotica NFT holders: register with your wallet to receive your exclusive
+            ERC-1155 Zodiac Badge airdrop on Base. Connect wallet, verify ownership, then claim.
           </p>
         </header>
 

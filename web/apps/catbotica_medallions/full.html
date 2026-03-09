@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#141414">
-  <title>CATBOTICA Medallions — Full (medallions + globe)</title>
+  <title>Catbotica Inc — Medallions (full)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; }
@@ -142,9 +142,15 @@
         <input type="text" id="hcc-medallions-hex" class="hcc-hex" placeholder="#RRGGBB" value="#ffffff">
       </div>
     </section>
-    <h3>Inner sphere</h3>
+    <h3>Inner cylinder</h3>
     <section>
       <label><input type="checkbox" id="hcc-inner-sphere" checked> Visible</label>
+      <div class="row">
+        <label>Spin 1–10 <input type="range" id="hcc-inner-cylinder-spin" min="1" max="10" step="1" value="3"></label>
+      </div>
+      <div class="row">
+        <label>Lum 1–10 <input type="range" id="hcc-inner-cylinder-lum" min="1" max="10" step="1" value="6"></label>
+      </div>
       <div class="row">
         <label>Bloom 1–10 <input type="range" id="hcc-inner-sphere-bloom" min="1" max="10" step="1" value="6"></label>
       </div>
@@ -163,7 +169,13 @@
         <label>Screen size 1–10 <input type="range" id="hcc-globe-screen-size" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
-        <label>Separation 1–10 <input type="range" id="hcc-globe-separation" min="1" max="10" step="1" value="5"></label>
+        <label>Separation (vertical) 1–10 <input type="range" id="hcc-globe-separation-vert" min="1" max="10" step="1" value="5"></label>
+      </div>
+      <div class="row">
+        <label>Separation (horizontal) 1–10 <input type="range" id="hcc-globe-separation-horiz" min="1" max="10" step="1" value="5"></label>
+      </div>
+      <div class="row">
+        <label>Curvature 1–10 <input type="range" id="hcc-globe-curvature" min="1" max="10" step="1" value="5"></label>
       </div>
       <div class="row">
         <label>Lum 1–10 <input type="range" id="hcc-globe-lum" min="1" max="10" step="1" value="6"></label>
@@ -187,7 +199,7 @@
       <button type="button" id="closeup-back" class="closeup-back">Back to carousel</button>
     </div>
   </div>
-  <p class="hint" aria-hidden="true">CATBOTICA Medallions — Drag to orbit. Scroll to zoom.</p>
+  <p class="hint" aria-hidden="true">Catbotica Inc · Medallions — Drag to orbit. Scroll to zoom.</p>
 
   <script>
     (function () {
@@ -250,12 +262,16 @@
         medallionsColor: '#ffffff',
         medallionsColorHex: '#ffffff',
         medallionsBloom: 7,
+        innerCylinderSpin: 3,
+        innerCylinderLum: 6,
         innerSphereColor: '#0ea5e9',
         innerSphereColorHex: '#0ea5e9',
         innerSphereBloom: 6,
         globeScreensDiameter: 3,
         globeScreensScreenSize: 10,
-        globeScreensSeparation: 5,
+        globeScreensSeparationVert: 5,
+        globeScreensSeparationHoriz: 5,
+        globeScreensCurvature: 5,
         globeScreensLum: 6,
         globeScreensSpin: 8,
         globeScreensColor: '#ffffff',
@@ -329,11 +345,15 @@
       bindRange('hcc-medallions-spin', 'medallionsSpinSpeed');
       bindRange('hcc-medallions-bloom', 'medallionsBloom');
       bindColor('hcc-medallions-color', 'hcc-medallions-hex', 'medallionsColor');
+      bindRange('hcc-inner-cylinder-spin', 'innerCylinderSpin');
+      bindRange('hcc-inner-cylinder-lum', 'innerCylinderLum');
       bindRange('hcc-inner-sphere-bloom', 'innerSphereBloom');
       bindColor('hcc-inner-sphere-color', 'hcc-inner-sphere-hex', 'innerSphereColor');
       bindRange('hcc-globe-diameter', 'globeScreensDiameter');
       bindRange('hcc-globe-screen-size', 'globeScreensScreenSize');
-      bindRange('hcc-globe-separation', 'globeScreensSeparation');
+      bindRange('hcc-globe-separation-vert', 'globeScreensSeparationVert');
+      bindRange('hcc-globe-separation-horiz', 'globeScreensSeparationHoriz');
+      bindRange('hcc-globe-curvature', 'globeScreensCurvature');
       bindRange('hcc-globe-lum', 'globeScreensLum');
       bindRange('hcc-globe-bloom', 'globeScreensBloom');
       bindRange('hcc-globe-spin', 'globeScreensSpin');

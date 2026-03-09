@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#141414">
+  <title>CATBOTICA — Hero Card Marquee</title>
+  <meta name="description" content="CATBOTICA — Hero card carousel marquee: Lunar Zodiac badges, particles, cylinder; fork of Karafuru marquee.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --karafuru-bg: #0f0f14;
+      --karafuru-text: #F4F4F4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; margin: 0; overflow: hidden; }
+    body {
+      min-height: 100vh; min-height: 100dvh; height: 100vh; height: 100dvh;
+      display: flex; flex-direction: column; background: var(--karafuru-bg); color: var(--karafuru-text);
+      font-family: 'JetBrains Mono', system-ui, sans-serif;
+    }
+    .strip-wrapper {
+      flex: 1; min-height: 0;
+      position: relative; overflow: hidden; z-index: 1;
+      margin-top: 100px; margin-bottom: 100px;
+    }
+    #parade-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: block; touch-action: none; -webkit-tap-highlight-color: transparent; z-index: 1;
+    }
+    .zoom-hint {
+      position: fixed; bottom: calc(108px + env(safe-area-inset-bottom, 0)); left: 50%; transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5);
+      pointer-events: none; z-index: 2; transition: opacity 0.4s ease;
+    }
+    .kf-debug-strip {
+      position: fixed; bottom: calc(108px + env(safe-area-inset-bottom, 0)); left: calc(16px + env(safe-area-inset-left, 0)); z-index: 2;
+      display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 20px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5);
+    }
+    .kf-text-groups .kf-tg-title { font-weight: 700; margin-bottom: 2px; color: rgba(255,255,255,0.7); }
+    .kf-text-groups .kf-tg-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .kf-text-groups label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .kf-text-groups input[type="checkbox"] { cursor: pointer; accent-color: #28EDED; }
+    .kf-text-groups input[type="color"] { width: 24px; height: 18px; padding: 0; border: none; cursor: pointer; vertical-align: middle; }
+    .kf-particle-fields {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .kf-particle-fields .kf-pf-title { font-weight: 700; margin-bottom: 2px; color: rgba(255,255,255,0.7); }
+    .kf-pf-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .kf-pf-row label { display: flex; align-items: center; gap: 4px; cursor: pointer; min-width: 52px; }
+    .kf-pf-row input[type="checkbox"] { cursor: pointer; accent-color: #28EDED; }
+    .kf-pf-slider { width: 40px; height: 6px; accent-color: #28EDED; vertical-align: middle; }
+    .kf-pf-slider.wide { width: 56px; }
+    .kf-pf-row span { color: rgba(255,255,255,0.4); margin-left: 2px; }
+    #closeup-overlay {
+      position: fixed; bottom: calc(32px + env(safe-area-inset-bottom, 0)); left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      opacity: 0; pointer-events: none; z-index: 10;
+      transition: opacity 0.4s ease;
+    }
+    #closeup-overlay.show { opacity: 1; pointer-events: auto; }
+    #closeup-card-name {
+      font-family: 'JetBrains Mono', monospace; font-weight: 800;
+      font-size: 18px; letter-spacing: 0.25em; color: #28EDED;
+      text-transform: uppercase; text-shadow: 0 0 16px #28EDED88;
+    }
+    #closeup-back {
+      font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.5); border: 1px solid rgba(40,237,237,0.4);
+      padding: 8px 20px; cursor: pointer; backdrop-filter: blur(8px);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    #closeup-back:hover { color: #28EDED; border-color: #28EDED; }
+
+    /* ── Nav Bar ── */
+    .kf-nav {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+      background-image: linear-gradient(90deg, #28EDED, #FF6FB0);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; padding-top: env(safe-area-inset-top, 0);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .kf-nav-logo {
+      font-family: 'JetBrains Mono', monospace; font-weight: 800;
+      font-size: 28px; letter-spacing: 0.18em; color: #fff;
+      text-shadow: 0 0 12px rgba(0,0,0,0.3); text-decoration: none;
+    }
+    .kf-nav-links {
+      display: flex; gap: 36px; list-style: none; margin: 0; padding: 0;
+    }
+    .kf-nav-links a {
+      font-family: 'JetBrains Mono', monospace; font-weight: 700;
+      font-size: 14px; letter-spacing: 0.14em; color: #fff;
+      text-decoration: none; text-transform: uppercase;
+      transition: opacity 0.2s;
+    }
+    .kf-nav-links a:hover { opacity: 0.7; }
+    .kf-coming { font-size: 10px; letter-spacing: 0.08em; opacity: 0.9; font-weight: 500; margin-left: 4px; }
+    .kf-xr-button-wrap { position: absolute; top: 100px; right: 16px; z-index: 10; }
+    .kf-xr-btn {
+      font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; letter-spacing: 0.1em;
+      padding: 10px 16px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 6px; cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    }
+    .kf-xr-btn:hover { background: rgba(40,237,237,0.25); border-color: #28EDED; }
+    .kf-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      flex-direction: column; gap: 5px; padding: 8px;
+    }
+    .kf-hamburger span {
+      display: block; width: 26px; height: 3px; background: #fff;
+      border-radius: 2px; transition: transform 0.3s, opacity 0.3s;
+    }
+    .kf-mobile-menu {
+      display: none; position: fixed; top: 100px; left: 0; width: 100%;
+      background: rgba(20,20,20,0.96); backdrop-filter: blur(12px);
+      flex-direction: column; align-items: center; gap: 0; z-index: 99;
+      padding: 16px 0;
+    }
+    .kf-mobile-menu.open { display: flex; }
+    .kf-mobile-menu a {
+      font-family: 'JetBrains Mono', monospace; font-weight: 700;
+      font-size: 16px; letter-spacing: 0.14em; color: #fff;
+      text-decoration: none; text-transform: uppercase;
+      padding: 18px 0; width: 100%; text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.2s;
+    }
+    .kf-mobile-menu a:hover { background: rgba(40,237,237,0.1); }
+
+    /* ── Footer ── */
+    .kf-footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 100px; z-index: 100;
+      background: #000; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 32px;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0) + 1em);
+    }
+    .kf-footer-copy {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.5);
+    }
+    .kf-footer-social {
+      display: flex; gap: 28px; list-style: none; margin: 0; padding: 0;
+    }
+    .kf-footer-social a {
+      font-family: 'JetBrains Mono', monospace; font-weight: 700;
+      font-size: 12px; letter-spacing: 0.12em; color: rgba(255,255,255,0.6);
+      text-decoration: none; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .kf-footer-social a:hover { color: #28EDED; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .kf-nav { height: 72px; padding: 0 20px; padding-top: env(safe-area-inset-top, 0); }
+      .kf-nav-logo { font-size: 20px; }
+      .kf-nav-links { display: none; }
+      .kf-hamburger { display: flex; }
+      .kf-mobile-menu { top: 72px; }
+      .strip-wrapper { margin-top: 72px; margin-bottom: 72px; }
+      .zoom-hint { bottom: calc(80px + env(safe-area-inset-bottom, 0)); }
+      .kf-debug-strip { display: none; }
+      .kf-footer { height: 72px; padding: 0 20px; flex-direction: column; justify-content: center; gap: 6px; }
+      .kf-footer-social { gap: 18px; }
+      .kf-footer-copy { font-size: 10px; }
+    }
+    @media (max-width: 480px) {
+      .kf-nav { height: 60px; padding: 0 16px; padding-top: env(safe-area-inset-top, 0); }
+      .kf-nav-logo { font-size: 16px; letter-spacing: 0.12em; }
+      .kf-mobile-menu { top: 60px; }
+      .strip-wrapper { margin-top: 60px; margin-bottom: 60px; }
+      .zoom-hint { bottom: calc(68px + env(safe-area-inset-bottom, 0)); }
+      .kf-footer { height: 60px; padding: 0 16px; }
+      .kf-footer-social a { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="kf-nav" id="kf-nav">
+    <a href="#" class="kf-nav-logo">CATBOTICA</a>
+    <ul class="kf-nav-links">
+      <li><a href="#">DASHBOARD</a></li>
+      <li><a href="#">SHOP <span class="kf-coming">COMING SOON</span></a></li>
+      <li><a href="#">DISCOVER <span class="kf-coming">COMING SOON</span></a></li>
+      <li><a href="#">PLAY <span class="kf-coming">COMING SOON</span></a></li>
+    </ul>
+    <button class="kf-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="kf-mobile-menu">
+    <a href="#">DASHBOARD</a>
+    <a href="#">SHOP <span class="kf-coming">COMING SOON</span></a>
+    <a href="#">DISCOVER <span class="kf-coming">COMING SOON</span></a>
+    <a href="#">PLAY <span class="kf-coming">COMING SOON</span></a>
+  </div>
+  <section class="strip-wrapper" aria-label="Marquee">
+    <div id="parade-canvas"></div>
+    <div id="parade-xr-button" class="kf-xr-button-wrap" aria-hidden="true"></div>
+    <p class="zoom-hint" aria-hidden="true" id="zoom-hint">Drag to spin cards · Click a card to focus</p>
+    <div class="kf-debug-strip" title="Particle fields and text group controls">
+      <div class="kf-all-components kf-text-groups" title="Toggle all components on/off">
+        <span class="kf-tg-title">All components</span>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-all-carousel" checked> Carousel</label><label><input type="checkbox" id="kf-all-globe" checked> Globe</label><label><input type="checkbox" id="kf-all-ring" checked> Ring</label><label><input type="checkbox" id="kf-all-top" checked> Top</label><label><input type="checkbox" id="kf-all-wf"> Waterfall</label><label><input type="checkbox" id="kf-all-fw" checked> Fireworks</label></div>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-all-welcome" checked> Welcome</label><label><input type="checkbox" id="kf-all-world" checked> World</label><label><input type="checkbox" id="kf-all-kara" checked> CATBOTICA</label><label><input type="checkbox" id="kf-all-kara-xl" checked> CATBOTICA XL</label><label><input type="checkbox" id="kf-all-nav" checked> Nav</label><label><input type="checkbox" id="kf-all-footer" checked> Footer</label><label><input type="checkbox" id="kf-all-tower" checked> Tower</label></div>
+      </div>
+      <div class="kf-global-controls kf-text-groups" title="Global: more particles, luminosity">
+        <span class="kf-tg-title">Global</span>
+        <div class="kf-tg-row">Particles×<input type="range" id="kf-global-particle-mult" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"> Lum×<input type="range" id="kf-global-lum" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider wide"></div>
+      </div>
+      <div class="kf-particle-fields" title="Particle fields: Q quantity, Lum, Rot, Spd, Sz size">
+        <span class="kf-pf-title">Particle fields</span>
+        <div class="kf-pf-row"><label><input type="checkbox" id="kf-pf-globe-vis" checked> Globe</label> Color<input type="color" id="kf-pf-globe-color" value="#0ea5e9" aria-label="Globe particle color"> Q<input type="range" id="kf-pf-globe-q" min="0" max="1" step="0.01" value="1" class="kf-pf-slider"> Lum<input type="range" id="kf-pf-globe-lum" min="0" max="2" step="0.05" value="0.5" class="kf-pf-slider"> Rot<input type="range" id="kf-pf-globe-rot" min="0" max="2" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-pf-globe-spd" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"> Sz<input type="range" id="kf-pf-globe-sz" min="0.1" max="3" step="0.05" value="0.1" class="kf-pf-slider"></div>
+        <div class="kf-pf-row"><label><input type="checkbox" id="kf-pf-ring-vis" checked> Ring</label> Q<input type="range" id="kf-pf-ring-q" min="0" max="1" step="0.01" value="0.2" class="kf-pf-slider"> Lum<input type="range" id="kf-pf-ring-lum" min="0" max="2" step="0.05" value="1" class="kf-pf-slider"> Rot<input type="range" id="kf-pf-ring-rot" min="0" max="2" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-pf-ring-spd" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"> Sz<input type="range" id="kf-pf-ring-sz" min="0.2" max="3" step="0.05" value="1" class="kf-pf-slider"></div>
+        <div class="kf-pf-row"><label><input type="checkbox" id="kf-pf-top-vis" checked> Top</label> Q<input type="range" id="kf-pf-top-q" min="0" max="1" step="0.01" value="0.2" class="kf-pf-slider"> Lum<input type="range" id="kf-pf-top-lum" min="0" max="2" step="0.05" value="1" class="kf-pf-slider"> Rot<input type="range" id="kf-pf-top-rot" min="0" max="2" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-pf-top-spd" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"> Sz<input type="range" id="kf-pf-top-sz" min="0.2" max="3" step="0.05" value="1" class="kf-pf-slider"></div>
+        <div class="kf-pf-row"><label><input type="checkbox" id="kf-pf-wf-vis"> Waterfall</label> Q<input type="range" id="kf-pf-wf-q" min="0" max="1" step="0.01" value="1" class="kf-pf-slider"> Lum<input type="range" id="kf-pf-wf-lum" min="0" max="2" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-pf-wf-spd" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"> Sz<input type="range" id="kf-pf-wf-sz" min="0.2" max="3" step="0.05" value="1" class="kf-pf-slider wide"></div>
+        <div class="kf-pf-row"><label><input type="checkbox" id="kf-pf-fw-vis" checked> Fireworks</label> Spd<input type="range" id="kf-pf-fw-spd" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"> Sz<input type="range" id="kf-pf-fw-sz" min="0.2" max="3" step="0.05" value="1" class="kf-pf-slider wide"></div>
+      </div>
+      <div class="kf-text-groups" title="Text groups: visibility, size, spin speed, direction, color">
+        <span class="kf-tg-title">Text groups</span>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-tg-welcome-vis" checked> Welcome</label> Sz<input type="range" id="kf-tg-welcome-sz" min="0.25" max="3" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-tg-welcome-spd" min="0" max="0.2" step="0.005" value="0.075" class="kf-pf-slider"> Dir<select id="kf-tg-welcome-dir"><option value="-1">CW</option><option value="1">CCW</option></select> <input type="color" id="kf-tg-welcome-color" value="#0ea5e9" aria-label="Welcome color"></div>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-tg-world-vis" checked> World of</label> Sz<input type="range" id="kf-tg-world-sz" min="0.25" max="3" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-tg-world-spd" min="0" max="0.2" step="0.005" value="0.0656" class="kf-pf-slider"> Dir<select id="kf-tg-world-dir"><option value="-1">CW</option><option value="1" selected>CCW</option></select> <input type="color" id="kf-tg-world-color" value="#f59e0b" aria-label="World color"></div>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-tg-kara-vis" checked> CATBOTICA</label> Sz<input type="range" id="kf-tg-kara-sz" min="0.25" max="3" step="0.05" value="1" class="kf-pf-slider"> Spd<input type="range" id="kf-tg-kara-spd" min="0" max="8" step="0.1" value="1.875" class="kf-pf-slider"> Dir<select id="kf-tg-kara-dir"><option value="-1" selected>CW</option><option value="1">CCW</option></select> A<input type="color" id="kf-tg-kara-color-a" value="#0ea5e9"> B<input type="color" id="kf-tg-kara-color-b" value="#f59e0b"></div>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-tg-kara-xl-vis" checked> CATBOTICA XL</label> Sz<input type="range" id="kf-tg-kara-xl-sz" min="0.25" max="3" step="0.05" value="1.4" class="kf-pf-slider"> Spd<input type="range" id="kf-tg-kara-xl-spd" min="0" max="8" step="0.1" value="1.875" class="kf-pf-slider"> Dir<select id="kf-tg-kara-xl-dir"><option value="-1" selected>CW</option><option value="1">CCW</option></select></div>
+      </div>
+      <div class="kf-carousel-panel kf-text-groups" title="Card carousel: visibility, spin speed, direction, brightness">
+        <span class="kf-tg-title">Card carousel</span>
+        <div class="kf-tg-row"><label><input type="checkbox" id="kf-carousel-vis" checked> Show</label> Spd<input type="range" id="kf-carousel-spd" min="0" max="0.2" step="0.01" value="0.08" class="kf-pf-slider"> Dir<select id="kf-carousel-dir"><option value="-1" selected>CW</option><option value="1">CCW</option></select> Lum<input type="range" id="kf-carousel-lum" min="0" max="1" step="0.05" value="1" class="kf-pf-slider wide"> Spin×<input type="range" id="kf-carousel-spin-mult" min="0.5" max="2" step="0.05" value="1" class="kf-pf-slider"></div>
+      </div>
+    </div>
+    <div id="closeup-overlay" aria-hidden="true">
+      <div id="closeup-card-name"></div>
+      <button id="closeup-back" aria-label="Back to carousel">← BACK</button>
+    </div>
+  </section>
+  <footer class="kf-footer" id="kf-footer">
+    <span class="kf-footer-copy">&copy; 2026 CATBOTICA. LUNAR ZODIAC.</span>
+    <ul class="kf-footer-social">
+      <li><a href="#" target="_blank" rel="noopener">X</a></li>
+      <li><a href="#" target="_blank" rel="noopener">DISCORD</a></li>
+      <li><a href="#" target="_blank" rel="noopener">OPENSEA</a></li>
+    </ul>
+  </footer>
+  <script>
+  (function(){
+    var btn = document.querySelector('.kf-hamburger');
+    var menu = document.querySelector('.kf-mobile-menu');
+    if (btn && menu) {
+      btn.addEventListener('click', function () { menu.classList.toggle('open'); });
+    }
+    /* Text group defaults (frozen current settings) */
+    window.paradeWelcomeVisible = true;
+    window.paradeWelcomeSize = 1.0;
+    window.paradeWelcomeSpinSpeed = 0.075;
+    window.paradeWelcomeSpinDir = -1;
+    window.paradeWelcomeColor = 0x0ea5e9; /* Catbotica sky */
+    window.paradeWorldVisible = true;
+    window.paradeWorldSize = 1.0;
+    window.paradeWorldSpinSpeed = 0.065625;
+    window.paradeWorldSpinDir = 1;
+    window.paradeWorldColor = 0xf59e0b; /* Catbotica amber */
+    window.paradeKarafuruVisible = true;
+    window.paradeKarafuruSize = 1.0;
+    window.paradeKarafuruSpinSpeed = 1.875;
+    window.paradeKarafuruSpinDir = -1;
+    window.paradeKarafuruColorA = 0x0ea5e9;
+    window.paradeKarafuruColorB = 0xf59e0b;
+    window.paradeKarafuruCopyVisible = true;
+    window.paradeKarafuruCopySize = 1.4;
+    window.paradeKarafuruCopySpinSpeed = 1.875;
+    window.paradeKarafuruCopySpinDir = -1;
+
+    function bindTextGroupVisibility(id, key) {
+      var cb = document.getElementById(id);
+      if (!cb) return;
+      cb.addEventListener('change', function () { window[key] = cb.checked; });
+    }
+    function bindTextGroupSlider(id, key) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', function () { window[key] = parseFloat(el.value, 10); });
+    }
+    function bindTextGroupSelect(id, key) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('change', function () { window[key] = parseInt(el.value, 10); });
+    }
+    function bindTextGroupColor(id, key) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', function () { window[key] = parseInt(el.value.slice(1), 16); });
+    }
+    bindTextGroupVisibility('kf-tg-welcome-vis', 'paradeWelcomeVisible');
+    bindTextGroupSlider('kf-tg-welcome-sz', 'paradeWelcomeSize');
+    bindTextGroupSlider('kf-tg-welcome-spd', 'paradeWelcomeSpinSpeed');
+    bindTextGroupSelect('kf-tg-welcome-dir', 'paradeWelcomeSpinDir');
+    bindTextGroupColor('kf-tg-welcome-color', 'paradeWelcomeColor');
+    bindTextGroupVisibility('kf-tg-world-vis', 'paradeWorldVisible');
+    bindTextGroupSlider('kf-tg-world-sz', 'paradeWorldSize');
+    bindTextGroupSlider('kf-tg-world-spd', 'paradeWorldSpinSpeed');
+    bindTextGroupSelect('kf-tg-world-dir', 'paradeWorldSpinDir');
+    bindTextGroupColor('kf-tg-world-color', 'paradeWorldColor');
+    bindTextGroupVisibility('kf-tg-kara-vis', 'paradeKarafuruVisible');
+    bindTextGroupSlider('kf-tg-kara-sz', 'paradeKarafuruSize');
+    bindTextGroupSlider('kf-tg-kara-spd', 'paradeKarafuruSpinSpeed');
+    bindTextGroupSelect('kf-tg-kara-dir', 'paradeKarafuruSpinDir');
+    bindTextGroupColor('kf-tg-kara-color-a', 'paradeKarafuruColorA');
+    bindTextGroupColor('kf-tg-kara-color-b', 'paradeKarafuruColorB');
+    bindTextGroupVisibility('kf-tg-kara-xl-vis', 'paradeKarafuruCopyVisible');
+    bindTextGroupSlider('kf-tg-kara-xl-sz', 'paradeKarafuruCopySize');
+    bindTextGroupSlider('kf-tg-kara-xl-spd', 'paradeKarafuruCopySpinSpeed');
+    bindTextGroupSelect('kf-tg-kara-xl-dir', 'paradeKarafuruCopySpinDir');
+    window.paradeCarouselCardsVisible = true;
+    window.paradeCarouselCardsSpeed = 0.08;
+    window.paradeCarouselCardsDir = -1;
+    window.paradeCarouselCardsBrightness = 1;
+    bindTextGroupVisibility('kf-carousel-vis', 'paradeCarouselCardsVisible');
+    bindTextGroupSlider('kf-carousel-spd', 'paradeCarouselCardsSpeed');
+    bindTextGroupSelect('kf-carousel-dir', 'paradeCarouselCardsDir');
+    bindTextGroupSlider('kf-carousel-lum', 'paradeCarouselCardsBrightness');
+
+    function bindParticleVisibility(id, refKey) {
+      var cb = document.getElementById(id);
+      if (!cb) return;
+      cb.addEventListener('change', function () {
+        var ref = window[refKey];
+        if (!ref) return;
+        if (Array.isArray(ref)) { for (var i = 0; i < ref.length; i++) if (ref[i] && ref[i].visible !== undefined) ref[i].visible = cb.checked; }
+        else if (ref.visible !== undefined) ref.visible = cb.checked;
+      });
+    }
+    bindParticleVisibility('kf-pf-globe-vis', 'paradeDustPoints');
+    bindParticleVisibility('kf-pf-ring-vis', 'paradeRingDustFields');
+    bindParticleVisibility('kf-pf-top-vis', 'paradeTopParticleFields');
+    bindParticleVisibility('kf-pf-wf-vis', 'paradeWaterfallPoints');
+    bindParticleVisibility('kf-pf-fw-vis', 'paradeFireworksMesh');
+
+    function bindParticleSlider(id, key) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', function () { window[key] = parseFloat(el.value, 10); });
+    }
+    bindParticleSlider('kf-pf-globe-q', 'paradeGlobeDustQuantity');
+    bindParticleSlider('kf-pf-globe-lum', 'paradeGlobeDustLuminosity');
+    bindParticleSlider('kf-pf-globe-rot', 'paradeGlobeDustRotationSpeed');
+    bindParticleSlider('kf-pf-globe-spd', 'paradeGlobeDustSpeed');
+    bindParticleSlider('kf-pf-globe-sz', 'paradeGlobeDustSize');
+    bindParticleSlider('kf-pf-ring-q', 'paradeRingDustQuantity');
+    bindParticleSlider('kf-pf-ring-lum', 'paradeRingDustLuminosity');
+    bindParticleSlider('kf-pf-ring-rot', 'paradeRingDustRotationSpeed');
+    bindParticleSlider('kf-pf-ring-spd', 'paradeRingDustSpeed');
+    bindParticleSlider('kf-pf-ring-sz', 'paradeRingDustSize');
+    bindParticleSlider('kf-pf-top-q', 'paradeTopDustQuantity');
+    bindParticleSlider('kf-pf-top-lum', 'paradeTopDustLuminosity');
+    bindParticleSlider('kf-pf-top-rot', 'paradeTopDustRotationSpeed');
+    bindParticleSlider('kf-pf-top-spd', 'paradeTopDustSpeed');
+    bindParticleSlider('kf-pf-top-sz', 'paradeTopDustSize');
+    bindParticleSlider('kf-pf-wf-q', 'paradeWaterfallQuantity');
+    bindParticleSlider('kf-pf-wf-lum', 'paradeWaterfallLuminosity');
+    bindParticleSlider('kf-pf-wf-spd', 'paradeWaterfallSpeed');
+    bindParticleSlider('kf-pf-wf-sz', 'paradeWaterfallSize');
+    bindParticleSlider('kf-pf-fw-spd', 'paradeFireworksSpeed');
+    bindParticleSlider('kf-pf-fw-sz', 'paradeFireworksSize');
+
+    window.paradeParticleDensityMultiplier = 1;
+    window.paradeGlobalLuminosityMultiplier = 1;
+    window.paradeCarouselSpinMultiplier = 1;
+    window.paradeGlobeDustColor = 0x0ea5e9; /* Catbotica sky tint */
+    window.paradeNavVisible = true;
+    window.paradeFooterVisible = true;
+    window.paradeTowerVisible = true;
+    bindParticleSlider('kf-global-particle-mult', 'paradeParticleDensityMultiplier');
+    bindParticleSlider('kf-global-lum', 'paradeGlobalLuminosityMultiplier');
+    bindParticleSlider('kf-carousel-spin-mult', 'paradeCarouselSpinMultiplier');
+    (function() {
+      var el = document.getElementById('kf-pf-globe-color');
+      if (el) el.addEventListener('input', function() { window.paradeGlobeDustColor = parseInt(el.value.slice(1), 16); });
+    })();
+
+    function syncAllComponent(id, targetId) {
+      var allCb = document.getElementById(id);
+      var targetCb = document.getElementById(targetId);
+      if (!allCb || !targetCb) return;
+      allCb.addEventListener('change', function() { targetCb.checked = allCb.checked; targetCb.dispatchEvent(new Event('change')); });
+    }
+    syncAllComponent('kf-all-carousel', 'kf-carousel-vis');
+    syncAllComponent('kf-all-globe', 'kf-pf-globe-vis');
+    syncAllComponent('kf-all-ring', 'kf-pf-ring-vis');
+    syncAllComponent('kf-all-top', 'kf-pf-top-vis');
+    syncAllComponent('kf-all-wf', 'kf-pf-wf-vis');
+    syncAllComponent('kf-all-fw', 'kf-pf-fw-vis');
+    syncAllComponent('kf-all-welcome', 'kf-tg-welcome-vis');
+    syncAllComponent('kf-all-world', 'kf-tg-world-vis');
+    syncAllComponent('kf-all-kara', 'kf-tg-kara-vis');
+    syncAllComponent('kf-all-kara-xl', 'kf-tg-kara-xl-vis');
+    (function() {
+      var nav = document.getElementById('kf-nav');
+      var footer = document.getElementById('kf-footer');
+      var cbNav = document.getElementById('kf-all-nav');
+      var cbFooter = document.getElementById('kf-all-footer');
+      var cbTower = document.getElementById('kf-all-tower');
+      if (cbNav && nav) cbNav.addEventListener('change', function() { window.paradeNavVisible = cbNav.checked; nav.style.display = cbNav.checked ? '' : 'none'; });
+      if (cbFooter && footer) cbFooter.addEventListener('change', function() { window.paradeFooterVisible = cbFooter.checked; footer.style.display = cbFooter.checked ? '' : 'none'; });
+      if (cbTower) cbTower.addEventListener('change', function() { window.paradeTowerVisible = cbTower.checked; });
+    })();
+  })();
+  </script>
+  <script>
+  window.PARADE_MEDALLIONS_COINS_CONFIG = {
+    imageList: [
+      { name: 'Rat',    url: 'assets/rat.png' },
+      { name: 'Ox',     url: 'assets/ox.png' },
+      { name: 'Tiger',  url: 'assets/tiger.png' },
+      { name: 'Rabbit', url: 'assets/rabbit.png' },
+      { name: 'Dragon', url: 'assets/dragon.png' },
+      { name: 'Snake',  url: 'assets/snake.png' },
+      { name: 'Horse',  url: 'assets/horse.png' },
+      { name: 'Goat',   url: 'assets/goat.png' },
+      { name: 'Monkey', url: 'assets/monkey.png' },
+      { name: 'Rooster', url: 'assets/rooster.png' },
+      { name: 'Dog',    url: 'assets/dog.png' },
+      { name: 'Pig',    url: 'assets/pig.png' }
+    ],
+    rearUrl: 'assets/rear.png'
+  };
+  </script>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script>
+    (async function () {
+      var defaultConfig = {
+        videoUrl: 'videos/KARAFURU_08.mp4',
+        videoUrl2: 'videos/KARAFURU_08.mp4',
+        logoUrl:   '',
+        logoUrls:  [
+          'logos/KARAFURU_LOGO_WHITE.png',
+          'logos/KARAFURU_LOGO_BLACK.png',
+          'logos/KARAFURU_LOGO_COLOR_WHITE.png',
+          'logos/KARAFURU_LOGO__COLOR.png',
+          'logos/KARAFURU_LOGO_COLOR_CIRCLE.png',
+          'logos/KARAFURU_LOGO_WHITE_BORDER.png',
+          'logos/KARAFURU_LOGO_WHITE_BORDER_BLACK_OUTLINE.png'
+        ]
+      };
+      try {
+        var r = await fetch('/api/config');
+        if (r.ok) {
+          var api = await r.json();
+          window.PARADE_IMAX_CONFIG = Object.assign({}, defaultConfig, api);
+        } else {
+          window.PARADE_IMAX_CONFIG = defaultConfig;
+        }
+      } catch (e) {
+        window.PARADE_IMAX_CONFIG = defaultConfig;
+      }
+      if (!window.PARADE_IMAX_CONFIG.videoUrl) window.PARADE_IMAX_CONFIG.videoUrl = defaultConfig.videoUrl;
+      if (!window.PARADE_IMAX_CONFIG.videoUrl2 || window.PARADE_IMAX_CONFIG.videoUrl2 === '') window.PARADE_IMAX_CONFIG.videoUrl2 = defaultConfig.videoUrl2;
+      if (!window.PARADE_IMAX_CONFIG.logoUrls || !window.PARADE_IMAX_CONFIG.logoUrls.length) window.PARADE_IMAX_CONFIG.logoUrls = defaultConfig.logoUrls.slice();
+      var c = window.PARADE_IMAX_CONFIG;
+      var pathname = window.location.pathname || '/';
+      var base = (pathname.indexOf('catbotica_marquee') !== -1 || pathname.indexOf('karafuru_marquee') !== -1)
+        ? (window.location.origin + pathname.replace(/[^/]*$/, ''))
+        : window.location.origin + '/catbotica_marquee/';
+      if (!base.endsWith('/')) base += '/';
+      function abs(u) { return u ? (u.startsWith('http') ? u : base + u.replace(/^\//, '')) : u; }
+      c.videoUrl = abs(c.videoUrl);
+      c.videoUrl2 = abs(c.videoUrl2);
+      if (!c.videoUrl2 || c.videoUrl2 === c.videoUrl) c.videoUrl2 = abs(defaultConfig.videoUrl2);
+      if (c.logoUrl) c.logoUrl = abs(c.logoUrl);
+      if (c.logoUrls && c.logoUrls.length) c.logoUrls = c.logoUrls.map(function(u) { return abs(u); });
+      var s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'catbotica_marquee.js';
+      document.body.appendChild(s);
+    })();
+  </script>
+  <script type="module">
+  (async function () {
+    function waitForScene() {
+      return new Promise(function (resolve) {
+        function check() {
+          if (window.paradeTitleRingGroup && window.paradeCarousel && window.paradeDiscGroup) {
+            resolve();
+            return;
+          }
+          requestAnimationFrame(check);
+        }
+        check();
+      });
+    }
+    await waitForScene();
+    var TITLE_RING_RADIUS = 560;
+    var TITLE_SCALE = 1.5;
+    var PHRASES = ['WELCOME TO', 'THE WORLD OF'];
+    var BRAND_TEXT = 'CATBOTICA';
+    var COLORS = [0x28EDED, 0xFF6FB0];
+    var LINE_SPACING = 210;
+    var FONT_URL = 'https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json';
+    var THREE = await import('three');
+    var FontLoaderMod = await import('https://unpkg.com/three@0.160.0/examples/jsm/loaders/FontLoader.js');
+    var TextGeometryMod = await import('https://unpkg.com/three@0.160.0/examples/jsm/geometries/TextGeometry.js');
+    var FontLoader = FontLoaderMod.FontLoader;
+    var TextGeometry = TextGeometryMod.TextGeometry;
+    var group = window.paradeTitleRingGroup;
+    var carousel = window.paradeCarousel;
+    var discGroup = window.paradeDiscGroup;
+    var karafuruContainer = window.paradeKarafuruContainer;
+    if (!group || !carousel || !discGroup) return;
+
+    var karafuruParent = karafuruContainer || discGroup;
+    var karafuruOrbitRadius = karafuruContainer ? 1440 : 1600;
+    var karafuruOffsetY = karafuruContainer ? 0 : 500;
+    window.paradeWelcomeMaterials = [];
+    window.paradeWorldOfMaterials = [];
+    window.paradeKarafuruMaterials = [];
+
+    function createHolographicTextMaterial(colorHex) {
+      var c = new THREE.Color(colorHex);
+      var VERT = [
+        'varying vec2 vUv;',
+        'void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }'
+      ].join('\n');
+      var FRAG = [
+        'uniform float uTime;',
+        'uniform vec3 uColor;',
+        'varying vec2 vUv;',
+        'void main() {',
+        '  float ca = 0.06;',
+        '  float scanR = sin(vUv.y * 50.0 + uTime * 10.0 + ca);',
+        '  float scanG = sin(vUv.y * 50.0 + uTime * 10.0);',
+        '  float scanB = sin(vUv.y * 50.0 + uTime * 10.0 - ca);',
+        '  vec3 flicker = vec3(0.5 + 0.5 * scanR, 0.5 + 0.5 * scanG, 0.5 + 0.5 * scanB);',
+        '  float intensity = 5.0 * (0.7 + 0.3 * (flicker.r + flicker.g + flicker.b) / 3.0);',
+        '  float shimmer = smoothstep(0.0, 0.4, sin(vUv.x * 4.0 + vUv.y * 3.0 + uTime * 5.0)) * 0.5 + 0.85;',
+        '  vec3 rgb = uColor * intensity * flicker * shimmer;',
+        '  gl_FragColor = vec4(rgb, 0.96);',
+        '}'
+      ].join('\n');
+      var mat = new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0 }, uColor: { value: new THREE.Vector3(c.r, c.g, c.b) } },
+        vertexShader: VERT,
+        fragmentShader: FRAG,
+        transparent: true,
+        opacity: 0.96,
+        depthWrite: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide
+      });
+      if (window.paradeHolographicMaterials) window.paradeHolographicMaterials.push(mat);
+      return mat;
+    }
+
+    function createKarafuruHoloMaterial(phase) {
+      phase = phase !== undefined ? phase : 0;
+      var cyan = new THREE.Color(0x28EDED);
+      var magenta = new THREE.Color(0xFF6FB0);
+      var VERT = [
+        'varying vec2 vUv;',
+        'void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }'
+      ].join('\n');
+      var FRAG = [
+        'uniform float uTime;',
+        'uniform float uPhase;',
+        'uniform vec3 uColorA;',
+        'uniform vec3 uColorB;',
+        'varying vec2 vUv;',
+        'void main() {',
+        '  float t = 0.5 + 0.5 * sin(uTime * 1.0 + uPhase);',
+        '  vec3 uColor = mix(uColorA, uColorB, t);',
+        '  float ca = 0.06;',
+        '  float scanR = sin(vUv.y * 50.0 + uTime * 18.0 + ca);',
+        '  float scanG = sin(vUv.y * 50.0 + uTime * 18.0);',
+        '  float scanB = sin(vUv.y * 50.0 + uTime * 18.0 - ca);',
+        '  vec3 flicker = vec3(0.5 + 0.5 * scanR, 0.5 + 0.5 * scanG, 0.5 + 0.5 * scanB);',
+        '  float scanH = sin(vUv.x * 60.0 + uTime * 14.0) * 0.5 + 0.5;',
+        '  float shimmer = smoothstep(0.0, 0.4, sin(vUv.x * 4.0 + vUv.y * 3.0 + uTime * 9.0)) * 0.5 + 0.85;',
+        '  float breath = 0.88 + 0.12 * sin(uTime * 2.0);',
+        '  float intensity = 8.0 * (0.75 + 0.25 * (flicker.r + flicker.g + flicker.b) / 3.0) * (0.7 + 0.3 * scanH) * breath;',
+        '  vec3 rgb = uColor * intensity * flicker * shimmer;',
+        '  gl_FragColor = vec4(rgb, 1.0);',
+        '}'
+      ].join('\n');
+      var mat = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uPhase: { value: phase },
+          uColorA: { value: new THREE.Vector3(cyan.r, cyan.g, cyan.b) },
+          uColorB: { value: new THREE.Vector3(magenta.r, magenta.g, magenta.b) }
+        },
+        vertexShader: VERT,
+        fragmentShader: FRAG,
+        transparent: true,
+        depthWrite: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide
+      });
+      if (window.paradeHolographicMaterials) window.paradeHolographicMaterials.push(mat);
+      return mat;
+    }
+
+    function wrapGeometryAroundCylinder(geometry, radius) {
+      var pos = geometry.attributes.position;
+      if (!pos) return;
+      var v = new THREE.Vector3();
+      for (var j = 0; j < pos.count; j++) {
+        v.fromBufferAttribute(pos, j);
+        var angle = v.x / radius;
+        var r = radius + v.z;
+        v.x = r * Math.sin(angle);
+        v.z = r * Math.cos(angle);
+        pos.setXYZ(j, v.x, v.y, v.z);
+      }
+      geometry.translate(0, 0, -radius);
+      geometry.computeVertexNormals();
+    }
+
+    var loader = new FontLoader();
+    loader.load(FONT_URL, function (font) {
+      var welcomeToGroup = new THREE.Group();
+      var worldOfGroup = new THREE.Group();
+      group.add(welcomeToGroup);
+      group.add(worldOfGroup);
+      window.paradeWelcomeToGroup = welcomeToGroup;
+      window.paradeWorldOfGroup = worldOfGroup;
+      for (var i = 0; i < PHRASES.length; i++) {
+        var phraseSize = (i === 0 ? 128 : 64) * TITLE_SCALE;
+        var phraseHeight = (i === 0 ? 40 * 0.5 : 20) * TITLE_SCALE;
+        var phraseBevelThickness = (i === 0 ? 4.8 : 2.4) * TITLE_SCALE;
+        var phraseBevelSize = (i === 0 ? 4 : 2) * TITLE_SCALE;
+        var phraseRadius = i === 0 ? (TITLE_RING_RADIUS * 1.5) * TITLE_SCALE : 1200;
+        var geo = new TextGeometry(PHRASES[i], {
+          font: font,
+          size: phraseSize,
+          height: phraseHeight,
+          curveSegments: 4,
+          bevelEnabled: true,
+          bevelThickness: phraseBevelThickness,
+          bevelSize: phraseBevelSize,
+          bevelSegments: 2
+        });
+        geo.computeBoundingBox();
+        geo.center();
+        wrapGeometryAroundCylinder(geo, phraseRadius);
+        var phraseMat = createHolographicTextMaterial(COLORS[i]);
+        if (i === 0) window.paradeWelcomeMaterials.push(phraseMat);
+        else window.paradeWorldOfMaterials.push(phraseMat);
+        var mesh = new THREE.Mesh(geo, phraseMat);
+        var yOff = (1 - i) * LINE_SPACING + (i === 0 ? 50 : 0);
+        mesh.position.set(0, yOff, phraseRadius);
+        mesh.rotation.y = 0;
+        var phraseGroup = i === 0 ? welcomeToGroup : worldOfGroup;
+        mesh.renderOrder = 1002;
+        phraseGroup.add(mesh);
+        var mesh2 = new THREE.Mesh(geo, phraseMat);
+        mesh2.position.set(0, yOff, -phraseRadius);
+        mesh2.rotation.y = Math.PI;
+        mesh2.renderOrder = 1002;
+        phraseGroup.add(mesh2);
+      }
+      var welcomeToGroup2 = welcomeToGroup.clone(true);
+      welcomeToGroup2.rotation.y = Math.PI / 2;
+      welcomeToGroup.add(welcomeToGroup2);
+      var worldOfGroup2 = worldOfGroup.clone(true);
+      worldOfGroup2.rotation.y = Math.PI / 2;
+      worldOfGroup.add(worldOfGroup2);
+
+      var karafuruGeo = new TextGeometry(BRAND_TEXT, {
+        font: font,
+        size: 192,
+        height: 30,
+        curveSegments: 4,
+        bevelEnabled: true,
+        bevelThickness: 3.6,
+        bevelSize: 3,
+        bevelSegments: 2
+      });
+      karafuruGeo.computeBoundingBox();
+      karafuruGeo.center();
+      var orbitRadius = karafuruOrbitRadius;
+      wrapGeometryAroundCylinder(karafuruGeo, orbitRadius);
+      var karafuruMats = [
+        createKarafuruHoloMaterial(0),
+        createKarafuruHoloMaterial(Math.PI / 2),
+        createKarafuruHoloMaterial(Math.PI),
+        createKarafuruHoloMaterial(Math.PI * 1.5)
+      ];
+      window.paradeKarafuruMaterials = karafuruMats;
+      var offsetY = karafuruOffsetY;
+      var karafuruMesh = new THREE.Mesh(karafuruGeo, karafuruMats[0]);
+      karafuruMesh.position.set(0, -offsetY, orbitRadius);
+      karafuruMesh.rotation.y = 0;
+      karafuruMesh.renderOrder = 1005;
+      var karafuruMesh2 = new THREE.Mesh(karafuruGeo.clone(), karafuruMats[1]);
+      karafuruMesh2.position.set(0, -offsetY, -orbitRadius);
+      karafuruMesh2.rotation.y = Math.PI;
+      karafuruMesh2.renderOrder = 1005;
+      var karafuruOrbitGroup = new THREE.Group();
+      karafuruOrbitGroup.add(karafuruMesh);
+      karafuruOrbitGroup.add(karafuruMesh2);
+      var karafuruOrbitGroup2 = new THREE.Group();
+      karafuruOrbitGroup2.rotation.y = Math.PI / 2;
+      var karafuruMesh3 = new THREE.Mesh(karafuruGeo.clone(), karafuruMats[2]);
+      karafuruMesh3.position.set(0, -offsetY, orbitRadius);
+      karafuruMesh3.rotation.y = 0;
+      karafuruMesh3.renderOrder = 1005;
+      var karafuruMesh4 = new THREE.Mesh(karafuruGeo.clone(), karafuruMats[3]);
+      karafuruMesh4.position.set(0, -offsetY, -orbitRadius);
+      karafuruMesh4.rotation.y = Math.PI;
+      karafuruMesh4.renderOrder = 1005;
+      karafuruOrbitGroup2.add(karafuruMesh3);
+      karafuruOrbitGroup2.add(karafuruMesh4);
+      karafuruOrbitGroup.add(karafuruOrbitGroup2);
+      karafuruParent.add(karafuruOrbitGroup);
+      window.paradeKarafuruOrbitGroup = karafuruOrbitGroup;
+      var karafuruOrbitGroupCopy = karafuruOrbitGroup.clone(true);
+      karafuruOrbitGroupCopy.scale.setScalar(1.4);
+      karafuruOrbitGroupCopy.rotation.y = Math.PI / 4; /* 45° at start */
+      karafuruParent.add(karafuruOrbitGroupCopy);
+      window.paradeKarafuruOrbitGroupCopy = karafuruOrbitGroupCopy;
+    });
+  })();
+  </script>
+</body>
+</html>

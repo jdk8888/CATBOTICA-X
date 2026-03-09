@@ -4,14 +4,23 @@ CATBOTICA Zodiac Badge Generator — Silo 03 (Arch Studio)
 =========================================================
 Batch generation of 12 zodiac badges via ComfyUI REST API.
 
+AI STACK (what is used for generation):
+  - ComfyUI (http://127.0.0.1:8188) — orchestration
+  - FLUX 2 Dev FP8 (flux2_dev_fp8mixed.safetensors) — Black Forest Labs FLUX.2; recommended for 24GB VRAM.
+    No FLUX 1. Place in ComfyUI/models/checkpoints/ (or merge from diffusion_models/ if using split files).
+  - PuLID FLUX (pulid_flux_v0.9.1.safetensors) — reference-based style/identity lock;
+    uses reference image (Dog master badge) so badges 2–12 match frame, colors, proportions.
+  - No IP-Adapter, ControlNet, or other style nodes in this workflow.
+
 Pipeline:
   Phase 1: Generate Horse (Master Badge) WITHOUT PuLID
-  Phase 2: Copy master to ComfyUI/input/ for PuLID reference
-  Phase 3: Generate remaining 11 badges WITH PuLID consistency
+  Phase 2: Upload Horse to ComfyUI/input/ as master_badge_horse.png
+  Phase 3: Generate remaining 11 badges WITH PuLID (weight 1.0, end_at 1.0, denoise 0.92)
+           + fixed clip_l (no animal) + minimal t5xxl (only animal token varies) + unified seed
 
-VRAM: ~14GB (FLUX 2 Dev FP8 + PuLID FLUX v0.9.1)
+VRAM: ~14GB (FLUX 1 Dev FP8 + PuLID)
 Lore Anchor: LS-CATBOTICA-ANCHOR-012
-Output: projects/CATBOTICA/Assets/badges/raw/
+Output: projects/CATBOTICA/Exports/draft/badges/raw/
 
 Usage:
   python generate_zodiac_badges.py                    # Full run (all 12)
@@ -19,6 +28,8 @@ Usage:
   python generate_zodiac_badges.py --start-from tiger  # Resume from tiger
   python generate_zodiac_badges.py --only horse        # Generate one badge
   python generate_zodiac_badges.py --skip-lock         # Skip VRAM lock (dev)
+  python generate_zodiac_badges.py --draft-label cute_cartoon   # Cute friendly variant → raw/cute_cartoon/
+  python generate_zodiac_badges.py --draft-label sleek_medallion  # Sleek metal medallion → raw/sleek_medallion/
 """
 
 import json
@@ -44,249 +55,178 @@ PROJECT_ROOT = STUDIO_ROOT / "projects" / "CATBOTICA"
 WORKFLOW_PATH = (
     PROJECT_ROOT / "workflow" / "comfyui_workflows" / "zodiac_badge_pulid_flux2.json"
 )
-RAW_OUTPUT_DIR = PROJECT_ROOT / "Assets" / "badges" / "raw"
+BADGES_BASE = PROJECT_ROOT / "Exports" / "draft" / "badges"
+RAW_OUTPUT_DIR = BADGES_BASE / "raw"  # default; use get_raw_output_dir(draft_label) for variants
 SCRIPTS_DIR = STUDIO_ROOT / "Scripts"
+
+
+def get_raw_output_dir(draft_label: str | None) -> Path:
+    """Raw output dir: raw/<draft_label>/ when draft_label set, else raw/."""
+    if draft_label:
+        return BADGES_BASE / "raw" / draft_label
+    return BADGES_BASE / "raw"
 
 COMFYUI_URL = "http://127.0.0.1:8188"
 SILO_NAME = "03_Arch_Studio"
 VRAM_ESTIMATE_GB = 14.0
+
+# Checkpoint: use FLUX 2 if present in ComfyUI checkpoints, else fall back to FLUX 1 for pipeline to run.
+CHECKPOINT_FLUX2 = "flux2_dev_fp8mixed.safetensors"
+CHECKPOINT_FALLBACK = "flux1-dev-fp8.safetensors"  # Used when FLUX 2 not installed
 POLL_INTERVAL_S = 5
-MAX_POLL_ATTEMPTS = 240  # 20 minutes max per badge
+MAX_POLL_ATTEMPTS = 480  # 40 minutes max per badge (slow ComfyUI / PuLID)
 
 
 # ─── Zodiac Badge Definitions ──────────────────────────────────────────────
-# Source of Truth: zodiac_badge_prompts.md (LS-CATBOTICA-ANCHOR-012)
-# Horse is generated first as Master Badge (no PuLID).
-# Remaining 11 use PuLID referencing the Horse for cross-badge consistency.
+# Source of Truth: projects/CATBOTICA/metadata/lore_anchors/zodiac_badges.md (LS-CATBOTICA-ANCHOR-012)
+# + lore_anchors.md summary. Dog = Master (no PuLID). Remaining 11: PuLID 1.0 + style-lock + unified seed.
 
-SHARED_NEGATIVE = (
-    "fur, hair, feathers, organic skin, organic eyes, realistic animal, "
-    "photograph, soft textures, watercolor, oil painting, blurry, low quality, "
-    "text, typography, words, letters, numbers, human face, human body, "
-    "environmental background, landscape, scenery, multiple objects, cluttered, "
-    "asymmetrical, cartoon, chibi, anime, sketch, pencil drawing, crayon"
+PULID_STYLE_LOCK_PREFIX = (
+    "Same style as reference: same frame, same colors, same composition. "
+    "Only the center subject differs: "
+)
+UNIFIED_SEED = 2040
+# For PuLID runs: lower denoise keeps reference layout/colors stronger (less drift)
+DENOISE_PULID = 0.92
+# Fixed clip_l for ALL PuLID badges — Catbotica reference look (LS-CATBOTICA-ANCHOR-012)
+CLIP_L_PULID_FIXED = (
+    "Catbotica zodiac badge, hard-surface mechanical, enamel pin, "
+    "Electric Cyan circuitry border, Imperial Red Gold overlay, Carbon Fiber Black"
 )
 
+SHARED_NEGATIVE = (
+    "fur, hair, feathers, organic skin, organic eyes, realistic animal, photograph, "
+    "soft textures, watercolor, oil painting, blurry, low quality, "
+    "text, typography, words, letters, numbers, human face, human body, "
+    "environmental background, landscape, scenery, multiple objects, cluttered, "
+    "asymmetrical, ornate, baroque, busy, heraldic, crest, shield, excessive detail, lavish, fancy, "
+    "details at top, ornament above frame, elements outside boundary, "
+    "strong glow, harsh glimmer, bright spotlight, artistic, painterly, stylized"
+)
+# Extra negatives for cute_cartoon variant (avoid menacing look)
+SHARED_NEGATIVE_CUTE = (
+    "menacing, aggressive, scary, threatening, fierce, angry, sharp teeth, "
+    "dark mood, sinister, intimidating, horror, violent"
+)
+# For cute_cartoon: allow cartoon/chibi; add friendly-avoid negatives
+NEGATIVE_CUTE_CARTOON = (
+    "fur, hair, feathers, organic skin, organic eyes, realistic animal, photograph, "
+    "soft textures, watercolor, oil painting, blurry, low quality, "
+    "text, typography, words, letters, numbers, human face, human body, "
+    "environmental background, landscape, scenery, multiple objects, cluttered, "
+    "asymmetrical, ornate, baroque, busy, heraldic, crest, shield, excessive detail, lavish, fancy, "
+    "details at top, ornament above frame, elements outside boundary, "
+    "strong glow, harsh glimmer, bright spotlight, artistic, painterly, stylized, "
+    + SHARED_NEGATIVE_CUTE
+)
+
+# From project_bible.md + lore_anchors/zodiac_badges.md — hybrid palette, mechanical only
+DESIGN_SPEC = (
+    " Catbotica mechanical style only: plates, wiring, circuit traces, LED accents. "
+    "Electric Cyan #00F2FF circuitry traces as border and structural lines. "
+    "Imperial Red #C41E3A and Gold #FFD700 for Lunar overlay and Luck-Module glow at center. "
+    "Carbon Fiber Black #0D0D0D base. Retro-futuristic enamel pin aesthetic, UE5-quality volumetric lighting. "
+    "Round badge frame, subject centered inside. 1:1 square, symmetrical, digital collectible."
+)
+
+def _badge_prompt(animal_upper: str) -> str:
+    return (
+        f"Catbotica zodiac badge. {animal_upper} in hard-surface mechanical style: "
+        f"recognizable silhouette with plates, circuit traces, LED accents. "
+        f"No organic texture. Enamel pin look, round frame."
+        + DESIGN_SPEC
+    )
+
+
+def _badge_prompt_pulid(animal_upper: str) -> str:
+    """PuLID runs: same Catbotica look; only animal changes (bible-aligned)."""
+    return (
+        PULID_STYLE_LOCK_PREFIX
+        + f"{animal_upper} in same hard-surface mechanical style, plates and circuit traces, enamel pin, round frame."
+        + DESIGN_SPEC
+    )
+
+
+# ─── Cute cartoon variant (draft_label=cute_cartoon): friendlier, like cat robot ───
+CUTE_CLIP_L_PULID_FIXED = (
+    "Cute cartoon zodiac badge, robot style, hard-surface only, friendly, "
+    "Electric Cyan circuitry, Imperial Red Gold, Carbon Fiber Black"
+)
+CUTE_DESIGN_SPEC = (
+    " Cute cartoon style like a friendly robot cat: hard-surface mechanical only, plates, circuit traces, LED accents. "
+    "Friendly and approachable, not menacing. Electric Cyan #00F2FF circuitry, Imperial Red #C41E3A and Gold #FFD700 accents, Carbon Fiber Black #0D0D0D. "
+    "Round badge frame, subject centered. 1:1 square, symmetrical, enamel pin look, digital collectible."
+)
+
+
+def _cute_badge_prompt(animal_upper: str) -> str:
+    """Cute cartoon variant: friendly robot style, hard-surface only."""
+    return (
+        f"Cute cartoon zodiac badge. {animal_upper} as a friendly robot: hard-surface mechanical only, "
+        f"plates, circuit traces, LED accents. Cute and approachable, like a cat robot. Round frame."
+        + CUTE_DESIGN_SPEC
+    )
+
+
+def _cute_badge_prompt_pulid(animal_upper: str) -> str:
+    """Cute PuLID runs: same friendly robot look; only animal changes."""
+    return (
+        PULID_STYLE_LOCK_PREFIX
+        + f"{animal_upper} as same cute friendly robot, hard-surface only, plates and circuit traces, round frame."
+        + CUTE_DESIGN_SPEC
+    )
+
+
+# ─── Sleek metal medallion variant (draft_label=sleek_medallion): refined, abstracted ───
+SLEEK_CLIP_L_PULID_FIXED = (
+    "Sleek metal medallion, abstract shape, polished round disc, "
+    "Electric Cyan and Gold accent lines, dark metal base"
+)
+SLEEK_DESIGN_SPEC = (
+    " Sleek metal medallion: polished metallic surface, round disc with clean beveled edge. "
+    "Zodiac as abstract form only: single simplified shape suggesting the animal, reduced to essential gesture. "
+    "No literal detail: one minimal contour or silhouette, geometric suggestion. "
+    "Thin Electric Cyan #00F2FF and Imperial Red #C41E3A or Gold #FFD700 accent lines only. "
+    "Dark metal or Carbon Fiber Black #0D0D0D base. Refined, premium collectible. "
+    "1:1 square, centered, symmetrical, subtle Luck-Module glow at center."
+)
+
+
+def _sleek_medallion_badge_prompt(animal_upper: str) -> str:
+    """Sleek metal medallion: abstract shape suggesting animal, minimal form."""
+    return (
+        f"Sleek metal medallion. One abstract shape suggesting {animal_upper}: "
+        f"minimal, reduced to essential form, single simplified contour on polished metal disc. "
+        f"Round, clean beveled edge, thin Cyan and Gold accent lines, dark metal base."
+        + SLEEK_DESIGN_SPEC
+    )
+
+
+def _sleek_medallion_badge_prompt_pulid(animal_upper: str) -> str:
+    """Sleek PuLID runs: same medallion; only animal token varies, abstract form."""
+    return (
+        PULID_STYLE_LOCK_PREFIX
+        + f"One abstract shape suggesting {animal_upper}, minimal and reduced to essential form, single contour, round disc, thin Cyan Gold accents."
+        + SLEEK_DESIGN_SPEC
+    )
+
+
+# Style references: Horse first (master), Monkey second (PuLID from horse). Rest use PuLID from horse.
+# Both horse and monkey define the medallion look; PuLID ref = master_badge_horse.png
 # fmt: off
 ZODIAC_BADGES = [
-    {
-        "name": "horse", "year": 2026, "seed": 2026, "element": "Fire",
-        "is_master": True, "filename_prefix": "catbotica_zodiac/horse",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical HORSE constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Rearing dynamic pose, pistons and hydraulic joints "
-            "visible at legs and neck, mane rendered as a cascade of fiber-optic cables glowing Electric "
-            "Cyan #00F2FF, armored chest plate with exposed circuitry. The badge frame features Electric "
-            "Cyan #00F2FF glowing circuitry traces forming structural border lines. Overlaid with Imperial "
-            "Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs representing "
-            "Fire element — flame and spark motifs in the filigree. A Gold glowing Luck-Module emanates "
-            "from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric "
-            "lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. Centered, "
-            "symmetrical, isolated on solid black background, ultra-fine technical detail, retro-futuristic "
-            "cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "tiger", "year": 2022, "seed": 2022, "element": "Water",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/tiger",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical TIGER constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Powerful crouching stance, armored plating with "
-            "layered pauldron-like shoulder plates, jagged circuit-trace stripes glowing Electric Cyan "
-            "#00F2FF across the body. Fangs rendered as polished chrome blades. The badge frame features "
-            "Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. Overlaid "
-            "with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs "
-            "representing Water element — wave motifs in the filigree. A Gold glowing Luck-Module emanates "
-            "from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric "
-            "lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. Centered, "
-            "symmetrical, isolated on solid black background, ultra-fine technical detail, retro-futuristic "
-            "cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "rabbit", "year": 2023, "seed": 2023, "element": "Water",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/rabbit",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical RABBIT constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Elegant upright pose, elongated radar-dish ears "
-            "made of brushed titanium with internal Cyan circuit veins, compact articulated body with "
-            "smooth ceramic-white plating. Whiskers rendered as fiber-optic filaments. The badge frame "
-            "features Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. "
-            "Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar "
-            "zodiac glyphs representing Water element — flowing ribbon motifs. A Gold glowing Luck-Module "
-            "emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality "
-            "volumetric lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. "
-            "Centered, symmetrical, isolated on solid black background, ultra-fine technical detail, "
-            "retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "dragon", "year": 2024, "seed": 2024, "element": "Wood",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/dragon",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical DRAGON constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Coiled serpentine body with overlapping hexagonal "
-            "scale-plates, articulated jaw with chrome teeth, swept-back horn antennae made of burnished "
-            "copper coils. Wings rendered as deployable solar-panel arrays with Cyan circuit veins. The "
-            "badge frame features Electric Cyan #00F2FF glowing circuitry traces forming structural border "
-            "lines. Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar "
-            "zodiac glyphs representing Wood element — branch and vine motifs in the filigree. A Gold "
-            "glowing Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate "
-            "base. UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface glow on "
-            "circuit traces. Centered, symmetrical, isolated on solid black background, ultra-fine "
-            "technical detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "snake", "year": 2025, "seed": 2025, "element": "Wood",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/snake",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical SNAKE constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Coiled spiral body made of interlocking segmented "
-            "rings with visible ball-joint articulation, smooth matte obsidian plating with Cyan circuit "
-            "traces running along the spine. Hooded cobra-like head with LED sensor eyes and a forked "
-            "antenna tongue. The badge frame features Electric Cyan #00F2FF glowing circuitry traces "
-            "forming structural border lines. Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate "
-            "filigree patterns and Lunar zodiac glyphs representing Wood element — leaf and tendril motifs. "
-            "A Gold glowing Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D "
-            "substrate base. UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface "
-            "glow on circuit traces. Centered, symmetrical, isolated on solid black background, ultra-fine "
-            "technical detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "goat", "year": 2027, "seed": 2027, "element": "Fire",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/goat",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical GOAT constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Regal standing pose, curved spiral horns made of "
-            "layered copper coil windings with Cyan LED tips, compact muscular frame with angular armor "
-            "plating, cloven hooves rendered as magnetic stabilizer pads. The badge frame features "
-            "Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. Overlaid "
-            "with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs "
-            "representing Fire element — ember and warmth motifs. A Gold glowing Luck-Module emanates "
-            "from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric "
-            "lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. Centered, "
-            "symmetrical, isolated on solid black background, ultra-fine technical detail, retro-futuristic "
-            "cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "monkey", "year": 2028, "seed": 2028, "element": "Earth",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/monkey",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical MONKEY constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Crouching agile pose with one articulated hand "
-            "reaching upward, prehensile tail rendered as a segmented cable with magnetic grapple tip, "
-            "expressive LED visor face, compact nimble frame with exposed servo motors at joints. The "
-            "badge frame features Electric Cyan #00F2FF glowing circuitry traces forming structural "
-            "border lines. Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns "
-            "and Lunar zodiac glyphs representing Earth element — stone and crystal motifs. A Gold glowing "
-            "Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate base. "
-            "UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface glow on circuit "
-            "traces. Centered, symmetrical, isolated on solid black background, ultra-fine technical "
-            "detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "rooster", "year": 2029, "seed": 2029, "element": "Earth",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/rooster",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical ROOSTER constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Proud upright stance, dramatic crest/comb rendered "
-            "as a radiator fin array glowing Imperial Red, tail feathers rendered as deployable antenna "
-            "blade fans with Cyan circuit traces, sharp talons as precision tool-tips. The badge frame "
-            "features Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. "
-            "Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar "
-            "zodiac glyphs representing Earth element — geometric crystal motifs. A Gold glowing "
-            "Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate base. "
-            "UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface glow on circuit "
-            "traces. Centered, symmetrical, isolated on solid black background, ultra-fine technical "
-            "detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "dog", "year": 2030, "seed": 2030, "element": "Metal",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/dog",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical DOG constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Alert sitting pose with ears perked, radar-dish "
-            "ears with internal antenna arrays, broad loyal chest plate with shield-like armor, articulated "
-            "tail functioning as a balance gyroscope, muzzle with sensor grid. The badge frame features "
-            "Electric Cyan #00F2FF glowing circuitry traces forming structural border lines. Overlaid "
-            "with Imperial Red #C41E3A and Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs "
-            "representing Metal element — forged steel and riveted motifs. A Gold glowing Luck-Module "
-            "emanates from the forehead region. Carbon Fiber Black #0D0D0D substrate base. UE5-quality "
-            "volumetric lighting, 3D beveled metallic surfaces, subsurface glow on circuit traces. "
-            "Centered, symmetrical, isolated on solid black background, ultra-fine technical detail, "
-            "retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "pig", "year": 2031, "seed": 2031, "element": "Metal",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/pig",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical PIG constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Sturdy seated pose with a round compact body of "
-            "overlapping armor plates, broad snout with dual intake vents and sensor array, small "
-            "articulated ears like satellite dishes, curly tail rendered as a coiled power conduit with "
-            "Cyan glow. The badge frame features Electric Cyan #00F2FF glowing circuitry traces forming "
-            "structural border lines. Overlaid with Imperial Red #C41E3A and Gold #FFD700 ornate filigree "
-            "patterns and Lunar zodiac glyphs representing Metal element — hammered bronze and gilt motifs. "
-            "A Gold glowing Luck-Module emanates from the forehead region. Carbon Fiber Black #0D0D0D "
-            "substrate base. UE5-quality volumetric lighting, 3D beveled metallic surfaces, subsurface "
-            "glow on circuit traces. Centered, symmetrical, isolated on solid black background, ultra-fine "
-            "technical detail, retro-futuristic cyberpunk, high-end enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "rat", "year": 2032, "seed": 2032, "element": "Water",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/rat",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical RAT constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Alert crouching pose with oversized round "
-            "sensor-ear dishes, long segmented tail made of linked micro-servos, compact agile body with "
-            "sleek low-profile armor, tiny articulated claws with tool-tip digits, sharp pointed snout "
-            "with whisker-like fiber-optic probes. The badge frame features Electric Cyan #00F2FF glowing "
-            "circuitry traces forming structural border lines. Overlaid with Imperial Red #C41E3A and "
-            "Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs representing Water element — "
-            "ripple and current motifs. A Gold glowing Luck-Module emanates from the forehead region. "
-            "Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric lighting, 3D beveled "
-            "metallic surfaces, subsurface glow on circuit traces. Centered, symmetrical, isolated on "
-            "solid black background, ultra-fine technical detail, retro-futuristic cyberpunk, high-end "
-            "enamel pin, digital collectible."
-        ),
-    },
-    {
-        "name": "ox", "year": 2033, "seed": 2033, "element": "Water",
-        "is_master": False, "filename_prefix": "catbotica_zodiac/ox",
-        "prompt": (
-            "A high-resolution digital collectible badge, retro-futuristic enamel pin aesthetic. "
-            "A cybernetic mechanical OX constructed from hard-surface metallic plates, copper wiring, "
-            "circuit traces, and LED optical sensors. Powerful front-facing stance, massive horns rendered "
-            "as twin hydraulic rams with Cyan-lit pressure gauges, broad reinforced chest plate with "
-            "hexagonal bolt patterns, thick armored legs with heavy-duty piston joints, a nose ring "
-            "rendered as a glowing data-link torus. The badge frame features Electric Cyan #00F2FF glowing "
-            "circuitry traces forming structural border lines. Overlaid with Imperial Red #C41E3A and "
-            "Gold #FFD700 ornate filigree patterns and Lunar zodiac glyphs representing Water element — "
-            "deep ocean and tide motifs. A Gold glowing Luck-Module emanates from the forehead region. "
-            "Carbon Fiber Black #0D0D0D substrate base. UE5-quality volumetric lighting, 3D beveled "
-            "metallic surfaces, subsurface glow on circuit traces. Centered, symmetrical, isolated on "
-            "solid black background, ultra-fine technical detail, retro-futuristic cyberpunk, high-end "
-            "enamel pin, digital collectible."
-        ),
-    },
+    {"name": "horse", "year": 2026, "seed": 2026, "element": "Fire", "is_master": True, "filename_prefix": "catbotica_zodiac/horse", "prompt": _badge_prompt("HORSE")},
+    {"name": "monkey", "year": 2028, "seed": 2028, "element": "Earth", "is_master": False, "filename_prefix": "catbotica_zodiac/monkey", "prompt": _badge_prompt("MONKEY")},
+    {"name": "dog", "year": 2030, "seed": 2030, "element": "Metal", "is_master": False, "filename_prefix": "catbotica_zodiac/dog", "prompt": _badge_prompt("DOG")},
+    {"name": "tiger", "year": 2022, "seed": 2022, "element": "Water", "is_master": False, "filename_prefix": "catbotica_zodiac/tiger", "prompt": _badge_prompt("TIGER")},
+    {"name": "rabbit", "year": 2023, "seed": 2023, "element": "Water", "is_master": False, "filename_prefix": "catbotica_zodiac/rabbit", "prompt": _badge_prompt("RABBIT")},
+    {"name": "dragon", "year": 2024, "seed": 2024, "element": "Wood", "is_master": False, "filename_prefix": "catbotica_zodiac/dragon", "prompt": _badge_prompt("DRAGON")},
+    {"name": "snake", "year": 2025, "seed": 2025, "element": "Wood", "is_master": False, "filename_prefix": "catbotica_zodiac/snake", "prompt": _badge_prompt("SNAKE")},
+    {"name": "goat", "year": 2027, "seed": 2027, "element": "Fire", "is_master": False, "filename_prefix": "catbotica_zodiac/goat", "prompt": _badge_prompt("GOAT")},
+    {"name": "rooster", "year": 2029, "seed": 2029, "element": "Earth", "is_master": False, "filename_prefix": "catbotica_zodiac/rooster", "prompt": _badge_prompt("ROOSTER")},
+    {"name": "pig", "year": 2031, "seed": 2031, "element": "Metal", "is_master": False, "filename_prefix": "catbotica_zodiac/pig", "prompt": _badge_prompt("PIG")},
+    {"name": "rat", "year": 2032, "seed": 2032, "element": "Water", "is_master": False, "filename_prefix": "catbotica_zodiac/rat", "prompt": _badge_prompt("RAT")},
+    {"name": "ox", "year": 2033, "seed": 2033, "element": "Water", "is_master": False, "filename_prefix": "catbotica_zodiac/ox", "prompt": _badge_prompt("OX")},
 ]
 # fmt: on
 
@@ -429,11 +369,10 @@ def load_base_workflow() -> dict:
 
 
 def build_clip_l_summary(animal_name: str) -> str:
-    """Build a short CLIP-L summary prompt for FLUX dual encoder."""
+    """Catbotica reference: mechanical, enamel pin, hybrid palette (bible)."""
     return (
-        f"Cybernetic mechanical {animal_name} badge, retro-futuristic enamel pin, "
-        f"Electric Cyan circuitry, Imperial Red and Gold filigree, "
-        f"Carbon Fiber Black base, digital collectible"
+        f"Catbotica zodiac badge, {animal_name}, hard-surface mechanical, enamel pin, "
+        "Electric Cyan circuitry, Imperial Red Gold, Carbon Fiber Black"
     )
 
 
@@ -443,45 +382,56 @@ def build_workflow(
     seed: int,
     filename_prefix: str,
     use_pulid: bool,
-    animal_name: str = "horse",
+    animal_name: str = "dog",
+    master_ref_image: str | None = None,
+    clip_l_override: str | None = None,
+    negative_override: str | None = None,
+    ckpt_name: str | None = None,
 ) -> dict:
     """
     Build a runnable workflow by swapping prompt, seed, filename, and PuLID state.
 
     FLUX requires CLIPTextEncodeFlux with dual inputs (clip_l + t5xxl) and cfg=1.0.
-    Guidance is handled internally by FLUX via the guidance parameter (3.5).
-
-    Args:
-        base: The base workflow dict.
-        prompt_text: Full positive prompt (goes into t5xxl field).
-        seed: Random seed for KSampler.
-        filename_prefix: SaveImage filename prefix.
-        use_pulid: If False, strip PuLID nodes entirely and connect KSampler to checkpoint.
-        animal_name: Animal name for the clip_l short summary.
-
-    Returns:
-        Modified workflow dict ready for API submission.
+    When use_pulid is True, master_ref_image is the ComfyUI input filename for the style reference.
+    clip_l_override: when set (e.g. for cute_cartoon variant), use instead of default clip_l.
+    negative_override: when set, use for node 7 negative prompt.
     """
     wf = copy.deepcopy(base)
 
-    # Fix checkpoint name to match available model
-    wf["1"]["inputs"]["ckpt_name"] = "flux1-dev-fp8.safetensors"
+    # FLUX 2 by default; use ckpt_name override (e.g. CHECKPOINT_FALLBACK when --flux1) if provided
+    wf["1"]["inputs"]["ckpt_name"] = ckpt_name if ckpt_name else CHECKPOINT_FLUX2
 
     # Node 6: Positive prompt (FLUX dual encoder)
-    wf["6"]["inputs"]["clip_l"] = build_clip_l_summary(animal_name)
+    if clip_l_override is not None:
+        wf["6"]["inputs"]["clip_l"] = clip_l_override
+    else:
+        wf["6"]["inputs"]["clip_l"] = (
+            CLIP_L_PULID_FIXED if use_pulid else build_clip_l_summary(animal_name)
+        )
     wf["6"]["inputs"]["t5xxl"] = prompt_text
     wf["6"]["inputs"]["guidance"] = 3.5
+
+    # Node 7: Negative prompt (override for draft variants e.g. cute_cartoon)
+    if negative_override is not None and "7" in wf:
+        wf["7"]["inputs"]["t5xxl"] = negative_override
 
     # Node 3: KSampler — seed + cfg=1.0 (FLUX uses internal guidance)
     wf["3"]["inputs"]["seed"] = seed
     wf["3"]["inputs"]["cfg"] = 1.0
+    if use_pulid:
+        wf["3"]["inputs"]["denoise"] = DENOISE_PULID  # Preserve reference structure
 
     if use_pulid:
-        # PuLID enabled: model from ApplyPulidFlux (node 20)
+        # PuLID enabled: model from ApplyPulidFlux (node 20), reference image in node 15
         wf["3"]["inputs"]["model"] = ["20", 0]
+        if master_ref_image and "15" in wf:
+            wf["15"]["inputs"]["image"] = master_ref_image
+        # Max style lock: weight 1.0, end_at 1.0 (reference dominates)
+        if "20" in wf:
+            wf["20"]["inputs"]["weight"] = 1.0
+            wf["20"]["inputs"]["end_at"] = 1.0
     else:
         # PuLID bypassed: remove PuLID nodes entirely (10, 11, 12, 15, 20)
-        # and connect KSampler directly to checkpoint (node 1)
         wf["3"]["inputs"]["model"] = ["1", 0]
         for node_id in ["10", "11", "12", "15", "20"]:
             wf.pop(node_id, None)
@@ -528,35 +478,75 @@ def release_vram_lock():
 # ─── Main Pipeline ─────────────────────────────────────────────────────────
 
 
-def generate_badge(badge: dict, base_workflow: dict, use_pulid: bool) -> Path:
+def generate_badge(
+    badge: dict,
+    base_workflow: dict,
+    use_pulid: bool,
+    master_ref_image: str | None = None,
+    raw_output_dir: Path | None = None,
+    draft_label: str | None = None,
+    ckpt_name: str | None = None,
+) -> Path:
     """
     Generate a single zodiac badge via ComfyUI.
 
     Args:
         badge: Badge definition dict.
         base_workflow: The base workflow to modify.
-        use_pulid: Whether to enable PuLID consistency.
+        use_pulid: Whether to enable PuLID consistency (reference = master_ref_image).
+        master_ref_image: ComfyUI input filename for PuLID reference (e.g. master_badge_horse.png).
+        raw_output_dir: Where to save raw PNG (default: RAW_OUTPUT_DIR).
+        draft_label: If "cute_cartoon", use cute/friendly prompt set and negative.
+        ckpt_name: Override checkpoint (e.g. CHECKPOINT_FALLBACK when --flux1). Default FLUX 2.
 
     Returns:
         Path to the downloaded raw badge PNG.
     """
+    out_dir = raw_output_dir if raw_output_dir is not None else (BADGES_BASE / "raw")
     name = badge["name"]
-    output_file = RAW_OUTPUT_DIR / f"{name}.png"
+    output_file = out_dir / f"{name}.png"
 
     # Check if already generated (resume support)
     if output_file.exists():
         print(f"  [SKIP] {name}.png already exists — skipping")
         return output_file
 
-    print(f"  [GEN] Queuing {name.upper()} (seed={badge['seed']}, PuLID={'ON' if use_pulid else 'OFF'})...")
+    is_cute = draft_label == "cute_cartoon"
+    is_sleek = draft_label == "sleek_medallion"
+    if is_cute:
+        prompt_text = _cute_badge_prompt_pulid(badge["name"].upper()) if use_pulid else _cute_badge_prompt(badge["name"].upper())
+        clip_l_override = CUTE_CLIP_L_PULID_FIXED if use_pulid else (
+            f"Cute cartoon zodiac badge, {badge['name']}, friendly robot, hard-surface, "
+            "Electric Cyan circuitry, Imperial Red Gold, Carbon Fiber Black"
+        )
+        negative_override = NEGATIVE_CUTE_CARTOON
+    elif is_sleek:
+        prompt_text = _sleek_medallion_badge_prompt_pulid(badge["name"].upper()) if use_pulid else _sleek_medallion_badge_prompt(badge["name"].upper())
+        clip_l_override = SLEEK_CLIP_L_PULID_FIXED if use_pulid else (
+            f"Sleek metal medallion, {badge['name']}, polished metal disc, "
+            "Electric Cyan Gold accents, dark metal base"
+        )
+        negative_override = None  # use workflow default
+    else:
+        prompt_text = _badge_prompt_pulid(badge["name"].upper()) if use_pulid else badge["prompt"]
+        clip_l_override = None
+        negative_override = None
+
+    seed = UNIFIED_SEED
+    variant_tag = ", cute_cartoon" if is_cute else (", sleek_medallion" if is_sleek else "")
+    print(f"  [GEN] Queuing {name.upper()} (seed={seed}, PuLID={'ON' if use_pulid else 'OFF'}{variant_tag})...")
 
     wf = build_workflow(
         base=base_workflow,
-        prompt_text=badge["prompt"],
-        seed=badge["seed"],
+        prompt_text=prompt_text,
+        seed=seed,
         filename_prefix=badge["filename_prefix"],
         use_pulid=use_pulid,
         animal_name=badge["name"],
+        master_ref_image=master_ref_image,
+        clip_l_override=clip_l_override,
+        negative_override=negative_override,
+        ckpt_name=ckpt_name,
     )
 
     # Queue and wait
@@ -585,11 +575,14 @@ def generate_badge(badge: dict, base_workflow: dict, use_pulid: bool) -> Path:
 
 def run_pipeline(args):
     """Execute the full badge generation pipeline."""
+    raw_output_dir = get_raw_output_dir(getattr(args, "draft_label", None))
     print("=" * 70)
     print("CATBOTICA ZODIAC BADGE GENERATOR — Silo 03 (Arch Studio)")
     print("Lore Anchor: LS-CATBOTICA-ANCHOR-012")
     print(f"VRAM Estimate: {VRAM_ESTIMATE_GB} GB (FLUX 2 Dev + PuLID)")
-    print(f"Output: {RAW_OUTPUT_DIR}")
+    print(f"Output: {raw_output_dir}")
+    if getattr(args, "draft_label", None):
+        print(f"Draft variant: {args.draft_label}")
     print("=" * 70)
 
     # ── Step 0: Determine which badges to generate ──
@@ -650,11 +643,25 @@ def run_pipeline(args):
         print(f"  [OK] Loaded {len(base_workflow)} nodes from workflow")
 
         # ── Step 4: Create output directory ──
-        RAW_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-        print(f"  [OK] Output directory: {RAW_OUTPUT_DIR}")
+        raw_output_dir = get_raw_output_dir(getattr(args, "draft_label", None))
+        raw_output_dir.mkdir(parents=True, exist_ok=True)
+        print(f"  [OK] Output directory: {raw_output_dir}")
 
         # ── Step 5: Generate badges ──
+        draft_label = getattr(args, "draft_label", None)
+        use_flux1 = getattr(args, "flux1", False)
+        ckpt_override = CHECKPOINT_FALLBACK if use_flux1 else None  # None = use FLUX 2
+        if use_flux1:
+            print(f"  [CKPT] Using FLUX 1 fallback: {CHECKPOINT_FALLBACK}")
+        else:
+            print(f"  [CKPT] Using FLUX 2: {CHECKPOINT_FLUX2}")
+        # PuLID reference is always the first badge in full order (Horse), so resume works
+        master_name = ZODIAC_BADGES[0]["name"] if ZODIAC_BADGES else "horse"
+        master_ref_image = f"master_badge_{master_name}.png"
         print("\n[4/5] Generating badges...")
+        print(f"  [STYLE ANCHORS] Horse then Monkey; reference: {master_ref_image}")
+        if draft_label:
+            print(f"  [VARIANT] {draft_label}")
         results = []
         master_path = None
 
@@ -662,39 +669,50 @@ def run_pipeline(args):
             print(f"\n--- Badge {i}/{len(badges_to_generate)}: {badge['name'].upper()} ---")
 
             if badge["is_master"]:
-                # Master badge: NO PuLID
-                print("  [MASTER] Generating WITHOUT PuLID (identity anchor)")
-                path = generate_badge(badge, base_workflow, use_pulid=False)
+                # Master badge: NO PuLID (style anchor)
+                print("  [MASTER] Generating WITHOUT PuLID (style anchor for rest)")
+                path = generate_badge(
+                    badge, base_workflow, use_pulid=False,
+                    raw_output_dir=raw_output_dir, draft_label=draft_label,
+                    ckpt_name=ckpt_override,
+                )
                 master_path = path
 
                 # Upload master to ComfyUI input for PuLID reference
                 if not path.name.startswith("SKIP"):
-                    print("  [UPLOAD] Uploading master badge to ComfyUI/input/...")
+                    print(f"  [UPLOAD] Uploading master badge to ComfyUI/input/ as {master_ref_image}...")
                     try:
-                        upload_image_to_comfyui(path, "master_badge_horse.png")
-                        print("  [OK] Master badge uploaded as master_badge_horse.png")
+                        upload_image_to_comfyui(path, master_ref_image)
+                        print(f"  [OK] Master badge uploaded as {master_ref_image}")
                     except Exception as e:
                         print(f"  [ERROR] Upload failed: {e}")
                         print("  [FALLBACK] You may need to manually copy to ComfyUI/input/")
             else:
-                # Determine PuLID usage
+                # Non-master: use PuLID with master as reference (unless --no-pulid)
                 use_pulid = not args.no_pulid
 
                 if use_pulid:
-                    # Check that master badge exists for PuLID reference
                     if master_path is None:
-                        master_candidate = RAW_OUTPUT_DIR / "horse.png"
+                        master_candidate = raw_output_dir / f"{master_name}.png"
                         if master_candidate.exists():
-                            print("  [INFO] Using existing master badge for PuLID reference")
+                            print(f"  [INFO] Using existing master badge ({master_name}.png) for PuLID reference")
                             try:
-                                upload_image_to_comfyui(master_candidate, "master_badge_horse.png")
+                                upload_image_to_comfyui(master_candidate, master_ref_image)
                             except Exception:
-                                pass  # May already be uploaded
+                                pass
                             master_path = master_candidate
                         else:
-                            print("  [WARN] Master badge (horse) not found — PuLID may produce inconsistent results")
+                            print(f"  [WARN] Master badge ({master_name}.png) not found — PuLID may be inconsistent")
 
-                path = generate_badge(badge, base_workflow, use_pulid=use_pulid)
+                path = generate_badge(
+                    badge,
+                    base_workflow,
+                    use_pulid=use_pulid,
+                    master_ref_image=master_ref_image if use_pulid else None,
+                    raw_output_dir=raw_output_dir,
+                    draft_label=draft_label,
+                    ckpt_name=ckpt_override,
+                )
 
             results.append({"name": badge["name"], "path": str(path), "success": True})
 
@@ -704,7 +722,7 @@ def run_pipeline(args):
         print("=" * 70)
         success_count = sum(1 for r in results if r["success"])
         print(f"  Generated: {success_count}/{len(badges_to_generate)} badges")
-        print(f"  Output: {RAW_OUTPUT_DIR}")
+        print(f"  Output: {raw_output_dir}")
         print("\n  Files:")
         for r in results:
             status = "OK" if r["success"] else "FAIL"
@@ -749,6 +767,10 @@ def main():
     parser.add_argument("--skip-lock", action="store_true", help="Skip VRAM lock (dev mode)")
     parser.add_argument("--no-pulid", action="store_true",
                         help="Generate ALL badges without PuLID (use when PuLID model not available)")
+    parser.add_argument("--draft-label", type=str, default=None,
+                        help="Draft variant: output to raw/<label>/ (e.g. cute_cartoon). Keeps other drafts intact.")
+    parser.add_argument("--flux1", action="store_true",
+                        help="Use FLUX 1 checkpoint instead of FLUX 2 (if FLUX 2 not installed)")
     args = parser.parse_args()
 
     success = run_pipeline(args)

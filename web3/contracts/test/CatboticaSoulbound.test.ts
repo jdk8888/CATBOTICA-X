@@ -169,7 +169,7 @@ describe("CatboticaSoulbound", function () {
     it("should track supply correctly", async function () {
       await sbt.connect(minter).issueProof(user1.address, 5, "LMRP-A");
       await sbt.connect(minter).issueProof(user2.address, 5, "LMRP-B");
-      expect(await sbt.totalSupply(5)).to.equal(2);
+      expect(await sbt["totalSupply(uint256)"](5)).to.equal(2);
     });
   });
 

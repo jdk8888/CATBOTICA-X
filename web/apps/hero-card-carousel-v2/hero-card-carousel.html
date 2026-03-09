@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#141414">
+  <title>CATBOTICA — Hero Card Carousel (v2 restored)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      min-height: 100vh; min-height: 100dvh;
+      background: #141414; color: #F4F4F4;
+    }
+    #parade-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: block; touch-action: none; -webkit-tap-highlight-color: transparent;
+    }
+    .hint {
+      position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+      font-family: ui-monospace, monospace; font-size: 12px;
+      color: rgba(255,255,255,0.5); pointer-events: none; z-index: 10;
+    }
+    #file-protocol-warning {
+      display: none;
+      position: fixed; inset: 0; background: #141414;
+      flex-direction: column; justify-content: center; align-items: center;
+      padding: 24px; text-align: center; z-index: 9999;
+      font-family: ui-monospace, monospace; color: #fff;
+    }
+    #file-protocol-warning.show { display: flex; }
+    #file-protocol-warning h2 { font-size: 18px; margin-bottom: 12px; color: #0ea5e9; }
+    #file-protocol-warning p { font-size: 14px; color: rgba(255,255,255,0.8); max-width: 360px; }
+    #file-protocol-warning a { color: #f59e0b; }
+    #closeup-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 20;
+      flex-direction: column; justify-content: flex-end; align-items: center;
+      background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 0%, transparent 38%, rgba(10,10,18,0.5) 65%, rgba(10,10,15,0.88) 100%);
+      pointer-events: none;
+    }
+    #closeup-overlay.show { display: flex; }
+    #closeup-overlay .closeup-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 28px 24px 36px;
+      text-align: center;
+      pointer-events: auto;
+    }
+    #closeup-overlay .closeup-card-name {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: clamp(20px, 4.5vw, 32px);
+      font-weight: 800;
+      color: #0ea5e9;
+      text-shadow: 0 0 24px rgba(14,165,233,0.5), 0 0 48px rgba(245,158,11,0.2);
+      letter-spacing: 0.02em;
+      order: 1;
+    }
+    #closeup-overlay .closeup-back {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 14px 36px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #F4F4F4;
+      background: rgba(14,165,233,0.25);
+      border: 2px solid #0ea5e9;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(14,165,233,0.3);
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+      order: 2;
+    }
+    #closeup-overlay .closeup-back:hover {
+      background: rgba(14,165,233,0.4);
+      border-color: #0ea5e9;
+      box-shadow: 0 0 24px rgba(14,165,233,0.4), 0 0 32px rgba(245,158,11,0.2);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="file-protocol-warning" aria-live="polite">
+    <h2>Open via HTTP</h2>
+    <p>Serve this folder (e.g. <code>npx serve -p 8767</code>) then open:</p>
+    <p style="margin: 8px 0;"><a href="http://localhost:8767/hero-card-carousel.html">http://localhost:8767/hero-card-carousel.html</a></p>
+  </div>
+  <div id="parade-canvas"></div>
+  <div id="closeup-overlay" class="closeup-overlay" aria-hidden="true">
+    <div class="closeup-actions">
+      <span id="closeup-card-name" class="closeup-card-name"></span>
+      <button type="button" id="closeup-back" class="closeup-back">Back to carousel</button>
+    </div>
+  </div>
+  <p class="hint" aria-hidden="true">CATBOTICA Hero Carousel — Drag to orbit. Scroll to zoom. Click a card for closeup.</p>
+
+  <script>
+    (function () {
+      if (window.location.protocol === 'file:' || window.location.origin === 'null') {
+        document.getElementById('file-protocol-warning').classList.add('show');
+      }
+    })();
+  </script>
+  <script>
+    window.PARADE_MEDALLIONS_COINS_CONFIG = {
+      imageList: [
+        { name: 'Rat',    url: 'assets/rat.png' },
+        { name: 'Ox',     url: 'assets/ox.png' },
+        { name: 'Tiger',  url: 'assets/tiger.png' },
+        { name: 'Rabbit', url: 'assets/rabbit.png' },
+        { name: 'Dragon', url: 'assets/dragon.png' },
+        { name: 'Snake',  url: 'assets/snake.png' },
+        { name: 'Horse',  url: 'assets/horse.png' },
+        { name: 'Goat',   url: 'assets/goat.png' },
+        { name: 'Monkey', url: 'assets/monkey.png' },
+        { name: 'Rooster', url: 'assets/rooster.png' },
+        { name: 'Dog',    url: 'assets/dog.png' },
+        { name: 'Pig',    url: 'assets/pig.png' }
+      ],
+      rearUrl: 'assets/rear.png'
+    };
+  </script>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="hero-card-carousel.js"></script>
+</body>
+</html>

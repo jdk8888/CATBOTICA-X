@@ -4,6 +4,7 @@
 
 ## Folder Structure
 
+- **`brand/`**: Official brand guidelines (e.g. `CATBOTICA_Brand_Guidelines_March2022.pdf`) — fonts, colors, logo rules, visual identity
 - **`2d_concepts/`**: 2D concept art, sketches, mood boards, and design iterations
 - **`3d_concepts/`**: 3D concept renders, previews, and visualization tests
 - **`final_outputs/`**: Final approved reference images used across all silos for consistency
@@ -18,4 +19,4 @@ All silos should reference images from `references/final_outputs/` for:
 
 ---
 
-**Last Updated**: 2026-02-06
+**Last Updated**: 2026-03-05

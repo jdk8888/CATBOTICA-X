@@ -1,0 +1,31 @@
+{
+  "project": "CATBOTICA",
+  "loreAnchor": "LS-CATBOTICA-ANCHOR-012",
+  "network": "baseSepolia",
+  "chainId": 84532,
+  "deployer": "0xB83412FdB688a4D5a732d1F2c792B01cFC0D38F8",
+  "deployedAt": "2026-02-18T13:37:41.120Z",
+  "contracts": {
+    "erc1155": {
+      "name": "CatboticaZodiacBadges",
+      "address": "0xca8988D2A51132e68499B2f6895397928bc21E03",
+      "baseURI": "ipfs://PLACEHOLDER/",
+      "contractURI": "ipfs://PLACEHOLDER_COLLECTION/",
+      "royaltyBps": 750,
+      "treasuryWallet": "0x9FFd9468Ffa42D39DC989bd026769Cf88471a23c"
+    },
+    "sbt": {
+      "name": "CatboticaSoulbound",
+      "address": "0xfF46ae9E14dbA28df04B548c1E0aE6c8fACc4DE5",
+      "baseURI": "ipfs://PLACEHOLDER_SBT/",
+      "contractURI": "ipfs://PLACEHOLDER_SBT_COLLECTION/"
+    }
+  },
+  "activeBadges": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

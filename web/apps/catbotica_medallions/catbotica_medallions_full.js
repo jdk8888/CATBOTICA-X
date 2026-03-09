@@ -1,5 +1,5 @@
 /**
- * CATBOTICA — Catbotica Medallions (full). Control panel, 12 medallions, inner sphere video, globe screens.
+ * Catbotica Inc — Medallions (full). Control panel, 12 medallions, inner cylinder video, globe screens.
  * Uses PARADE_MEDALLIONS_COINS_CONFIG and PARADE_IMAX_CONFIG; window.heroCarouselControls.
  */
 import * as THREE from 'three';
@@ -428,21 +428,20 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     medLoader.load(MEDALLION_FACE_IMAGE, function (t) { faceTex = t; faceTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
   })();
 
-  // Inner sphere video (PARADE_IMAX_CONFIG.innerSphereVideoUrl, e.g. videos/catboticavid5.mp4)
+  // Inner cylinder video (PARADE_IMAX_CONFIG.innerSphereVideoUrl; video1, 2x wrap)
   (function () {
     var imaxConfig = window.PARADE_IMAX_CONFIG || {};
     var scriptBase = (function () {
       var s = document.currentScript || document.querySelector('script[src*="hero-card-carousel.js"]') || document.querySelector('script[src*="catbotica_medallions_full.js"]');
       return s && s.src ? s.src.replace(/\/[^/]*$/, '/') : (window.location.href.replace(/\/[^/]*$/, '/'));
     })();
-    var defaultInnerVideo = 'videos/catboticavid5.mp4';
+    var defaultInnerVideo = 'videos/video1_480p.mp4';
     var innerVideoUrl = (imaxConfig.innerSphereVideoUrl && imaxConfig.innerSphereVideoUrl.indexOf('http') === 0)
       ? imaxConfig.innerSphereVideoUrl
-      : (scriptBase + defaultInnerVideo);
+      : (scriptBase + (imaxConfig.innerSphereVideoUrl || defaultInnerVideo));
     var INNER_SPHERE_RADIUS = 2200;
+    var INNER_CYLINDER_HEIGHT = INNER_SPHERE_RADIUS * 2;
     var INNER_SPHERE_OPACITY = 0.6;
-    var R_eq = INNER_SPHERE_RADIUS;
-    var R_polar = R_eq / 2;
     var innerSphereVideo = document.createElement('video');
     innerSphereVideo.loop = true;
     innerSphereVideo.muted = true;
@@ -456,11 +455,11 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     innerSphereTex.magFilter = THREE.LinearFilter;
     innerSphereTex.wrapS = THREE.RepeatWrapping;
     innerSphereTex.wrapT = THREE.RepeatWrapping;
-    innerSphereTex.repeat.set(1, 1);
+    innerSphereTex.repeat.set(2, 1);
     innerSphereTex.offset.set(0, 0);
     if (innerSphereTex.flipY !== undefined) innerSphereTex.flipY = true;
     if (innerSphereTex.colorSpace !== undefined) innerSphereTex.colorSpace = THREE.SRGBColorSpace;
-    var innerSphereGeo = new THREE.SphereGeometry(INNER_SPHERE_RADIUS, 32, 32);
+    var innerSphereGeo = new THREE.CylinderGeometry(INNER_SPHERE_RADIUS, INNER_SPHERE_RADIUS, INNER_CYLINDER_HEIGHT, 32, 1, true);
     var innerSphereMat = new THREE.MeshBasicMaterial({
       map: innerSphereTex,
       side: THREE.BackSide,
@@ -470,7 +469,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       depthTest: true
     });
     var innerSphere = new THREE.Mesh(innerSphereGeo, innerSphereMat);
-    innerSphere.scale.set(1, R_polar / R_eq, 1);
+    innerSphere.scale.set(1, 1, 1);
     innerSphere.position.set(0, medallionCenterY, 0);
     innerSphere.renderOrder = 990;
     innerSphere.frustumCulled = false;
@@ -500,7 +499,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     var screenScale = 3;
     var ELLIPSE_SIZE_MULT = 2;
     var R_eq = 3800 * 1.5 * 1.5 * ELLIPSE_SIZE_MULT;
-    var R_polar = R_eq / 2;
+    var R_polar = R_eq * 0.38;
     var R_ref = 1200 * 1.5 * 1.5 * ELLIPSE_SIZE_MULT;
     var R_polar_ref = R_ref / 2;
     var R_ref_size = 1200 * 1.5 * ELLIPSE_SIZE_MULT;
@@ -625,17 +624,23 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
         ref.mesh.geometry = makeRoundedRectGeo(screenW, screenH, cornerR);
       }
     };
-    window.updateGlobeScreensSeparation = function (sepFactor) {
+    var PHI_MAX_HALF_SPAN = 0.45 * (Math.PI / 2);
+    var phiMinLimit = Math.PI / 2 - PHI_MAX_HALF_SPAN;
+    var phiMaxLimit = Math.PI / 2 + PHI_MAX_HALF_SPAN;
+    var PHI_MAX_SPAN = 2 * PHI_MAX_HALF_SPAN;
+    window.updateGlobeScreensSeparation = function (sepVert, sepHoriz, curvatureFactor) {
       var bandCenter = Math.PI / 2;
       var bandSpan = phiRange;
-      var bandMin = bandCenter - bandSpan / 2;
-      var bandMax = bandCenter + bandSpan / 2;
-      var effectivePhiRange = Math.min(bandSpan * (1 + sepFactor), bandSpan);
-      var effectivePhiMin = Math.max(bandMin, bandCenter - effectivePhiRange / 2);
-      var effectivePhiMax = Math.min(bandMax, bandCenter + effectivePhiRange / 2);
-      var effectiveThetaSpan = thetaSpan * (1 + sepFactor);
+      var sepV = sepVert != null ? sepVert : 0;
+      var effectivePhiRange = PHI_MAX_SPAN * (0.25 + 0.75 * Math.min(1, sepV));
+      effectivePhiRange = Math.min(effectivePhiRange, PHI_MAX_SPAN);
+      var effectivePhiMin = Math.max(phiMinLimit, bandCenter - effectivePhiRange / 2);
+      var effectivePhiMax = Math.min(phiMaxLimit, bandCenter + effectivePhiRange / 2);
+      var effectiveThetaSpan = thetaSpan * (1 + (sepHoriz || 0));
       var thetaCenter = thetaMin + thetaSpan / 2;
       var effectiveThetaMin = thetaCenter - effectiveThetaSpan / 2;
+      var curv = curvatureFactor != null ? curvatureFactor : 1;
+      var R_polar_eff = R_polar * curv;
       for (var i = 0; i < screenMeshRefs.length; i++) {
         var ref = screenMeshRefs[i];
         var r = ref.row, c = ref.col;
@@ -645,7 +650,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
         var cosPhi = Math.cos(phi);
         var radial = R_eq * sinPhi;
         var x = radial * Math.cos(theta);
-        var y = R_polar * cosPhi;
+        var y = R_polar_eff * cosPhi;
         var z = radial * Math.sin(theta);
         ref.group.position.set(x, y, z);
       }
@@ -1243,7 +1248,9 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     var globeSwingAngle = 0;
     var globeSwingDir = 1;
     var lastGlobeScreensGap = -1;
-    var lastGlobeScreensSeparation = -1;
+    var lastGlobeScreensSeparationVert = -1;
+    var lastGlobeScreensSeparationHoriz = -1;
+    var lastGlobeScreensCurvature = -1;
     function map1_10(v, min, max) {
       v = typeof v === 'number' ? v : 5;
       v = Math.max(1, Math.min(10, v));
@@ -1470,6 +1477,10 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       }
       if (window.paradeInnerSphere) {
         window.paradeInnerSphere.visible = (ctrlUI.innerSphereVisible !== false);
+        var innerSpin = map1_10(ctrlUI.innerCylinderSpin != null ? ctrlUI.innerCylinderSpin : 3, 0, 0.015);
+        window.paradeInnerSphere.rotation.y += innerSpin * delta;
+        var innerLum = map1_10(ctrlUI.innerCylinderLum != null ? ctrlUI.innerCylinderLum : 6, 0.2, 1);
+        if (window.paradeInnerSphere.material) window.paradeInnerSphere.material.opacity = innerLum;
         var isColorHex = ctrlUI.innerSphereColorHex || ctrlUI.innerSphereColor;
         if (isColorHex && window.paradeInnerSphere.material && window.paradeInnerSphere.material.color) {
           window.paradeInnerSphere.material.color.set(typeof isColorHex === 'number' ? isColorHex : isColorHex);
@@ -1484,10 +1495,14 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
           lastGlobeScreensGap = gsGap;
           window.updateGlobeScreensGap(gsGap);
         }
-        var gsSep = map1_10(ctrlUI.globeScreensSeparation != null ? ctrlUI.globeScreensSeparation : 5, 0, 0.2);
-        if (window.updateGlobeScreensSeparation && gsSep !== lastGlobeScreensSeparation) {
-          lastGlobeScreensSeparation = gsSep;
-          window.updateGlobeScreensSeparation(gsSep);
+        var gsSepV = map1_10(ctrlUI.globeScreensSeparationVert != null ? ctrlUI.globeScreensSeparationVert : 5, 0, 1);
+        var gsSepH = map1_10(ctrlUI.globeScreensSeparationHoriz != null ? ctrlUI.globeScreensSeparationHoriz : 5, 0, 0.5);
+        var gsCurv = map1_10(ctrlUI.globeScreensCurvature != null ? ctrlUI.globeScreensCurvature : 5, 0.25, 1);
+        if (window.updateGlobeScreensSeparation && (gsSepV !== lastGlobeScreensSeparationVert || gsSepH !== lastGlobeScreensSeparationHoriz || gsCurv !== lastGlobeScreensCurvature)) {
+          lastGlobeScreensSeparationVert = gsSepV;
+          lastGlobeScreensSeparationHoriz = gsSepH;
+          lastGlobeScreensCurvature = gsCurv;
+          window.updateGlobeScreensSeparation(gsSepV, gsSepH, gsCurv);
         }
         var gsSize = map1_10(ctrlUI.globeScreensDiameter != null ? ctrlUI.globeScreensDiameter : 3, 0.5, 4);
         window.paradeGlobeScreens.scale.setScalar(gsSize);
