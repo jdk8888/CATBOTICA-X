@@ -1,14 +1,11 @@
 /**
  * CATBOTICA — Smart Contract Integration Layer
- * Connects the claim page to the on-chain ERC-1155 + SBT contracts.
+ * Connects the claim page to on-chain contracts.
  *
  * Lore Anchor: LS-CATBOTICA-ANCHOR-012
  *
- * This module provides:
- *  1. Contract ABIs (minimal, for read/write operations)
- *  2. Contract addresses (per-chain)
- *  3. Server-side mint helpers (for the /api/claim route)
- *  4. Client-side read helpers (for badge status display)
+ * Primary: CatboticaMedallions (ERC-1155, Merkle claim on Base).
+ * Legacy: ERC-1155 + SBT addresses/ABIs kept for backward compatibility (deprecated).
  */
 
 import { type Address } from 'viem'
@@ -19,9 +16,22 @@ import { type Address } from 'viem'
 
 const ZERO = '0x0000000000000000000000000000000000000000' as Address
 
+/** CatboticaMedallions (ERC-1155) on Base. Env: NEXT_PUBLIC_BASE_ERC1155_ADDRESS. */
+export function getMedallionsAddress(chainId: number): Address | null {
+  if (chainId === 8453) {
+    const addr = process.env.NEXT_PUBLIC_BASE_ERC1155_ADDRESS || ZERO
+    return addr === ZERO ? null : (addr as Address)
+  }
+  if (chainId === 84532) {
+    const addr = process.env.NEXT_PUBLIC_BASE_SEPOLIA_ERC1155_ADDRESS || ZERO
+    return addr === ZERO ? null : (addr as Address)
+  }
+  return null
+}
+
 /**
- * Deployed contract addresses.
- * Base (8453) can be overridden via env: NEXT_PUBLIC_BASE_ERC1155_ADDRESS, NEXT_PUBLIC_BASE_SBT_ADDRESS.
+ * Deployed contract addresses (legacy: erc1155/sbt; medallions use erc1155 as Medallions address).
+ * Base (8453): NEXT_PUBLIC_BASE_ERC1155_ADDRESS = CatboticaMedallions.
  */
 function getContractAddressesStatic(): Record<number, { erc1155: Address; sbt: Address }> {
   const baseErc1155 = (process.env.NEXT_PUBLIC_BASE_ERC1155_ADDRESS || ZERO) as Address
@@ -39,6 +49,73 @@ function getContractAddressesStatic(): Record<number, { erc1155: Address; sbt: A
 }
 
 export const CONTRACT_ADDRESSES = getContractAddressesStatic()
+
+// ═══════════════════════════════════════════════════════════════
+//  CATBOTICA MEDALLIONS (Merkle claim — primary)
+// ═══════════════════════════════════════════════════════════════
+
+/** Year IDs 1–5 (Tiger through Horse). Token ID = yearId. */
+export const MEDALLIONS_YEAR_IDS = [1, 2, 3, 4, 5] as const
+
+export const MEDALLIONS_ZODIAC: Record<number, string> = {
+  1: 'Tiger',
+  2: 'Rabbit',
+  3: 'Dragon',
+  4: 'Snake',
+  5: 'Horse',
+}
+
+/**
+ * CatboticaMedallions (ERC-1155) — Merkle claimBatch, isYearActive, balanceOf.
+ * Leaf encoding: keccak256(bytes.concat(keccak256(abi.encode(wallet, yearId, count))))
+ */
+export const MEDALLIONS_ABI = [
+  {
+    inputs: [
+      { name: 'yearIds', type: 'uint256[]' },
+      { name: 'counts', type: 'uint256[]' },
+      { name: 'proofs', type: 'bytes32[][]' },
+    ],
+    name: 'claimBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'yearId', type: 'uint256' }],
+    name: 'isYearActive',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'account', type: 'address' },
+      { name: 'id', type: 'uint256' },
+    ],
+    name: 'balanceOf',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'wallet', type: 'address' },
+      { name: 'yearId', type: 'uint256' },
+    ],
+    name: 'claimedCount',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
+    name: 'uri',
+    outputs: [{ name: '', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 
 // ═══════════════════════════════════════════════════════════════
 //  ZODIAC BADGE MAPPING
@@ -235,4 +312,10 @@ export function areContractsDeployed(chainId: number): boolean {
   if (!addrs) return false
   const zero = '0x0000000000000000000000000000000000000000'
   return addrs.erc1155 !== zero && addrs.sbt !== zero
+}
+
+/** Check if CatboticaMedallions is configured for chain. */
+export function areMedallionsDeployed(chainId: number): boolean {
+  const addr = getMedallionsAddress(chainId)
+  return addr != null && addr !== ZERO
 }

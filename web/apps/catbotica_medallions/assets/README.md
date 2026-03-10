@@ -7,6 +7,10 @@ Place here the images used by the medallions carousel so this app is **self-cont
 - **rear.png** — Card back / rear face (one image for all cards).
 - **rat.png**, **ox.png**, **tiger.png**, **rabbit.png**, **dragon.png**, **snake.png**, **horse.png**, **goat.png**, **monkey.png**, **rooster.png**, **dog.png**, **pig.png** — 12 Lunar Zodiac badge fronts.
 
+## 3D medallion (optional)
+
+- **medallionv1.glb** — Standalone GLB for the “Use GLB” toggle. Export from `medallion.blend` (Blender: File → Export → glTF 2.0, format GLB, embed textures). If missing, the toggle still works; procedural medallions are used.
+
 ## Full experience (full.html)
 
 The **full** page also uses:

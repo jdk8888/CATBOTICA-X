@@ -89,53 +89,55 @@
     <h3>Camera</h3>
     <section>
       <div class="row">
-        <label>Zoom 1–10 <input type="range" id="hcc-camera-zoom" min="1" max="10" step="1" value="5"></label>
+        <label>Zoom 1–10 <input type="range" id="hcc-camera-zoom" min="1" max="10" step="1" value="10"></label>
       </div>
     </section>
     <h3>Bloom</h3>
     <section>
       <label><input type="checkbox" id="hcc-bloom" checked> Bloom</label>
       <div class="row">
-        <label>Level 1–10 <input type="range" id="hcc-bloom-level" min="1" max="10" step="1" value="5"></label>
+        <label>Level 1–10 <input type="range" id="hcc-bloom-level" min="1" max="10" step="1" value="2"></label>
       </div>
     </section>
     <h3>Particles</h3>
     <section>
       <label><input type="checkbox" id="hcc-particles" checked> Visible</label>
       <div class="row">
-        <label>More 1–20 <input type="range" id="hcc-particles-mult" min="1" max="20" step="1" value="4"></label>
+        <label>More 1–20 <input type="range" id="hcc-particles-mult" min="1" max="20" step="1" value="2"></label>
       </div>
       <div class="row">
-        <label>Lum 1–20 <input type="range" id="hcc-particles-lum" min="1" max="20" step="1" value="12"></label>
+        <label>Lum 1–20 <input type="range" id="hcc-particles-lum" min="1" max="20" step="1" value="4"></label>
       </div>
       <div class="row">
-        <label>Bloom 1–10 <input type="range" id="hcc-particles-bloom" min="1" max="10" step="1" value="6"></label>
+        <label>Bloom 1–10 <input type="range" id="hcc-particles-bloom" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
-        <label>Size 1–20 <input type="range" id="hcc-particles-size" min="1" max="20" step="1" value="5"></label>
+        <label>Size 1–20 <input type="range" id="hcc-particles-size" min="1" max="20" step="1" value="1"></label>
       </div>
       <div class="row">
-        <label>Spin 1–10 <input type="range" id="hcc-particles-spin" min="1" max="10" step="1" value="4"></label>
+        <label>Spin 1–10 <input type="range" id="hcc-particles-spin" min="1" max="10" step="1" value="2"></label>
       </div>
       <div class="row">
         <label>Dir <select id="hcc-particles-spin-dir"><option value="-1">CCW</option><option value="1">CW</option></select></label>
       </div>
       <div class="row">
-        <label>Color <input type="color" id="hcc-particles-color" value="#0ea5e9"></label>
-        <input type="text" id="hcc-particles-hex" class="hcc-hex" placeholder="#RRGGBB" value="#0ea5e9">
+        <label>Color <input type="color" id="hcc-particles-color" value="#ffffff"></label>
+        <input type="text" id="hcc-particles-hex" class="hcc-hex" placeholder="#RRGGBB" value="#ffffff">
       </div>
     </section>
     <h3>Medallions</h3>
     <section>
       <label><input type="checkbox" id="hcc-medallions" checked> Visible</label>
+      <label><input type="checkbox" id="hcc-medallion-use-glb" checked> Use GLB</label>
+      <label><input type="checkbox" id="hcc-medallion-spin" checked> Spin</label>
       <div class="row">
-        <label>Size 1–10 <input type="range" id="hcc-medallions-scale" min="1" max="10" step="1" value="7"></label>
+        <label>Size 1–10 <input type="range" id="hcc-medallions-scale" min="1" max="10" step="1" value="5"></label>
       </div>
       <div class="row">
-        <label>Spin 1–10 <input type="range" id="hcc-medallions-spin" min="1" max="10" step="1" value="3"></label>
+        <label>Spin 1–10 <input type="range" id="hcc-medallions-spin" min="1" max="10" step="1" value="2"></label>
       </div>
       <div class="row">
-        <label>Bloom 1–10 <input type="range" id="hcc-medallions-bloom" min="1" max="10" step="1" value="7"></label>
+        <label>Bloom 1–10 <input type="range" id="hcc-medallions-bloom" min="1" max="10" step="1" value="9"></label>
       </div>
       <div class="row">
         <label>Color <input type="color" id="hcc-medallions-color" value="#ffffff"></label>
@@ -146,45 +148,45 @@
     <section>
       <label><input type="checkbox" id="hcc-inner-sphere" checked> Visible</label>
       <div class="row">
-        <label>Spin 1–10 <input type="range" id="hcc-inner-cylinder-spin" min="1" max="10" step="1" value="3"></label>
+        <label>Spin 1–10 <input type="range" id="hcc-inner-cylinder-spin" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
-        <label>Lum 1–10 <input type="range" id="hcc-inner-cylinder-lum" min="1" max="10" step="1" value="6"></label>
+        <label>Lum 0–10 <input type="range" id="hcc-inner-cylinder-lum" min="0" max="10" step="1" value="0"></label>
       </div>
       <div class="row">
-        <label>Bloom 1–10 <input type="range" id="hcc-inner-sphere-bloom" min="1" max="10" step="1" value="6"></label>
+        <label>Bloom 1–10 <input type="range" id="hcc-inner-sphere-bloom" min="1" max="10" step="1" value="3"></label>
       </div>
       <div class="row">
-        <label>Color <input type="color" id="hcc-inner-sphere-color" value="#0ea5e9"></label>
-        <input type="text" id="hcc-inner-sphere-hex" class="hcc-hex" placeholder="#RRGGBB" value="#0ea5e9">
+        <label>Color <input type="color" id="hcc-inner-sphere-color" value="#ffffff"></label>
+        <input type="text" id="hcc-inner-sphere-hex" class="hcc-hex" placeholder="#RRGGBB" value="#ffffff">
       </div>
     </section>
     <h3>Globe screens</h3>
     <section>
       <label><input type="checkbox" id="hcc-globe" checked> Visible</label>
       <div class="row">
-        <label>Diameter 1–10 <input type="range" id="hcc-globe-diameter" min="1" max="10" step="1" value="3"></label>
+        <label>Diameter 1–10 <input type="range" id="hcc-globe-diameter" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
         <label>Screen size 1–10 <input type="range" id="hcc-globe-screen-size" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
-        <label>Separation (vertical) 1–10 <input type="range" id="hcc-globe-separation-vert" min="1" max="10" step="1" value="5"></label>
+        <label>Separation (vertical) 1–10 <input type="range" id="hcc-globe-separation-vert" min="1" max="10" step="1" value="7"></label>
       </div>
       <div class="row">
-        <label>Separation (horizontal) 1–10 <input type="range" id="hcc-globe-separation-horiz" min="1" max="10" step="1" value="5"></label>
+        <label>Separation (horizontal) 1–10 <input type="range" id="hcc-globe-separation-horiz" min="1" max="10" step="1" value="2"></label>
       </div>
       <div class="row">
-        <label>Curvature 1–10 <input type="range" id="hcc-globe-curvature" min="1" max="10" step="1" value="5"></label>
+        <label>Curvature 1–10 <input type="range" id="hcc-globe-curvature" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
-        <label>Lum 1–10 <input type="range" id="hcc-globe-lum" min="1" max="10" step="1" value="6"></label>
+        <label>Lum 1–10 <input type="range" id="hcc-globe-lum" min="1" max="10" step="1" value="10"></label>
       </div>
       <div class="row">
         <label>Bloom 1–10 <input type="range" id="hcc-globe-bloom" min="1" max="10" step="1" value="3"></label>
       </div>
       <div class="row">
-        <label>Spin 1–10 <input type="range" id="hcc-globe-spin" min="1" max="10" step="1" value="8"></label>
+        <label>Spin 1–10 <input type="range" id="hcc-globe-spin" min="1" max="10" step="1" value="7"></label>
       </div>
       <div class="row">
         <label>Color <input type="color" id="hcc-globe-color" value="#ffffff"></label>
@@ -199,7 +201,7 @@
       <button type="button" id="closeup-back" class="closeup-back">Back to carousel</button>
     </div>
   </div>
-  <p class="hint" aria-hidden="true">Catbotica Inc · Medallions — Drag to orbit. Scroll to zoom.</p>
+  <p class="hint" aria-hidden="true">Catbotica Inc · Medallions — Drag to orbit camera and rotate medallion ring. Scroll to zoom.</p>
 
   <script>
     (function () {
@@ -241,39 +243,42 @@
   </script>
   <script>
     (function () {
+      // Frozen default settings — do not change without explicit request.
       var ctrl = {
-        cameraZoom: 5,
+        cameraZoom: 10,
         bloomEnabled: true,
-        bloomLevel: 5,
+        bloomLevel: 2,
         particlesVisible: true,
         medallionsVisible: true,
         innerSphereVisible: true,
         globeScreensVisible: true,
-        particlesMult: 4,
-        particlesLum: 12,
-        particlesSize: 5,
-        particlesSpinSpeed: 4,
+        particlesMult: 2,
+        particlesLum: 4,
+        particlesSize: 1,
+        particlesSpinSpeed: 2,
         particlesSpinDir: -1,
-        particlesColor: '#0ea5e9',
-        particlesColorHex: '#0ea5e9',
-        particlesBloom: 6,
-        medallionsScale: 7,
-        medallionsSpinSpeed: 3,
+        particlesColor: '#ffffff',
+        particlesColorHex: '#ffffff',
+        particlesBloom: 10,
+        medallionUseGLB: true,
+        medallionSpinEnabled: true,
+        medallionsScale: 5,
+        medallionsSpinSpeed: 2,
         medallionsColor: '#ffffff',
         medallionsColorHex: '#ffffff',
-        medallionsBloom: 7,
-        innerCylinderSpin: 3,
-        innerCylinderLum: 6,
-        innerSphereColor: '#0ea5e9',
-        innerSphereColorHex: '#0ea5e9',
-        innerSphereBloom: 6,
-        globeScreensDiameter: 3,
+        medallionsBloom: 9,
+        innerCylinderSpin: 10,
+        innerCylinderLum: 0,
+        innerSphereColor: '#ffffff',
+        innerSphereColorHex: '#ffffff',
+        innerSphereBloom: 3,
+        globeScreensDiameter: 10,
         globeScreensScreenSize: 10,
-        globeScreensSeparationVert: 5,
-        globeScreensSeparationHoriz: 5,
-        globeScreensCurvature: 5,
-        globeScreensLum: 6,
-        globeScreensSpin: 8,
+        globeScreensSeparationVert: 7,
+        globeScreensSeparationHoriz: 2,
+        globeScreensCurvature: 10,
+        globeScreensLum: 10,
+        globeScreensSpin: 7,
         globeScreensColor: '#ffffff',
         globeScreensColorHex: '#ffffff',
         globeScreensBloom: 3
@@ -332,6 +337,8 @@
       bindRange('hcc-bloom-level', 'bloomLevel');
       bindCheck('hcc-particles', 'particlesVisible');
       bindCheck('hcc-medallions', 'medallionsVisible');
+      bindCheck('hcc-medallion-use-glb', 'medallionUseGLB');
+      bindCheck('hcc-medallion-spin', 'medallionSpinEnabled');
       bindCheck('hcc-inner-sphere', 'innerSphereVisible');
       bindCheck('hcc-globe', 'globeScreensVisible');
       bindRange('hcc-particles-mult', 'particlesMult');

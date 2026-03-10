@@ -7,6 +7,7 @@ import { EffectComposer } from 'https://unpkg.com/three@0.160.0/examples/jsm/pos
 import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 
 (function () {
   var container = document.getElementById('parade-canvas');
@@ -234,6 +235,9 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
   let orbitAngleVTarget = DEFAULT_ORBIT_V;
   let isDragging = false;
   let dragStartX = 0, dragStartY = 0, dragStartOrbitH = 0, dragStartOrbitV = 0;
+  let medallionDragRotationY = 0;
+  let medallionAutoSpinAccum = 0;
+  let dragStartMedallionRot = 0;
   var lastPinchDist = null;
   const PINCH_ZOOM_SENSITIVITY = 0.4;
 
@@ -339,7 +343,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     window.paradeDustMaxCount = dustCount;
   })();
 
-  // 12 medallions at equator (three-layer parallax), MEDALLION_RING_RADIUS
+  // 12 medallions at equator (procedural cylinder: back cap + rim + front cap), MEDALLION_RING_RADIUS
   const MEDALLION_FACE_IMAGE = 'assets/2026_CATBOTICA_Lunar_New_Year_Badge_Face.png';
   const MEDALLION_CHARACTER_IMAGE = 'assets/2026_CATBOTICA_Lunar_New_Year_Badge_Character.png';
   const MEDALLION_BACKGROUND_IMAGE = 'assets/2026_CATBOTICA_Lunar_New_Year_Badge_Background.png';
@@ -348,6 +352,12 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
   const MEDALLION_RING_RADIUS = 900;
   const MEDALLION_SPIN_SPEED = 0.4;
   const MEDALLION_PARALLAX_Z = 22;
+  const MEDALLION_CYLINDER_HEIGHT = 14;
+  const MEDALLION_RIM_RADIUS = 76;
+  const MEDALLION_GLB_URL = 'assets/medallion.glb';
+  const MEDALLION_HORSE_GLB_URL = '../assets/medallion_horse.glb';
+  const MEDALLION_HORSE_INDEX = 6;
+  const MEDALLION_GLB_SCALE = 10;
   (function () {
     var medLoader = new THREE.TextureLoader();
     medLoader.setCrossOrigin('anonymous');
@@ -370,7 +380,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       return new THREE.MeshBasicMaterial({
         map: tex || null,
         color: 0x2a2a3a,
-        side: THREE.FrontSide,
+        side: THREE.DoubleSide,
         transparent: false,
         alphaTest: 0.02,
         alphaMap: circleAlphaTex,
@@ -378,42 +388,139 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
         depthTest: true
       });
     }
+    function matForCylinder(tex) {
+      if (tex && tex.colorSpace !== undefined) tex.colorSpace = THREE.SRGBColorSpace;
+      return new THREE.MeshBasicMaterial({
+        map: tex || null,
+        color: 0x2a2a3a,
+        side: THREE.DoubleSide,
+        transparent: true,
+        alphaTest: 0.02,
+        alphaMap: circleAlphaTex,
+        depthWrite: true,
+        depthTest: true
+      });
+    }
+    function matForRim(tex) {
+      if (tex && tex.colorSpace !== undefined) tex.colorSpace = THREE.SRGBColorSpace;
+      return new THREE.MeshBasicMaterial({
+        map: tex || null,
+        color: 0x2a2a3a,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true
+      });
+    }
     var medGroup = new THREE.Group();
     medGroup.position.set(0, 0, 0);
+    var medGroupGLB = new THREE.Group();
+    medGroupGLB.position.set(0, 0, 0);
+    medGroupGLB.visible = false;
+    carousel.add(medGroupGLB);
+    window.paradeRingMedallionsGLB = medGroupGLB;
+    var glbLoaded = false, glbLoading = false;
+    medGroupGLB.userData.mainScene = null;
+    medGroupGLB.userData.horseScene = null;
+
+    function buildGLBMedallions() {
+      var mainScene = medGroupGLB.userData.mainScene;
+      var horseScene = medGroupGLB.userData.horseScene;
+      if (!mainScene) return;
+      while (medGroupGLB.children.length) medGroupGLB.remove(medGroupGLB.children[0]);
+      var box = new THREE.Box3().setFromObject(mainScene);
+      var size = new THREE.Vector3();
+      box.getSize(size);
+      var maxDim = Math.max(size.x, size.y, size.z, 1);
+      var targetSize = MEDALLION_DISC_RADIUS * 2;
+      var baseScale = (targetSize / maxDim) * MEDALLION_GLB_SCALE;
+      medGroupGLB.userData.baseScale = baseScale;
+      for (var i = 0; i < MEDALLION_COUNT; i++) {
+        var angle = (i / MEDALLION_COUNT) * Math.PI * 2;
+        var baseAngle = angle + Math.PI;
+        var src = (i === MEDALLION_HORSE_INDEX && horseScene) ? horseScene : mainScene;
+        var clone = src.clone();
+        clone.scale.setScalar(baseScale);
+        clone.position.x = MEDALLION_RING_RADIUS * Math.cos(angle);
+        clone.position.y = medallionCenterY;
+        clone.position.z = MEDALLION_RING_RADIUS * Math.sin(angle);
+        clone.rotation.y = baseAngle;
+        clone.userData.baseAngle = baseAngle;
+        medGroupGLB.add(clone);
+      }
+      glbLoaded = true;
+      glbLoading = false;
+      window.medallionGLBLoaded = true;
+    }
+
+    function ensureMedallionGLB() {
+      if (glbLoaded || glbLoading) return;
+      glbLoading = true;
+      var loader = new GLTFLoader();
+      loader.load(MEDALLION_GLB_URL, function (gltf) {
+        medGroupGLB.userData.mainScene = gltf.scene;
+        buildGLBMedallions();
+      }, undefined, function () {
+        glbLoading = false;
+        console.warn('Medallion GLB load failed:', MEDALLION_GLB_URL);
+        startProceduralLoad();
+      });
+      loader.load(MEDALLION_HORSE_GLB_URL, function (gltf) {
+        medGroupGLB.userData.horseScene = gltf.scene;
+        if (medGroupGLB.userData.mainScene) buildGLBMedallions();
+      }, undefined, function () {
+        // Horse optional; slot 6 stays main if horse fails
+      });
+    }
+    window.ensureMedallionGLB = ensureMedallionGLB;
+
     var faceTex = null, characterTex = null, backgroundTex = null;
     var loaded = 0;
+    var proceduralStarted = false;
+    function startProceduralLoad() {
+      if (proceduralStarted) return;
+      proceduralStarted = true;
+      medLoader.load(MEDALLION_BACKGROUND_IMAGE, function (t) { backgroundTex = t; backgroundTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
+      medLoader.load(MEDALLION_CHARACTER_IMAGE, function (t) { characterTex = t; characterTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
+      medLoader.load(MEDALLION_FACE_IMAGE, function (t) { faceTex = t; faceTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
+    }
     function buildMedallions() {
       if (loaded !== 3) return;
+      var halfH = MEDALLION_CYLINDER_HEIGHT / 2;
       for (var i = 0; i < MEDALLION_COUNT; i++) {
         var angle = (i / MEDALLION_COUNT) * Math.PI * 2;
         var single = new THREE.Group();
         single.userData.baseAngle = angle + Math.PI;
-        var zOff = MEDALLION_PARALLAX_Z;
-        if (backgroundTex) {
-          var backMesh = new THREE.Mesh(
-            new THREE.CircleGeometry(MEDALLION_DISC_RADIUS, 64),
-            matForTex(backgroundTex)
-          );
-          backMesh.position.set(0, 0, -zOff);
-          backMesh.rotation.y = Math.PI;
-          single.add(backMesh);
-        }
-        if (characterTex) {
-          var midMesh = new THREE.Mesh(
-            new THREE.CircleGeometry(MEDALLION_DISC_RADIUS, 64),
-            matForTex(characterTex)
-          );
-          midMesh.position.set(0, 0, 0);
-          single.add(midMesh);
-        }
-        if (faceTex) {
-          var frontMesh = new THREE.Mesh(
-            new THREE.CircleGeometry(MEDALLION_DISC_RADIUS, 64),
-            matForTex(faceTex)
-          );
-          frontMesh.position.set(0, 0, zOff);
-          single.add(frontMesh);
-        }
+        // Back cap (background)
+        var backCap = new THREE.Mesh(
+          new THREE.CircleGeometry(MEDALLION_DISC_RADIUS, 64),
+          matForTex(backgroundTex)
+        );
+        backCap.userData.medallionPart = 'backCap';
+        backCap.position.set(0, 0, -halfH);
+        backCap.rotation.x = Math.PI;
+        single.add(backCap);
+        // Rim (character) — open-ended cylinder = tube only (no circle alpha so rim is visible)
+        var rimGeo = new THREE.CylinderGeometry(MEDALLION_RIM_RADIUS, MEDALLION_RIM_RADIUS, MEDALLION_CYLINDER_HEIGHT, 64, 1, true);
+        var rimMesh = new THREE.Mesh(rimGeo, matForRim(characterTex));
+        rimMesh.userData.medallionPart = 'rim';
+        rimMesh.rotation.x = Math.PI / 2;
+        single.add(rimMesh);
+        // Front cap (face)
+        var frontCap = new THREE.Mesh(
+          new THREE.CircleGeometry(MEDALLION_DISC_RADIUS, 64),
+          matForTex(faceTex)
+        );
+        frontCap.userData.medallionPart = 'frontCap';
+        frontCap.position.set(0, 0, halfH);
+        single.add(frontCap);
+        // Border ring at edge of disc (cyan silhouette framing front face only)
+        var borderRing = new THREE.Mesh(
+          new THREE.RingGeometry(MEDALLION_DISC_RADIUS - 2, MEDALLION_DISC_RADIUS, 64),
+          new THREE.MeshBasicMaterial({ color: edgeColor, side: THREE.DoubleSide, depthTest: true, depthWrite: true })
+        );
+        borderRing.userData.medallionPart = 'border';
+        borderRing.position.set(0, 0, halfH);
+        single.add(borderRing);
         single.position.x = MEDALLION_RING_RADIUS * Math.cos(angle);
         single.position.y = medallionCenterY;
         single.position.z = MEDALLION_RING_RADIUS * Math.sin(angle);
@@ -423,9 +530,8 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       carousel.add(medGroup);
       window.paradeRingMedallions = medGroup;
     }
-    medLoader.load(MEDALLION_BACKGROUND_IMAGE, function (t) { backgroundTex = t; backgroundTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
-    medLoader.load(MEDALLION_CHARACTER_IMAGE, function (t) { characterTex = t; characterTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
-    medLoader.load(MEDALLION_FACE_IMAGE, function (t) { faceTex = t; faceTex.needsUpdate = true; loaded++; buildMedallions(); }, undefined, function () { loaded++; buildMedallions(); });
+    // Try GLB first; procedural medallions load only if main GLB fails
+    ensureMedallionGLB();
   })();
 
   // Inner cylinder video (PARADE_IMAX_CONFIG.innerSphereVideoUrl; video1, 2x wrap)
@@ -1457,13 +1563,16 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       var ctrlUI = window.heroCarouselControls || {};
       var cz = ctrlUI.cameraZoom != null ? ctrlUI.cameraZoom : 5;
       currentCameraDist = zoomMin + (10 - Math.max(1, Math.min(10, cz))) / 9 * (zoomMax - zoomMin);
+      var useGLB = ctrlUI.medallionUseGLB === true;
+      if (useGLB && window.ensureMedallionGLB) window.ensureMedallionGLB();
       if (window.paradeRingMedallions) {
-        window.paradeRingMedallions.visible = ctrlUI.medallionsVisible !== false;
+        window.paradeRingMedallions.visible = !useGLB && (ctrlUI.medallionsVisible !== false);
         var ms = map1_10(ctrlUI.medallionsScale, 0.5, 2);
         var children = window.paradeRingMedallions.children;
         for (var c = 0; c < children.length; c++) children[c].scale.setScalar(ms);
         var mspin = map1_10(ctrlUI.medallionsSpinSpeed, 0, 0.6);
-        window.paradeRingMedallions.rotation.y += mspin * delta;
+        if (!useGLB && ctrlUI.medallionSpinEnabled === true) medallionAutoSpinAccum += mspin * delta;
+        window.paradeRingMedallions.rotation.y = medallionDragRotationY + medallionAutoSpinAccum;
         var medColorHex = ctrlUI.medallionsColorHex || ctrlUI.medallionsColor;
         if (medColorHex && window.paradeRingMedallions.traverse) {
           var medColor = new THREE.Color(typeof medColorHex === 'number' ? medColorHex : medColorHex);
@@ -1473,6 +1582,28 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
               o.material.color.copy(medColor).multiplyScalar(bloomMult);
             }
           });
+        }
+      }
+      if (window.paradeRingMedallionsGLB) {
+        window.paradeRingMedallionsGLB.visible = useGLB && (ctrlUI.medallionsVisible !== false);
+        if (useGLB) {
+          var msGLB = map1_10(ctrlUI.medallionsScale, 0.5, 2);
+          var baseScaleGLB = window.paradeRingMedallionsGLB.userData.baseScale != null ? window.paradeRingMedallionsGLB.userData.baseScale : 1;
+          var childrenGLB = window.paradeRingMedallionsGLB.children;
+          for (var c = 0; c < childrenGLB.length; c++) childrenGLB[c].scale.setScalar(baseScaleGLB * msGLB);
+          var mspinGLB = map1_10(ctrlUI.medallionsSpinSpeed, 0, 0.6);
+          if (useGLB && ctrlUI.medallionSpinEnabled === true) medallionAutoSpinAccum += mspinGLB * delta;
+          window.paradeRingMedallionsGLB.rotation.y = medallionDragRotationY + medallionAutoSpinAccum;
+          var medColorHexGLB = ctrlUI.medallionsColorHex || ctrlUI.medallionsColor;
+          if (medColorHexGLB && window.paradeRingMedallionsGLB.traverse) {
+            var medColorGLB = new THREE.Color(typeof medColorHexGLB === 'number' ? medColorHexGLB : medColorHexGLB);
+            var bloomMultGLB = 1 + map1_10(ctrlUI.medallionsBloom != null ? ctrlUI.medallionsBloom : 5, 0, 0.6);
+            window.paradeRingMedallionsGLB.traverse(function (o) {
+              if (o.material && o.material.color) {
+                o.material.color.copy(medColorGLB).multiplyScalar(bloomMultGLB);
+              }
+            });
+          }
         }
       }
       if (window.paradeInnerSphere) {
@@ -1763,6 +1894,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     dragStartY = e.clientY;
     dragStartOrbitH = orbitAngleHTarget;
     dragStartOrbitV = orbitAngleVTarget;
+    dragStartMedallionRot = medallionDragRotationY;
     if (selectedCard) {
       dragStartCloseupRotX = closeupRotationX;
       dragStartCloseupRotY = closeupRotationY;
@@ -1780,6 +1912,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
     }
     orbitAngleHTarget = Math.max(-ORBIT_LIMIT, Math.min(ORBIT_LIMIT, dragStartOrbitH + (e.clientX - dragStartX) * 0.002));
     orbitAngleVTarget = Math.max(-ORBIT_LIMIT_V, Math.min(ORBIT_LIMIT_V, dragStartOrbitV - (e.clientY - dragStartY) * 0.002));
+    medallionDragRotationY = dragStartMedallionRot + (e.clientX - dragStartX) * 0.003;
   });
   window.addEventListener('mouseup', function (e) {
     if (e.button === 0) {
@@ -1828,6 +1961,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       dragStartY = t.y;
       dragStartOrbitH = orbitAngleHTarget;
       dragStartOrbitV = orbitAngleVTarget;
+      dragStartMedallionRot = medallionDragRotationY;
       if (selectedCard) {
         dragStartCloseupRotX = closeupRotationX;
         dragStartCloseupRotY = closeupRotationY;
@@ -1861,6 +1995,7 @@ import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
       }
       orbitAngleHTarget = Math.max(-ORBIT_LIMIT, Math.min(ORBIT_LIMIT, dragStartOrbitH + (t.x - dragStartX) * 0.002));
       orbitAngleVTarget = Math.max(-ORBIT_LIMIT_V, Math.min(ORBIT_LIMIT_V, dragStartOrbitV - (t.y - dragStartY) * 0.002));
+      medallionDragRotationY = dragStartMedallionRot + (t.x - dragStartX) * 0.003;
     }
   }, { passive: false });
   el.addEventListener('touchend', function (e) {
